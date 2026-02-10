@@ -408,3 +408,352 @@ ML-powered notification systems learn optimal engagement windows while monitorin
 - [What's Next in AI: 7 Trends to Watch in 2026 — Microsoft](https://news.microsoft.com/source/features/ai/whats-next-in-ai-7-trends-to-watch-in-2026)
 - [18 Predictions for 2026 — Jakob Nielsen](https://jakobnielsenphd.substack.com/p/2026-predictions)
 - [Top 10 Agentic AI Trends to Watch in 2026 — XCube Labs](https://www.xcubelabs.com/blog/top-10-agentic-ai-trends-to-watch-in-2026/)
+
+---
+
+# Part 2: Refined Research — Engagement Windows & Anticipating User Needs
+
+*Research compiled by UX Researcher, Competitive Analyst, and Data Scientist agents.*
+
+---
+
+## Optimal Session-Level Engagement Windows
+
+### Peak Receptivity Moments
+
+| Moment | Receptivity | Trigger Type | Window |
+|--------|------------|--------------|--------|
+| **Post-action completion** | Highest | Next-step suggestion | 2-5 seconds after |
+| **Navigation transitions** | High | Contextual tooltip | 300-500ms delay |
+| **Idle moments** | Medium-High | Feature discovery | After 30-60s inactivity |
+| **After error resolution** | High | Helpful alternative | Immediately |
+| **Feature discovery** | High | Contextual education | 2-5s after page load |
+| **Search-then-browse** | High | Guided recommendation | After 2-3 similar queries |
+
+### Cognitive Load Zones — When to Trigger (and When Not To)
+
+**Green Zone (Trigger):**
+- No overwhelm indicators
+- Steady interaction rhythm (3-8 actions/minute)
+- Forward progression through interface
+- Recent success or completion event
+- 30+ seconds since last trigger
+
+**Yellow Zone (Delay or Simplify):**
+- Single overwhelm indicator present
+- Moderate interaction pace (8-15 actions/minute)
+- Recent navigation backward
+- Partial task completion
+
+**Red Zone (Do Not Trigger):**
+- 2+ overwhelm indicators simultaneously
+- Active error state or correction in progress
+- High interaction frequency (>15 actions/minute)
+- Multiple failed attempts at same task
+
+### Overwhelm Detection Signals
+
+- **Mouse dynamics:** Decreased speed, erratic direction changes, rage clicks (3+ rapid clicks in <2s)
+- **Navigation patterns:** U-turns, increased time on page, reduced text input speed
+- **Frustration indicators:** Rage clicks convert at 0.9% vs 4.1% for smooth experiences
+
+---
+
+## Time-of-Day and Day-of-Week Patterns
+
+### Daily Timing
+
+| Window | Engagement | Best For |
+|--------|-----------|----------|
+| **9-11 AM** | Moderate | Informational, non-urgent triggers |
+| **12-1 PM** | High | Feature discovery, quick wins |
+| **2-4 PM** | Low — Avoid | Cognitive dip, low receptivity |
+| **6-9 PM** | Highest | Deep engagement, tutorials |
+| **10 PM-12 AM** | High | Non-urgent suggestions, reminders |
+
+### Weekly Patterns
+
+| Day | Engagement Rate | Notes |
+|-----|----------------|-------|
+| **Tuesday** | 8.4% (Highest) | "Golden day" — users settled but not overwhelmed |
+| **Sunday** | 8.1% | Leisure time, high mental availability |
+| **Monday** | Lower | Users not ready for new information |
+| **Saturday** | Lull | Reserve for highly personalized content |
+
+**Golden Window: Tuesday at 8 PM** — Highest documented engagement across platforms.
+
+**Personalization Impact:** Tailored send times increase reaction rates by **40%** vs fixed schedules.
+
+---
+
+## Competitive Benchmarks: How Top Apps Time Triggers
+
+### Duolingo — The Gold Standard
+
+- **23.5-hour reminder:** Sends exactly 23.5 hours after last session (users return at same time daily)
+- **Streak Saver:** Late-night reminder personalized to user's sleep patterns
+- **Bandit algorithm:** ML personalizes notification copy based on language, streak length, milestone progress, and historical response
+- **Result:** Within weeks of deploying the algorithm, tens of thousands more learners returned
+
+### Calm — User-Controlled Timing
+
+- **User-set daily reminders** at personally chosen times
+- **Post-first-session prompt:** After first meditation, users see prominent reminder-setting screen
+- **Result:** Users who set daily reminders had **3x retention**; **40%** of prompted users set a reminder
+
+### Spotify — Anticipatory Curation
+
+- **Time-of-day predictions:** Morning workout mixes, evening relaxation
+- **Activity-based suggestions:** Triggered by movement patterns via device sensors
+- **Discover Weekly:** Drops Monday mornings when engagement is highest
+
+### Slack — Collaboration Context
+
+- **Peak communication windows:** Analytics identify when teams are most active
+- **Response-time patterns:** System learns typical reply cadences
+- **Smart scheduling:** Respects "do not disturb" hours
+
+### Linear — Minimal Interruption
+
+- **Near-zero marketing spend** (<$20k) — product itself drives retention
+- **Triggers limited to:** Issue assignment, status changes, @mentions, cycle updates
+- **Philosophy:** Minimize context-switching for engineering teams
+
+---
+
+## Trigger Timing Frameworks
+
+### BJ Fogg's Behavior Model (B=MAP)
+
+Behavior occurs when **Motivation**, **Ability**, and **Prompt** converge simultaneously.
+
+| User State | Trigger Type | Example |
+|-----------|-------------|---------|
+| High motivation + High ability | **Signal** (simple reminder) | "You have unread messages" |
+| High motivation + Low ability | **Facilitator** (reduce friction) | Template suggestions, one-click actions |
+| Low motivation + High ability | **Spark** (increase motivation) | Streak-saver, progress visualization |
+
+### Context-Aware Timing — 7 Signal Layers
+
+1. **Temporal:** Time of day, day of week, season
+2. **Behavioral:** In-app actions, feature usage, engagement history
+3. **Device state:** Screen locked/unlocked, battery level, connectivity
+4. **Motion:** Walking, sitting, driving (via accelerometer)
+5. **Environmental:** Light levels, noise (via sensors)
+6. **Social:** Team activity, friend actions
+7. **Psychological:** Mood indicators inferred from usage patterns
+
+Modern apps process **200+ real-time signals** on-device (privacy-safe) to determine optimal timing.
+
+---
+
+## Predictive Models for Anticipating User Needs
+
+### Behavioral Signals That Predict Intent
+
+**Frustration (Intervene Immediately):**
+- **Rage clicks:** 3+ rapid clicks on same element (<2s)
+- **Mouse thrashing:** Rapid back-and-forth cursor movement
+- **Navigation U-turns:** Repeated backward navigation
+- **Failed searches:** Multiple queries with refinements
+
+**Exploration (Surface Discovery Triggers):**
+- Increasing session depth
+- Search-then-browse patterns
+- Longer dwell times on features
+- Hovering over unfamiliar elements (3+ seconds)
+
+**Ready to Convert (Deploy Facilitators):**
+- 2-3 product comparisons completed
+- Repeated visits to pricing/settings pages
+- Steady forward workflow progression
+- Recent success events
+
+### Propensity Scoring for Feature Adoption
+
+**Recommended Model:** XGBoost with SMOTE for imbalanced datasets
+
+**Key Features:**
+- Current feature usage patterns and depth
+- Time since account creation
+- Engagement trajectory (increasing/declining)
+- Login frequency and session duration
+- Previous feature adoption speed
+- User role and team size (B2B)
+
+**Target:** AUC-ROC > 0.75 for production deployment; weekly model refresh
+
+### Churn Prediction in First 72 Hours
+
+| Signal | Risk Level | Intervention Window |
+|--------|-----------|-------------------|
+| No "aha moment" in first 15 min | Critical | Immediate |
+| Zero login on Day 2 | High | Day 2 morning |
+| <2 sessions in first week | High | Day 3-5 |
+| Incomplete onboarding checklist | Medium | Day 2-7 |
+| No team invites sent (collab tools) | Medium | Day 3 |
+
+**Optimal intervention sweet spot:** Risk score between **50-75%**
+- Below 50%: Too early, may seem pushy
+- Above 75%: Often too late to recover
+
+**Performance benchmarks:** Advanced AI models achieve **97% accuracy** in detecting at-risk subscribers.
+
+### Real-Time Engagement Scoring (RFM Framework)
+
+```
+Recency (R):    Minutes since last interaction (weight: 0.40)
+Frequency (F):  Sessions in rolling 7-day window   (weight: 0.35)
+Value (M):      Features used / total features      (weight: 0.25)
+
+Engagement Score = (R × 0.4) + (F × 0.35) + (M × 0.25)
+```
+
+Scores update in real-time on every interaction event.
+
+---
+
+## Notification Frequency & Fatigue Management
+
+### Optimal Frequency
+
+| Scope | Limit |
+|-------|-------|
+| **Per session** | 2-3 triggers maximum |
+| **Per hour** | 1 trigger for active users |
+| **Per day per app** | 1-3 notifications |
+| **Per week** | 2-5 total (sweet spot) |
+| **Reactivation** | Max 2/week for dormant users |
+
+### The Diminishing Returns Curve
+
+- **1st-3rd impression:** High impact
+- **5+ daily:** Diminishing returns begin
+- **10+ daily:** Negative returns — drives uninstalls
+- **52%** of users who disable notifications eventually churn completely
+
+### Fatigue Detection Model
+
+```
+Fatigue Risk Score = weighted sum of:
+- Notification open rate decline (last 7 days vs previous 7)
+- Time-to-open increasing
+- Swipe-to-dismiss without opening
+- Opt-out from specific channels
+- Decreased app sessions post-notification
+
+Risk Levels:
+  Low    (<0.3): Continue normal cadence
+  Medium (0.3-0.6): Reduce frequency by 30%
+  High   (0.6-0.8): Pause non-critical notifications
+  Critical (>0.8): Immediate intervention — reassess strategy
+```
+
+### Suppression Rules
+
+1. No triggers within 2 minutes of previous trigger
+2. No triggers during active input/typing
+3. No triggers during error states
+4. No triggers if 2+ cognitive load indicators present
+5. Respect user dismissals (suppress similar triggers for 24 hours)
+6. Cross-channel coordination mandatory (47% lower opt-out rates)
+
+---
+
+## Micro-Moment Mapping
+
+### Four Intent Categories
+
+| Moment | User State | Behavioral Signals | Optimal Trigger | Timing |
+|--------|-----------|-------------------|----------------|--------|
+| **I-want-to-know** | Researching | Multiple page views, extended reading, clicking "Learn more" | Knowledge base, educational tooltips | During reading pauses (60-90s) |
+| **I-want-to-go** | Navigating | Map interactions, location searches, "near me" queries | Location-based suggestions | Immediately on signal |
+| **I-want-to-do** | Taking action | Accessing tools, starting multi-step processes | Step-by-step guidance, templates | At step transitions |
+| **I-want-to-buy** | Deciding | Pricing views, product comparisons, cart interactions | Upgrade prompts, social proof | After 2-3 comparisons |
+
+---
+
+## Engagement Cadence: Time-Windowed Breakdown
+
+### First Hour (0-60 min)
+- Celebrate first action completion
+- Post-session reminder prompt (Calm: 40% conversion)
+- Quick-start templates and collaborative invites
+- **40% of users who will engage do so in this window**
+
+### First 4 Hours (1-4 hrs)
+- Single high-value nudge for next action
+- Context-based suggestions
+- Collaboration invites (network effect tools)
+
+### First 24 Hours (4-24 hrs)
+- **23.5-hour reminder** targeting same time as first session
+- Progress visualization
+- Social proof ("X teammates have joined")
+
+### First 72 Hours (24-72 hrs)
+- Two-day follow-up (email + push)
+- Quick wins tied to small milestones
+- Introduce one power feature at a time
+
+### First 7 Days (3-7 days)
+- Streak mechanics and daily habit triggers
+- Weekly milestone summaries
+- Re-engagement at Day 7 for inactives
+- **7-day retention strongly predicts 30-day and 90-day retention**
+
+---
+
+## Implementation Priority
+
+### Tier 1 — Implement First (Highest Impact)
+1. Post-action completion triggers (2-5s delay)
+2. Repeated search detection (after 2-3 similar queries)
+3. Error sequence response (after 2 consecutive errors)
+4. Time-of-day optimization (evening priority, avoid 2-4 PM)
+
+### Tier 2 — Implement Second
+1. Navigation transition triggers (300-500ms delay)
+2. Idle moment detection (30-60s threshold)
+3. Hover pattern analysis (3+ second triggers)
+4. Personalized send-time optimization (ML-based)
+
+### Tier 3 — Advanced
+1. Mouse dynamics / cognitive load detection
+2. Micro-moment AI intent classification
+3. Real-time RFM engagement scoring
+4. Cross-channel fatigue management with ML throttling
+
+### Expected Results
+- **25%** CTR improvement from well-timed triggers
+- **40%** engagement increase from personalized timing
+- **59%** boost from behavioral targeting vs non-personalized
+- **3x** retention for users with habit-forming prompts
+
+---
+
+## Additional Sources (Refined Research)
+
+### Competitive Analysis
+- [How Duolingo Perfected the Art of Push Notifications](https://tinomwadeyi.substack.com/p/how-duolingo-perfected-the-art-of)
+- [The AI Behind The Meme — Duolingo Blog](https://blog.duolingo.com/hi-its-duo-the-ai-behind-the-meme/)
+- [How Calm Increased Retention 3X — Amplitude](https://amplitude.com/case-studies/calm)
+- [The Fogg Behavior Model — behaviormodel.org](https://www.behaviormodel.org)
+- [What Are Contextual Notifications? — ContextSDK](https://contextsdk.com/blogposts/what-are-contextual-notifications-how-to-trigger-them-at-the-right-moment-with-on-device-ai)
+- [Popup Timing: 7 Proven Triggers That Convert](https://www.aliapopups.com/blog/popup-timing-triggers)
+
+### Predictive Models & Data Science
+- [Shopper Intent Prediction from Clickstream Data — Nature](https://www.nature.com/articles/s41598-020-73622-y)
+- [ML to Predict Digital Frustration from Clickstream Data — arXiv](https://arxiv.org/html/2512.20438v1)
+- [What Are Rage Clicks — Amplitude](https://amplitude.com/explore/analytics/rage-clicks)
+- [AI-Driven Churn Prediction for User Retention 2025](https://www.influencers-time.com/ai-driven-churn-prediction-boosts-user-retention-in-2025/)
+- [Efficient Churn Prediction Using Gradient Boosting — Nature](https://www.nature.com/articles/s41598-023-41093-6)
+- [The 7% Retention Rule — Amplitude](https://amplitude.com/blog/7-percent-retention-rule)
+- [How to Reduce Notification Fatigue — Courier](https://www.courier.com/blog/how-to-reduce-notification-fatigue-7-proven-product-strategies-for-saas)
+
+### UX Research
+- [The Psychology of Push Notifications — ContextSDK](https://contextsdk.com/blogposts/the-psychology-of-push-why-60-of-users-engage-more-frequently-with-notified-apps)
+- [Cognitive Load Measurement Methods — arXiv](https://arxiv.org/pdf/2402.11820)
+- [Behavioral Insights Enhance AI-Driven Recommendations — Stanford](https://news.stanford.edu/stories/2025/09/behavioral-insights-user-intent-ai-driven-recommendations-youtube)
+- [Micro-Moments and Consumer Behavior — Google](https://www.thinkwithgoogle.com/consumer-insights/consumer-trends/micro-moments-consumer-behavior-expectations/)
+- [Timing Influences on User Experience — Aguayo](https://aguayo.co/en/blog-aguayo-user-experience/timing-impact-user-experience-ux/)
