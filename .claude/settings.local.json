@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_figma_figma-desktop__get_design_context",
+      "Bash(powershell.exe:)",
+      "Bash(powershell.exe:*)",
+      "mcp__plugin_figma_figma-desktop__get_screenshot"
+    ]
+  }
+}

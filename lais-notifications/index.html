@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Casa da Lais · Exploração de Notificações</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* FIX 10: smooth scroll */
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --p50: #F5F3FF; --p100: #EDE9FE; --p200: #DDD6FE;
+      --p300: #C4B5FD; --p600: #7C3AED; --p700: #6D28D9; --p800: #5B21B6;
+      --fg: #111827; --fg2: #374151; --sec: #6B7280;
+      --mut: #9CA3AF; --faint: #E5E7EB; --surface: #FFFFFF; --bg: #F9FAFB;
+      --green: #059669;
+      --font: 'Inter', -apple-system, sans-serif;
+      --sh-sm: 0 1px 2px rgba(0,0,0,0.06);
+      --sh-md: 0 4px 12px rgba(0,0,0,0.08);
+      --sh-lg: 0 8px 32px rgba(0,0,0,0.14);
+      --sh-purple: 0 4px 24px rgba(124,58,237,0.22);
+    }
+
+    body {
+      font-family: var(--font);
+      background: #0A0A0B;
+      color: var(--fg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Catalog shell ─────────────────────────────────── */
+    .catalog { max-width: 1100px; margin: 0 auto; padding: 72px 40px 120px; }
+
+    .catalog-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--p300); margin-bottom: 16px;
+    }
+    .catalog-eyebrow::before {
+      content: ''; width: 20px; height: 1px; background: var(--p600);
+    }
+    .catalog-title {
+      font-size: 30px; font-weight: 700; color: #FAFAFA;
+      letter-spacing: -0.5px; line-height: 1.2; margin-bottom: 10px;
+    }
+    .catalog-desc {
+      font-size: 14px; color: #9CA3AF; max-width: 500px;
+      line-height: 1.65; margin-bottom: 32px;
+    }
+
+    /* FIX 8: Table of contents chips */
+    .toc {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 72px;
+    }
+    .toc-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 28px; padding: 0 12px;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px; font-size: 12px; font-weight: 500;
+      color: #A1A1AA; text-decoration: none; cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      white-space: nowrap;
+    }
+    .toc-chip:hover {
+      background: rgba(124,58,237,0.16); border-color: var(--p600);
+      color: var(--p300);
+    }
+    .toc-chip-num {
+      font-size: 10px; font-weight: 700; color: #52525B;
+      letter-spacing: 0.04em;
+    }
+    .toc-chip:hover .toc-chip-num { color: var(--p400, #A78BFA); }
+
+    /* ── Section ───────────────────────────────────────── */
+    /* FIX 10: scroll-margin-top for anchor nav */
+    .section { margin-bottom: 72px; scroll-margin-top: 24px; }
+    .section-meta {
+      display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px;
+    }
+    /* FIX 1: section-index made visible and doing work */
+    .section-index {
+      font-size: 11px; font-weight: 700; color: #71717A;
+      letter-spacing: 0.06em; padding-top: 3px; min-width: 20px;
+      opacity: 0.9;
+    }
+    .section-name {
+      font-size: 15px; font-weight: 600; color: #E4E4E7; margin-bottom: 4px;
+    }
+    /* FIX 9: "when to use" wrapped in a subtle pill */
+    .section-when {
+      display: inline-flex; align-items: center;
+      font-size: 11px; color: #A1A1AA;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 4px; padding: 2px 8px;
+      letter-spacing: 0.01em;
+    }
+
+    /* ── App shell ─────────────────────────────────────── */
+    .shell {
+      background: var(--bg); border-radius: 10px; overflow: hidden;
+      border: 1px solid #1C1C1E; position: relative;
+    }
+    .app { display: flex; height: 100%; }
+
+    /* ── Sidebar ───────────────────────────────────────── */
+    .sidebar {
+      width: 196px; min-width: 196px; background: #FFF;
+      border-right: 1px solid var(--faint);
+      display: flex; flex-direction: column; padding: 16px 0;
+    }
+    .sidebar-logo {
+      padding: 0 14px 16px; border-bottom: 1px solid var(--faint); margin-bottom: 10px;
+    }
+    .sidebar-logo-mark { display: flex; align-items: center; gap: 8px; }
+    .logo-icon {
+      width: 26px; height: 26px; background: var(--p600); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .logo-name { font-size: 12px; font-weight: 600; color: var(--fg); }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px; font-size: 12px; color: var(--sec);
+      cursor: pointer; transition: background 0.12s; border-radius: 0;
+    }
+    .nav-item:hover { background: var(--bg); }
+    /* FIX 3: stronger active state visual weight */
+    .nav-item.active {
+      background: var(--p50); color: var(--p600); font-weight: 600;
+      border-right: 2px solid var(--p600);
+    }
+    .nav-icon { width: 14px; height: 14px; flex-shrink: 0; opacity: 0.5; }
+    .nav-item.active .nav-icon { opacity: 1; }
+    .nav-sep { height: 1px; background: var(--faint); margin: 6px 0; }
+    .nav-badge {
+      margin-left: auto; font-size: 9px; font-weight: 700; color: #FFF;
+      background: var(--p600); border-radius: 3px; padding: 1px 5px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── Top bar ───────────────────────────────────────── */
+    .topbar {
+      height: 48px; background: #FFF; border-bottom: 1px solid var(--faint);
+      display: flex; align-items: center; padding: 0 18px; gap: 10px; flex-shrink: 0;
+    }
+    .topbar-title { font-size: 13px; font-weight: 600; color: var(--fg); }
+    .topbar-right { display: flex; align-items: center; gap: 6px; margin-left: auto; }
+
+    .novidades-btn {
+      height: 30px; padding: 0 11px; border-radius: 6px; border: none;
+      background: var(--p600); font-size: 11px; font-weight: 500; color: #FFF;
+      cursor: pointer; display: flex; align-items: center; gap: 5px;
+      white-space: nowrap; transition: background 0.12s;
+    }
+    .novidades-btn:hover { background: var(--p700); }
+    .novidades-dot {
+      width: 5px; height: 5px; border-radius: 999px;
+      background: rgba(255,255,255,0.7);
+    }
+
+    .bell-btn {
+      width: 30px; height: 30px; border-radius: 6px;
+      border: 1px solid var(--faint); background: transparent;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; position: relative; font-size: 12px;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .bell-btn:hover { border-color: var(--p300); background: var(--p50); }
+    .bell-badge {
+      position: absolute; top: 6px; right: 6px;
+      width: 5px; height: 5px; border-radius: 999px;
+      background: var(--p600); border: 1.5px solid #FFF;
+    }
+    .avatar {
+      width: 26px; height: 26px; border-radius: 999px; overflow: hidden;
+      flex-shrink: 0; cursor: pointer; transition: opacity 0.12s;
+    }
+    .avatar:hover { opacity: 0.85; }
+    .avatar-inner {
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #C4B5FD, #7C3AED);
+    }
+
+    /* ── Content / skeleton ────────────────────────────── */
+    .content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .page-content { flex: 1; padding: 16px 18px; overflow: hidden; }
+
+    .skel {
+      border-radius: 4px; background: var(--faint);
+      animation: pulse 1.6s ease-in-out infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+    .card-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 12px; }
+    .card-sm {
+      background: var(--surface); border: 1px solid var(--faint);
+      border-radius: 8px; padding: 14px;
+    }
+
+    .table-wrap {
+      background: var(--surface); border: 1px solid var(--faint);
+      border-radius: 8px; overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      padding: 7px 11px; text-align: left; font-size: 10px; font-weight: 600;
+      color: var(--sec); letter-spacing: 0.05em; text-transform: uppercase;
+      background: var(--bg); border-bottom: 1px solid var(--faint);
+    }
+    td {
+      padding: 9px 11px; font-size: 12px; color: var(--fg2);
+      border-bottom: 1px solid var(--faint);
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── Tag ───────────────────────────────────────────── */
+    .tag {
+      display: inline-flex; align-items: center; height: 15px; padding: 0 6px;
+      font-size: 9px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; border-radius: 3px;
+    }
+    /* FIX: "Novo" tag — proper tracking already set above in .tag */
+    .tag-novo { background: var(--p600); color: #FFF; }
+    .tag-melhoria { background: var(--green); color: #FFF; }
+
+    /* ──────────────────────────────────────────────────────
+       01  APP-WIDE ANNOUNCEMENT BAR
+    ────────────────────────────────────────────────────── */
+    .announcement-bar {
+      background: var(--p600);
+      height: 38px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 0 40px; position: relative;
+    }
+    /* FIX 2: spark emoji font-size and line-height to prevent bar inflation */
+    .ann-spark {
+      font-size: 13px; line-height: 1; flex-shrink: 0;
+    }
+    .ann-text { font-size: 12px; font-weight: 500; color: rgba(255,255,255,.88); }
+    .ann-link {
+      font-size: 12px; font-weight: 600; color: #FFF;
+      text-decoration: underline; text-underline-offset: 2px; cursor: pointer;
+      transition: opacity 0.12s;
+    }
+    .ann-link:hover { opacity: 0.8; }
+    .ann-close {
+      position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+      width: 22px; height: 22px; display: flex; align-items: center;
+      justify-content: center; border-radius: 4px; cursor: pointer;
+      color: rgba(255,255,255,.55); font-size: 13px;
+      transition: background 0.12s, color 0.12s;
+    }
+    .ann-close:hover { background: rgba(255,255,255,.15); color: #FFF; }
+
+    /* ──────────────────────────────────────────────────────
+       02  PAGE-WIDE BANNER
+    ────────────────────────────────────────────────────── */
+    .page-banner {
+      background: var(--p50); border: 1px solid var(--p200);
+      border-radius: 8px; padding: 13px 14px 13px 18px;
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 14px; position: relative;
+    }
+    .page-banner::before {
+      content: ''; position: absolute; left: 0; top: 5px; bottom: 5px;
+      width: 3px; background: var(--p600); border-radius: 0 2px 2px 0;
+    }
+    .banner-icon {
+      width: 30px; height: 30px; background: var(--p100); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; flex-shrink: 0;
+    }
+    .banner-body { flex: 1; }
+    .banner-title { font-size: 12px; font-weight: 600; color: var(--p700); margin-bottom: 2px; }
+    .banner-desc { font-size: 11px; color: var(--sec); line-height: 1.5; }
+    .banner-actions { display: flex; align-items: center; gap: 8px; margin-top: 9px; }
+    .banner-cta {
+      height: 26px; padding: 0 11px; border-radius: 5px;
+      background: var(--p600); border: none; font-size: 11px; font-weight: 500;
+      color: #FFF; cursor: pointer; transition: background 0.12s;
+    }
+    .banner-cta:hover { background: var(--p700); }
+    .banner-skip {
+      font-size: 11px; color: var(--mut); cursor: pointer;
+      text-decoration: underline; text-underline-offset: 2px;
+      transition: color 0.12s;
+    }
+    .banner-skip:hover { color: var(--sec); }
+    .banner-close {
+      position: absolute; top: 9px; right: 9px;
+      width: 18px; height: 18px; display: flex; align-items: center;
+      justify-content: center; border-radius: 4px; cursor: pointer;
+      color: var(--mut); font-size: 12px; transition: all 0.12s;
+    }
+    .banner-close:hover { background: var(--p100); color: var(--p600); }
+
+    /* ──────────────────────────────────────────────────────
+       03  IN-TABLE FEATURE ROW
+    ────────────────────────────────────────────────────── */
+    tr.feature-row td {
+      background: var(--p50) !important;
+      border-top: 1px solid var(--p200) !important;
+      border-bottom: 1px solid var(--p200) !important;
+      padding: 9px 11px !important;
+    }
+    tr.feature-row td:first-child { position: relative; padding-left: 14px !important; }
+    tr.feature-row td:first-child::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 3px; background: var(--p600);
+    }
+    .tfc { display: flex; align-items: center; gap: 9px; }
+    .tfc-icon {
+      width: 26px; height: 26px; background: var(--p100); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .tfc-title { font-size: 11px; font-weight: 600; color: var(--p700); }
+    .tfc-desc { font-size: 10px; color: var(--sec); }
+    .tfc-link {
+      font-size: 11px; font-weight: 500; color: var(--p600);
+      cursor: pointer; white-space: nowrap; margin-left: auto;
+      display: flex; align-items: center; gap: 3px;
+      text-decoration: none; transition: color 0.12s;
+    }
+    .tfc-link:hover { color: var(--p700); text-decoration: underline; text-underline-offset: 2px; }
+
+    /* ──────────────────────────────────────────────────────
+       04  WHAT'S NEW PAGE
+    ────────────────────────────────────────────────────── */
+    .wnp { flex: 1; overflow-y: auto; padding: 20px 22px; }
+    .wnp-h1 {
+      font-size: 17px; font-weight: 700; color: var(--fg);
+      letter-spacing: -0.3px; margin-bottom: 3px;
+    }
+    .wnp-sub { font-size: 12px; color: var(--sec); margin-bottom: 18px; }
+    .wnp-filters { display: flex; gap: 4px; margin-bottom: 20px; }
+    .wnp-f {
+      height: 26px; padding: 0 11px; border-radius: 5px;
+      border: 1px solid var(--faint); background: transparent;
+      font-size: 11px; font-weight: 500; color: var(--sec);
+      cursor: pointer; transition: all 0.12s; font-family: var(--font);
+    }
+    .wnp-f.active { background: var(--p600); border-color: var(--p600); color: #FFF; }
+    .wnp-f:hover:not(.active) { border-color: var(--p300); color: var(--p600); }
+    .wnp-month {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--mut); margin-bottom: 10px;
+    }
+    .wnp-item {
+      display: flex; gap: 14px; padding: 14px;
+      background: var(--surface); border: 1px solid var(--faint);
+      border-radius: 8px; margin-bottom: 8px;
+      transition: border-color 0.12s, box-shadow 0.12s;
+    }
+    .wnp-item:hover { border-color: var(--p200); box-shadow: var(--sh-sm); }
+    .wnp-thumb {
+      width: 108px; min-width: 108px; height: 66px;
+      background: var(--p50); border-radius: 6px;
+      border: 1px solid var(--p200); overflow: hidden;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    }
+    .wnp-thumb-inner {
+      width: 88%; height: 82%; background: var(--surface);
+      border-radius: 3px; border: 1px solid var(--faint); overflow: hidden;
+    }
+    .wnp-thumb-bar { height: 7px; background: var(--p100); border-bottom: 1px solid var(--p200); }
+    .wnp-thumb-rows { padding: 5px; display: flex; flex-direction: column; gap: 3px; }
+    .wnp-thumb-line { height: 3px; border-radius: 2px; background: var(--faint); }
+    .wnp-body { flex: 1; }
+    .wnp-meta { display: flex; align-items: center; gap: 7px; margin-bottom: 5px; }
+    .wnp-date { font-size: 10px; color: var(--mut); }
+    /* FIX 5: wnp-title increased to 13px, using --fg color for stronger hierarchy */
+    .wnp-title { font-size: 13px; font-weight: 600; color: var(--fg); margin-bottom: 3px; }
+    .wnp-desc { font-size: 11px; color: var(--sec); line-height: 1.5; }
+    .wnp-link {
+      font-size: 11px; font-weight: 500; color: var(--p600);
+      cursor: pointer; margin-top: 7px; display: inline-flex;
+      align-items: center; gap: 3px; transition: color 0.12s;
+    }
+    .wnp-link:hover { color: var(--p700); }
+
+    /* ──────────────────────────────────────────────────────
+       05  SPOTLIGHT / COACH MARK
+    ────────────────────────────────────────────────────── */
+    /* FIX 4: backdrop-filter with fallback for browsers that don't support it */
+    .overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,.62);
+      z-index: 10;
+    }
+    @supports (backdrop-filter: blur(1px)) {
+      .overlay {
+        background: rgba(0,0,0,.52);
+        backdrop-filter: blur(1px);
+        -webkit-backdrop-filter: blur(1px);
+      }
+    }
+    .spotlight-card {
+      position: absolute; left: 210px; top: 104px;
+      background: var(--surface); border-radius: 10px; padding: 18px;
+      width: 272px; box-shadow: var(--sh-purple), var(--sh-lg); z-index: 11;
+    }
+    .spotlight-card::before {
+      content: ''; position: absolute; left: -7px; top: 18px;
+      border-top: 7px solid transparent; border-bottom: 7px solid transparent;
+      border-right: 7px solid var(--surface);
+    }
+    .sc-step {
+      font-size: 10px; font-weight: 600; color: var(--mut);
+      letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 7px;
+    }
+    .sc-title {
+      font-size: 14px; font-weight: 700; color: var(--fg);
+      letter-spacing: -0.2px; margin-bottom: 5px;
+    }
+    .sc-desc { font-size: 12px; color: var(--sec); line-height: 1.55; margin-bottom: 14px; }
+    .sc-footer { display: flex; align-items: center; justify-content: space-between; }
+    .sc-skip {
+      font-size: 11px; color: var(--mut); cursor: pointer;
+      text-decoration: underline; text-underline-offset: 2px;
+      transition: color 0.12s;
+    }
+    .sc-skip:hover { color: var(--sec); }
+    .sc-dots { display: flex; gap: 4px; align-items: center; }
+    .sc-dot { width: 5px; height: 5px; border-radius: 999px; background: var(--faint); transition: all 0.2s; }
+    .sc-dot.on { background: var(--p600); width: 14px; }
+    .sc-next {
+      height: 30px; padding: 0 14px; border-radius: 6px; background: var(--p600);
+      border: none; font-size: 12px; font-weight: 500; color: #FFF;
+      cursor: pointer; transition: background 0.12s; font-family: var(--font);
+    }
+    .sc-next:hover { background: var(--p700); }
+    .nav-item.spotlight-target {
+      background: var(--surface) !important; color: var(--p600) !important;
+      font-weight: 600 !important; border-radius: 6px;
+      box-shadow: 0 0 0 2px var(--p600), 0 0 0 5px rgba(124,58,237,.18);
+      position: relative; z-index: 12;
+    }
+
+    /* ──────────────────────────────────────────────────────
+       06  TOAST
+    ────────────────────────────────────────────────────── */
+    .toast-wrap {
+      position: absolute; bottom: 14px; right: 14px; z-index: 20;
+    }
+    .toast {
+      background: var(--surface); border: 1px solid var(--faint);
+      border-radius: 9px; box-shadow: var(--sh-lg);
+      padding: 11px 13px; width: 280px;
+      display: flex; align-items: flex-start; gap: 9px;
+      overflow: hidden; position: relative;
+    }
+    .toast-icon {
+      width: 30px; height: 30px; background: var(--p100); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .toast-body { flex: 1; }
+    .toast-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.09em;
+      text-transform: uppercase; color: var(--p600); margin-bottom: 2px;
+    }
+    .toast-title { font-size: 12px; font-weight: 600; color: var(--fg); margin-bottom: 2px; }
+    .toast-desc { font-size: 11px; color: var(--sec); line-height: 1.45; }
+    .toast-cta {
+      height: 24px; padding: 0 9px; border-radius: 4px; background: var(--p600);
+      border: none; font-size: 10px; font-weight: 600; color: #FFF;
+      cursor: pointer; margin-top: 7px; display: inline-block;
+      font-family: var(--font); transition: background 0.12s;
+    }
+    .toast-cta:hover { background: var(--p700); }
+    .toast-close {
+      width: 18px; height: 18px; display: flex; align-items: center;
+      justify-content: center; border-radius: 3px; cursor: pointer;
+      color: var(--mut); font-size: 12px; flex-shrink: 0;
+      transition: all 0.12s;
+    }
+    .toast-close:hover { background: var(--bg); color: var(--sec); }
+    /* FIX 6: toast bar — height 3px, opacity 0.5, draining animation */
+    .toast-bar {
+      position: absolute; bottom: 0; left: 0; height: 3px;
+      background: var(--p600); opacity: 0.5; border-radius: 0 2px 0 9px;
+      animation: toast-drain 6s linear forwards;
+    }
+    @keyframes toast-drain {
+      from { width: 100%; }
+      to   { width: 0%; }
+    }
+
+    /* ──────────────────────────────────────────────────────
+       07  FEATURE CALLOUT CARD
+    ────────────────────────────────────────────────────── */
+    /* FIX 7: overflow: hidden confirmed on parent .callout-card; ::after adjusted */
+    .callout-card {
+      background: var(--p50); border: 1px solid var(--p200);
+      border-radius: 9px; padding: 14px; position: relative; overflow: hidden;
+    }
+    .callout-card::after {
+      content: '✦'; position: absolute; bottom: -8px; right: -2px;
+      font-size: 44px; color: var(--p200); line-height: 1; pointer-events: none;
+      /* overflow: hidden on parent clips this — no adjustment needed */
+    }
+    .cc-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+    .cc-icon {
+      width: 26px; height: 26px; background: var(--p100); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center; font-size: 13px;
+    }
+    .cc-title { font-size: 12px; font-weight: 600; color: var(--p700); margin-bottom: 3px; }
+    .cc-desc { font-size: 11px; color: var(--sec); line-height: 1.5; margin-bottom: 10px; }
+    .cc-cta {
+      height: 26px; padding: 0 11px; border-radius: 5px; background: var(--p600);
+      border: none; font-size: 11px; font-weight: 500; color: #FFF;
+      cursor: pointer; font-family: var(--font); transition: background 0.12s;
+    }
+    .cc-cta:hover { background: var(--p700); }
+
+    .metric-card {
+      background: var(--surface); border: 1px solid var(--faint);
+      border-radius: 9px; padding: 14px;
+    }
+    .metric-label { font-size: 10px; font-weight: 500; color: var(--mut); margin-bottom: 6px; }
+    .metric-value {
+      font-size: 20px; font-weight: 700; color: var(--fg);
+      letter-spacing: -0.5px; margin-bottom: 3px;
+    }
+    .metric-trend { font-size: 10px; color: var(--green); }
+  </style>
+</head>
+<body>
+<div class="catalog">
+
+  <div class="catalog-eyebrow">Casa da Lais · REA Intelligent Management</div>
+  <h1 class="catalog-title">Explorações de Notificação de Novidades</h1>
+  <p class="catalog-desc">Sete padrões para comunicar funcionalidades novas — do anúncio global ao contextual, do bloqueante ao passivo. Cada um tem seu momento certo.</p>
+
+  <!-- FIX 8: Table of contents anchor chips -->
+  <nav class="toc" aria-label="Índice de padrões">
+    <a class="toc-chip" href="#section-01"><span class="toc-chip-num">01</span> Barra de Anúncio Global</a>
+    <a class="toc-chip" href="#section-02"><span class="toc-chip-num">02</span> Banner de Página</a>
+    <a class="toc-chip" href="#section-03"><span class="toc-chip-num">03</span> Linha Contextual na Tabela</a>
+    <a class="toc-chip" href="#section-04"><span class="toc-chip-num">04</span> Página Dedicada de Novidades</a>
+    <a class="toc-chip" href="#section-05"><span class="toc-chip-num">05</span> Spotlight / Coach Mark</a>
+    <a class="toc-chip" href="#section-06"><span class="toc-chip-num">06</span> Toast de Novidade</a>
+    <a class="toc-chip" href="#section-07"><span class="toc-chip-num">07</span> Card de Destaque no Grid</a>
+  </nav>
+
+  <!-- ────────────────────────────────────────────────────
+       01  APP-WIDE ANNOUNCEMENT BAR
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-01">
+    <div class="section-meta">
+      <span class="section-index">01</span>
+      <div>
+        <div class="section-name">Barra de Anúncio Global</div>
+        <div class="section-when">Lançamento de versão maior que impacta todo o sistema</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:340px;">
+      <div style="display:flex;flex-direction:column;height:100%;">
+        <div class="announcement-bar">
+          <!-- FIX 2: spark emoji wrapped with font-size 13px and line-height 1 -->
+          <span class="ann-spark">✨</span>
+          <span class="ann-text">Nova versão: Comportamento da Lais foi redesenhado.</span>
+          <a class="ann-link">Ver novidades →</a>
+          <span class="ann-close">✕</span>
+        </div>
+        <div class="app">
+          <div class="sidebar">
+            <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+            <div class="nav-item active">Início</div>
+            <div class="nav-item">Leads</div>
+            <div class="nav-item">Atendimentos</div>
+            <div class="nav-item">Minha Lais</div>
+          </div>
+          <div class="content">
+            <div class="topbar">
+              <span class="topbar-title">Início</span>
+              <div class="topbar-right">
+                <div class="bell-btn">🔔<div class="bell-badge"></div></div>
+                <div class="avatar"><div class="avatar-inner"></div></div>
+              </div>
+            </div>
+            <div class="page-content">
+              <div class="card-grid">
+                <div class="card-sm"><div class="skel" style="width:55%;height:9px;margin-bottom:7px;"></div><div class="skel" style="width:40%;height:20px;margin-bottom:5px;"></div><div class="skel" style="width:50%;height:8px;"></div></div>
+                <div class="card-sm"><div class="skel" style="width:60%;height:9px;margin-bottom:7px;"></div><div class="skel" style="width:35%;height:20px;margin-bottom:5px;"></div><div class="skel" style="width:45%;height:8px;"></div></div>
+                <div class="card-sm"><div class="skel" style="width:50%;height:9px;margin-bottom:7px;"></div><div class="skel" style="width:45%;height:20px;margin-bottom:5px;"></div><div class="skel" style="width:55%;height:8px;"></div></div>
+              </div>
+              <div class="skel" style="width:100%;height:90px;border-radius:8px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       02  PAGE-WIDE BANNER
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-02">
+    <div class="section-meta">
+      <span class="section-index">02</span>
+      <div>
+        <div class="section-name">Banner de Página</div>
+        <div class="section-when">Funcionalidade relevante para esta seção específica</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:380px;">
+      <div class="app">
+        <div class="sidebar">
+          <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+          <div class="nav-item">Início</div>
+          <div class="nav-item active">Leads</div>
+          <div class="nav-item">Atendimentos</div>
+          <div class="nav-item">Minha Lais</div>
+        </div>
+        <div class="content">
+          <div class="topbar">
+            <span class="topbar-title">Leads</span>
+            <div class="topbar-right">
+              <div class="novidades-btn"><span class="ann-spark">✨</span> Novidades <div class="novidades-dot"></div></div>
+              <div class="bell-btn">🔔<div class="bell-badge"></div></div>
+              <div class="avatar"><div class="avatar-inner"></div></div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="page-banner">
+              <div class="banner-icon">⚡</div>
+              <div class="banner-body">
+                <div class="banner-title">Qualificação e Envio ao CRM — mais inteligente</div>
+                <div class="banner-desc">A Lais agora pergunta as perguntas certas antes de enviar leads ao CRM. Configure os critérios de qualificação para este funil.</div>
+                <div class="banner-actions">
+                  <button class="banner-cta">Configurar agora</button>
+                  <span class="banner-skip">Lembrar depois</span>
+                </div>
+              </div>
+              <span class="banner-close">✕</span>
+            </div>
+            <div class="skel" style="width:100%;height:110px;border-radius:8px;margin-bottom:10px;"></div>
+            <div class="skel" style="width:100%;height:60px;border-radius:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       03  IN-TABLE FEATURE ROW
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-03">
+    <div class="section-meta">
+      <span class="section-index">03</span>
+      <div>
+        <div class="section-name">Linha Contextual na Tabela</div>
+        <div class="section-when">Funcionalidade que afeta diretamente os dados desta tabela</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:390px;">
+      <div class="app">
+        <div class="sidebar">
+          <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+          <div class="nav-item">Início</div>
+          <div class="nav-item active">Leads</div>
+          <div class="nav-item">Atendimentos</div>
+          <div class="nav-item">Minha Lais</div>
+        </div>
+        <div class="content">
+          <div class="topbar">
+            <span class="topbar-title">Leads</span>
+            <div class="topbar-right">
+              <div class="novidades-btn"><span class="ann-spark">✨</span> Novidades <div class="novidades-dot"></div></div>
+              <div class="bell-btn">🔔</div>
+              <div class="avatar"><div class="avatar-inner"></div></div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nome</th><th>Canal</th><th>Status</th><th>Data</th><th>CRM</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="feature-row">
+                    <td colspan="5">
+                      <div class="tfc">
+                        <div class="tfc-icon">✨</div>
+                        <div>
+                          <div class="tfc-title">Nova qualificação automática disponível</div>
+                          <div class="tfc-desc">Configure os critérios antes do envio ao CRM</div>
+                        </div>
+                        <span class="tag tag-novo" style="margin-left:8px;">Novo</span>
+                        <a class="tfc-link">Configurar qualificação →</a>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr><td>Ana Paula Ferreira</td><td>WhatsApp</td><td><span style="color:var(--green);font-weight:500;">Qualificado</span></td><td>11/Fev</td><td><span style="color:var(--sec);">Enviado</span></td></tr>
+                  <tr><td>Carlos Eduardo Lima</td><td>Site próprio</td><td><span style="color:var(--mut);font-weight:500;">Em análise</span></td><td>10/Fev</td><td><span style="color:var(--mut);">Pendente</span></td></tr>
+                  <tr><td>Mariana Souza</td><td>Grupo Zap</td><td><span style="color:var(--green);font-weight:500;">Qualificado</span></td><td>9/Fev</td><td><span style="color:var(--sec);">Enviado</span></td></tr>
+                  <tr><td>Roberto Mendes</td><td>WhatsApp</td><td><span style="color:var(--mut);font-weight:500;">Em análise</span></td><td>8/Fev</td><td><span style="color:var(--mut);">Pendente</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       04  WHAT'S NEW DEDICATED PAGE
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-04">
+    <div class="section-meta">
+      <span class="section-index">04</span>
+      <div>
+        <div class="section-name">Página Dedicada de Novidades</div>
+        <div class="section-when">Usuário quer explorar o histórico de funcionalidades no próprio ritmo</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:480px;">
+      <div class="app">
+        <div class="sidebar">
+          <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+          <div class="nav-item">Início</div>
+          <div class="nav-item">Leads</div>
+          <div class="nav-item">Atendimentos</div>
+          <div class="nav-item">Minha Lais</div>
+          <div class="nav-sep"></div>
+          <div class="nav-item active">✨ Novidades <span class="nav-badge">2</span></div>
+          <div class="nav-item">Ajuda</div>
+        </div>
+        <div class="content">
+          <div class="topbar">
+            <span class="topbar-title">Novidades</span>
+            <div class="topbar-right">
+              <div class="bell-btn">🔔</div>
+              <div class="avatar"><div class="avatar-inner"></div></div>
+            </div>
+          </div>
+          <div class="wnp">
+            <div class="wnp-h1">O que há de novo na Casa da Lais</div>
+            <div class="wnp-sub">Acompanhe funcionalidades, melhorias e correções lançadas.</div>
+            <div class="wnp-filters">
+              <button class="wnp-f active">Todos</button>
+              <button class="wnp-f">Funcionalidades</button>
+              <button class="wnp-f">Melhorias</button>
+              <button class="wnp-f">Correções</button>
+            </div>
+            <div class="wnp-month">Fevereiro 2026</div>
+            <div class="wnp-item">
+              <div class="wnp-thumb"><div class="wnp-thumb-inner"><div class="wnp-thumb-bar"></div><div class="wnp-thumb-rows"><div class="wnp-thumb-line" style="width:80%;background:var(--p200);"></div><div class="wnp-thumb-line" style="width:60%;"></div><div class="wnp-thumb-line" style="width:90%;background:var(--p100);"></div><div class="wnp-thumb-line" style="width:70%;background:var(--p100);"></div></div></div></div>
+              <div class="wnp-body">
+                <div class="wnp-meta"><span class="wnp-date">11/Fev/2026</span><span class="tag tag-novo">Novo</span></div>
+                <div class="wnp-title">Qualificação e Envio ao CRM</div>
+                <div class="wnp-desc">Configure as perguntas que a Lais faz antes de enviar leads ao CRM. Aumente a qualidade dos leads qualificados automaticamente.</div>
+                <a class="wnp-link">Ver funcionalidade →</a>
+              </div>
+            </div>
+            <div class="wnp-item">
+              <div class="wnp-thumb"><div class="wnp-thumb-inner"><div class="wnp-thumb-bar"></div><div class="wnp-thumb-rows"><div class="wnp-thumb-line" style="width:70%;background:var(--p200);"></div><div class="wnp-thumb-line" style="width:50%;"></div><div class="wnp-thumb-line" style="width:80%;"></div></div></div></div>
+              <div class="wnp-body">
+                <div class="wnp-meta"><span class="wnp-date">5/Fev/2026</span><span class="tag tag-melhoria">Melhoria</span></div>
+                <div class="wnp-title">Sugestões Inteligentes na Casa da Lais</div>
+                <div class="wnp-desc">A Lais agora sugere ações com base no comportamento dos seus leads e clientes em tempo real.</div>
+                <a class="wnp-link">Ver funcionalidade →</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       05  SPOTLIGHT / COACH MARK
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-05">
+    <div class="section-meta">
+      <span class="section-index">05</span>
+      <div>
+        <div class="section-name">Spotlight / Coach Mark</div>
+        <div class="section-when">Guiar o usuário até uma funcionalidade específica pela primeira vez</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:380px;position:relative;">
+      <div class="app">
+        <div class="sidebar">
+          <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+          <div class="nav-item" style="opacity:.25;">Início</div>
+          <div class="nav-item" style="opacity:.25;">Leads</div>
+          <div class="nav-item" style="opacity:.25;">Atendimentos</div>
+          <div class="nav-item spotlight-target">⚙️ Minha Lais</div>
+          <div class="nav-sep" style="opacity:.25;"></div>
+          <div class="nav-item" style="opacity:.25;">Novidades</div>
+        </div>
+        <div class="content" style="opacity:.2;">
+          <div class="topbar"><span class="topbar-title">Início</span></div>
+          <div class="page-content">
+            <div class="skel" style="width:100%;height:80px;border-radius:8px;margin-bottom:10px;"></div>
+            <div class="skel" style="width:100%;height:60px;border-radius:8px;"></div>
+          </div>
+        </div>
+      </div>
+      <!-- FIX 4: overlay with @supports fallback defined in CSS -->
+      <div class="overlay"></div>
+      <div class="spotlight-card">
+        <div class="sc-step">Passo 2 de 4</div>
+        <div class="sc-title">Configurações da Lais, ao seu alcance</div>
+        <div class="sc-desc">Agora você encontra comportamento, personalização e integrações da Lais em um só lugar — reorganizado para ser mais rápido.</div>
+        <div class="sc-footer">
+          <span class="sc-skip">Pular tour</span>
+          <div class="sc-dots">
+            <div class="sc-dot"></div>
+            <div class="sc-dot on"></div>
+            <div class="sc-dot"></div>
+            <div class="sc-dot"></div>
+          </div>
+          <button class="sc-next">Próximo →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       06  TOAST
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-06">
+    <div class="section-meta">
+      <span class="section-index">06</span>
+      <div>
+        <div class="section-name">Toast de Novidade</div>
+        <div class="section-when">Notificação passiva, sem interromper o fluxo do usuário</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:300px;position:relative;">
+      <div class="app">
+        <div class="sidebar">
+          <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+          <div class="nav-item active">Início</div>
+          <div class="nav-item">Leads</div>
+          <div class="nav-item">Atendimentos</div>
+          <div class="nav-item">Minha Lais</div>
+        </div>
+        <div class="content">
+          <div class="topbar">
+            <span class="topbar-title">Início</span>
+            <div class="topbar-right">
+              <div class="bell-btn">🔔</div>
+              <div class="avatar"><div class="avatar-inner"></div></div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="skel" style="width:100%;height:76px;border-radius:8px;margin-bottom:10px;"></div>
+            <div class="skel" style="width:100%;height:56px;border-radius:8px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="toast-wrap">
+        <div class="toast">
+          <div class="toast-icon">✨</div>
+          <div class="toast-body">
+            <div class="toast-label">Novidade</div>
+            <div class="toast-title">Reengajamento automático</div>
+            <div class="toast-desc">A Lais agora tenta reengajar leads que pararam de responder.</div>
+            <button class="toast-cta">Ver como funciona</button>
+          </div>
+          <span class="toast-close">✕</span>
+          <!-- FIX 6: toast-bar now animated, 3px tall, 0.5 opacity -->
+          <div class="toast-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────
+       07  FEATURE CALLOUT CARD (in-grid)
+  ──────────────────────────────────────────────────────── -->
+  <div class="section" id="section-07">
+    <div class="section-meta">
+      <span class="section-index">07</span>
+      <div>
+        <div class="section-name">Card de Destaque no Grid</div>
+        <div class="section-when">Descoberta passiva — funcionalidade relacionada ao contexto dos cards ao redor</div>
+      </div>
+    </div>
+
+    <div class="shell" style="height:340px;">
+      <div class="app">
+        <div class="sidebar">
+          <div class="sidebar-logo"><div class="sidebar-logo-mark"><div class="logo-icon">🔥</div><div><div class="logo-name">Casa da Lais</div></div></div></div>
+          <div class="nav-item active">Início</div>
+          <div class="nav-item">Leads</div>
+          <div class="nav-item">Atendimentos</div>
+          <div class="nav-item">Minha Lais</div>
+        </div>
+        <div class="content">
+          <div class="topbar">
+            <span class="topbar-title">Início</span>
+            <div class="topbar-right">
+              <div class="novidades-btn"><span class="ann-spark">✨</span> Novidades <div class="novidades-dot"></div></div>
+              <div class="bell-btn">🔔</div>
+              <div class="avatar"><div class="avatar-inner"></div></div>
+            </div>
+          </div>
+          <div class="page-content">
+            <div class="card-grid">
+              <div class="metric-card">
+                <div class="metric-label">Leads este mês</div>
+                <div class="metric-value">863</div>
+                <div class="metric-trend">↑ 12% vs mês anterior</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-label">Enviados ao CRM</div>
+                <div class="metric-value">127</div>
+                <div class="metric-trend">↑ 8% vs mês anterior</div>
+              </div>
+              <!-- FIX 7: callout-card has overflow:hidden confirmed, ::after clipped correctly -->
+              <div class="callout-card">
+                <div class="cc-header">
+                  <div class="cc-icon">⚡</div>
+                  <span class="tag tag-novo">Novo</span>
+                </div>
+                <div class="cc-title">Qualificação automática</div>
+                <div class="cc-desc">Configure critérios para que a Lais qualifique leads antes do CRM.</div>
+                <button class="cc-cta">Explorar</button>
+              </div>
+            </div>
+            <div class="skel" style="width:100%;height:80px;border-radius:8px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
