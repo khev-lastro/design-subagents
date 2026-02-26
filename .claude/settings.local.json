@@ -11,7 +11,13 @@
       "Bash(git stash)",
       "Bash(git stash pop)",
       "Bash(git add .claude/settings.local.json .claude/commands/ .claude/skills/)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(git push -u origin claude/musing-noether)",
+      "Bash(gh pr:*)",
+      "Bash(where gh)",
+      "Bash(winget list GitHub.cli)",
+      "Bash(git add .claude/settings.local.json)",
+      "Bash(git push)"
     ]
   }
 }
