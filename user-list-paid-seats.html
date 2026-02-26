@@ -8,15 +8,14 @@
 <style>
   /*
    * ═══════════════════════════════════════════════════════════════
-   * Acessos — User List with Paid Seats
+   * Acessos — User List with Paid Seats v2
    *
-   * Components:
-   * 1. Top bar with logo + user avatar
-   * 2. Sidebar with grouped navigation
-   * 3. Compact access code inline banner
-   * 4. User list table with role badges
-   * 5. Paid seats progress bar
-   * 6. "Adicionar usuário" primary CTA
+   * - Pago/Gratuito seat pills (filled vs dashed outlined)
+   * - 4 profile badge colors + distinct icons per perfil
+   * - Pendente status, no dot in status badges
+   * - Seats track paid users: 4 pagos de 5 disponíveis
+   * - Adicionar usuário button in card header
+   * - Users sorted: Administrador → Editor → Operacional → Membro → Pendente
    * ═══════════════════════════════════════════════════════════════
    */
 
@@ -47,29 +46,25 @@
 
     --green-50: #F0FDF4;
     --green-100: #DCFCE7;
-    --green-200: #BBF7D0;
     --green-500: #22C55E;
     --green-600: #16A34A;
     --green-700: #15803D;
 
-    --amber-50: #FFFBEB;
-    --amber-100: #FEF3C7;
-    --amber-200: #FDE68A;
-    --amber-500: #F59E0B;
-    --amber-600: #D97706;
-    --amber-700: #B45309;
-
     --blue-50: #EFF6FF;
     --blue-100: #DBEAFE;
+    --blue-200: #BFDBFE;
     --blue-400: #60A5FA;
+    --blue-500: #3B82F6;
     --blue-600: #2563EB;
     --blue-700: #1D4ED8;
 
-    --red-50: #FEF2F2;
-    --red-100: #FEE2E2;
-    --red-500: #EF4444;
-    --red-600: #DC2626;
-    --red-700: #B91C1C;
+    --amber-50: #FFFBEB;
+    --amber-100: #FEF3C7;
+    --amber-200: #FDE68A;
+    --amber-400: #FBBF24;
+    --amber-500: #F59E0B;
+    --amber-600: #D97706;
+    --amber-700: #B45309;
 
     --white: #FFFFFF;
 
@@ -111,18 +106,13 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  :focus-visible {
-    outline: 2px solid var(--purple-400);
-    outline-offset: 2px;
-  }
+  :focus-visible { outline: 2px solid var(--purple-400); outline-offset: 2px; }
   :focus:not(:focus-visible) { outline: none; }
 
   /* ── Top Bar ── */
   .topbar {
     position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    top: 0; left: 0; right: 0;
     height: 56px;
     background: var(--white);
     border-bottom: 1px solid var(--gray-100);
@@ -133,363 +123,152 @@
     z-index: 100;
   }
 
-  .topbar-logo {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-  }
+  .topbar-logo { display: flex; align-items: center; gap: var(--sp-3); }
+  .topbar-logo svg { width: 32px; height: 32px; color: var(--purple-600); }
+  .topbar-logo-text { font-size: var(--text-xl); font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; }
 
-  .topbar-logo svg {
-    width: 32px;
-    height: 32px;
-    color: var(--purple-600);
-  }
-
-  .topbar-logo-text {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--gray-900);
-    letter-spacing: -0.02em;
-  }
-
-  .topbar-right {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-4);
-  }
+  .topbar-right { display: flex; align-items: center; gap: var(--sp-4); }
 
   .topbar-bell {
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border-radius: var(--radius-md);
     border: 1px solid var(--gray-200);
     background: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--gray-500);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--gray-500);
     transition: all 0.15s ease;
   }
-
-  .topbar-bell:hover {
-    background: var(--gray-50);
-    color: var(--gray-700);
-  }
-
+  .topbar-bell:hover { background: var(--gray-50); color: var(--gray-700); }
   .topbar-bell svg { width: 18px; height: 18px; }
 
   .topbar-user {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-2);
+    display: flex; align-items: center; gap: var(--sp-2);
     padding: var(--sp-1) var(--sp-3) var(--sp-1) var(--sp-1);
     border: 1px solid var(--gray-200);
     border-radius: var(--radius-md);
-    cursor: pointer;
-    background: var(--white);
+    cursor: pointer; background: var(--white);
     transition: all 0.15s ease;
   }
-
-  .topbar-user:hover {
-    background: var(--gray-50);
-  }
+  .topbar-user:hover { background: var(--gray-50); }
 
   .topbar-user-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    width: 32px; height: 32px; border-radius: 50%;
     background: var(--gray-200);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     color: var(--gray-500);
   }
-
   .topbar-user-avatar svg { width: 18px; height: 18px; }
-
-  .topbar-user-name {
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--gray-700);
-  }
-
-  .topbar-user .chevron {
-    width: 14px;
-    height: 14px;
-    color: var(--gray-400);
-    margin-left: var(--sp-1);
-  }
+  .topbar-user-name { font-size: var(--text-sm); font-weight: 500; color: var(--gray-700); }
+  .topbar-user .chevron { width: 14px; height: 14px; color: var(--gray-400); margin-left: var(--sp-1); }
 
   /* ── Layout Shell ── */
-  .app {
-    display: flex;
-    min-height: 100vh;
-    padding-top: 56px;
-  }
+  .app { display: flex; min-height: 100vh; padding-top: 56px; }
 
   /* ── Sidebar ── */
   .sidebar {
-    width: 260px;
-    min-width: 260px;
+    width: 260px; min-width: 260px;
     background: var(--white);
     border-right: 1px solid var(--gray-100);
-    display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: 56px;
+    display: flex; flex-direction: column;
+    position: sticky; top: 56px;
     height: calc(100vh - 56px);
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 
   .sidebar-brand {
-    padding: var(--sp-5) var(--sp-5) var(--sp-4);
+    padding: var(--sp-3) var(--sp-5);
     border-bottom: 1px solid var(--gray-100);
     position: relative;
   }
-
-  .sidebar-brand h2 {
-    font-size: var(--text-base);
-    font-weight: 600;
-    color: var(--gray-900);
-    letter-spacing: -0.01em;
-    line-height: 1.25;
-  }
-
-  .sidebar-org {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-1);
-    font-size: var(--text-sm);
-    color: var(--gray-500);
-    margin-top: var(--sp-1);
-    cursor: pointer;
-  }
-
+  .sidebar-brand h2 { font-size: var(--text-base); font-weight: 600; color: var(--gray-900); letter-spacing: -0.01em; line-height: 1.25; }
+  .sidebar-org { display: flex; align-items: center; gap: var(--sp-1); font-size: var(--text-sm); color: var(--gray-500); margin-top: var(--sp-1); cursor: pointer; }
   .sidebar-org svg { width: 14px; height: 14px; }
 
   .sidebar-collapse {
-    position: absolute;
-    right: -12px;
-    top: 16px;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2;
-    transition: all 0.15s ease;
-    color: var(--gray-400);
+    position: absolute; right: -12px; top: 16px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--white); border: 1px solid var(--gray-200);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; z-index: 2;
+    transition: all 0.15s ease; color: var(--gray-400);
   }
-
-  .sidebar-collapse:hover {
-    background: var(--gray-50);
-    border-color: var(--gray-300);
-    color: var(--gray-600);
-  }
-
+  .sidebar-collapse:hover { background: var(--gray-50); border-color: var(--gray-300); color: var(--gray-600); }
   .sidebar-collapse svg { width: 14px; height: 14px; }
 
-  /* Nav */
-  .sidebar-nav {
-    flex: 1;
-    padding: var(--sp-4) var(--sp-3);
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
+  .sidebar-nav { flex: 1; padding: var(--sp-2) var(--sp-3) var(--sp-3); display: flex; flex-direction: column; gap: 0; }
 
   .nav-section-label {
-    font-size: var(--text-xs);
-    font-weight: 500;
-    color: var(--gray-400);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    padding: var(--sp-4) var(--sp-3) var(--sp-2);
+    font-size: var(--text-xs); font-weight: 500; color: var(--gray-400);
+    text-transform: uppercase; letter-spacing: 0.04em;
+    padding: var(--sp-3) var(--sp-3) var(--sp-1);
   }
-
-  .nav-section-label:first-child {
-    padding-top: 0;
-  }
+  .nav-section-label:first-child { padding-top: 0; }
 
   .nav-item {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
+    display: flex; align-items: center; gap: var(--sp-3);
     padding: var(--sp-2) var(--sp-3);
     border-radius: var(--radius-md);
-    color: var(--gray-600);
-    text-decoration: none;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    transition: all 0.15s ease;
-    cursor: pointer;
-    position: relative;
+    color: var(--gray-600); text-decoration: none;
+    font-size: var(--text-sm); font-weight: 500;
+    transition: all 0.15s ease; cursor: pointer; position: relative;
   }
-
   .nav-item:hover { color: var(--gray-700); background: var(--gray-50); }
-
-  .nav-item.active {
-    color: var(--purple-700);
-    background: var(--purple-50);
-    font-weight: 600;
-  }
-
+  .nav-item.active { color: var(--purple-700); background: var(--purple-50); font-weight: 600; }
   .nav-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 20px;
-    background: var(--purple-600);
-    border-radius: 0 2px 2px 0;
+    content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 20px; background: var(--purple-600); border-radius: 0 2px 2px 0;
   }
-
   .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; opacity: 0.65; }
   .nav-item.active svg { opacity: 1; }
 
   .nav-badge {
-    font-size: 10px;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
     text-transform: uppercase;
-    background: var(--gray-100);
-    color: var(--gray-500);
-    padding: 1px 6px;
-    border-radius: var(--radius-pill);
+    background: var(--gray-100); color: var(--gray-500);
+    padding: 1px 6px; border-radius: var(--radius-pill);
     border: 1px solid var(--gray-200);
   }
 
   /* ── Main Content ── */
-  .main {
-    flex: 1;
-    min-width: 0;
-    padding: var(--sp-8) var(--sp-10);
-    max-width: 960px;
-  }
+  .main { flex: 1; min-width: 0; padding: var(--sp-8) var(--sp-10); max-width: 1100px; }
 
   /* ── Page Header ── */
-  .page-header {
-    margin-bottom: var(--sp-8);
-  }
+  .page-header { margin-bottom: var(--sp-8); }
+  .page-header h1 { font-size: var(--text-3xl); font-weight: 700; color: var(--gray-900); letter-spacing: -0.02em; line-height: 1.2; }
+  .page-header p { font-size: var(--text-base); color: var(--gray-500); margin-top: var(--sp-1); }
 
-  .page-header h1 {
-    font-size: var(--text-3xl);
-    font-weight: 700;
-    color: var(--gray-900);
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-  }
-
-  .page-header p {
-    font-size: var(--text-base);
-    color: var(--gray-500);
-    margin-top: var(--sp-1);
-  }
-
-  /* ── Access Code — compact inline banner ── */
+  /* ── Access Code Banner ── */
   .access-code-banner {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-5);
+    display: flex; align-items: center; gap: var(--sp-5);
     background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    padding: var(--sp-4) var(--sp-5);
-    margin-bottom: var(--sp-6);
+    border: 1px solid var(--gray-200); border-radius: var(--radius-lg);
+    padding: var(--sp-4) var(--sp-5); margin-bottom: var(--sp-6);
   }
-
   .access-code-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-md);
+    width: 36px; height: 36px; border-radius: var(--radius-md);
     background: var(--purple-50);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: var(--purple-600);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; color: var(--purple-600);
   }
-
   .access-code-icon svg { width: 18px; height: 18px; }
-
-  .access-code-body {
-    flex: 1;
-    min-width: 0;
-  }
-
-  .access-code-body-title {
-    font-size: var(--text-sm);
-    font-weight: 600;
-    color: var(--gray-800);
-    line-height: 1.25;
-  }
-
-  .access-code-body-desc {
-    font-size: var(--text-sm);
-    color: var(--gray-500);
-    line-height: 1.4;
-    margin-top: 2px;
-  }
-
-  .access-code-value {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    flex-shrink: 0;
-  }
-
+  .access-code-body { flex: 1; min-width: 0; }
+  .access-code-body-title { font-size: var(--text-sm); font-weight: 600; color: var(--gray-800); line-height: 1.25; }
+  .access-code-body-desc { font-size: var(--text-sm); color: var(--gray-500); line-height: 1.4; margin-top: 2px; }
+  .access-code-value { display: flex; align-items: center; gap: var(--sp-3); flex-shrink: 0; }
   .access-code-chip {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-2);
-    background: var(--gray-50);
-    border: 1px dashed var(--gray-300);
-    border-radius: var(--radius-md);
-    padding: var(--sp-2) var(--sp-4);
+    display: flex; align-items: center; gap: var(--sp-2);
+    background: var(--gray-50); border: 1px dashed var(--gray-300);
+    border-radius: var(--radius-md); padding: var(--sp-2) var(--sp-4);
   }
-
-  .access-code-number {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--gray-900);
-    letter-spacing: 0.05em;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .access-code-label {
-    font-size: var(--text-xs);
-    color: var(--gray-400);
-    font-weight: 500;
-    white-space: nowrap;
-  }
-
+  .access-code-number { font-size: var(--text-xl); font-weight: 700; color: var(--gray-900); letter-spacing: 0.05em; font-variant-numeric: tabular-nums; }
+  .access-code-label { font-size: var(--text-xs); color: var(--gray-400); font-weight: 500; white-space: nowrap; }
   .access-code-copy-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--gray-200);
-    background: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--gray-400);
-    transition: all 0.15s ease;
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    border: 1px solid var(--gray-200); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--gray-400); transition: all 0.15s ease;
   }
-
-  .access-code-copy-btn:hover {
-    background: var(--gray-50);
-    color: var(--gray-600);
-    border-color: var(--gray-300);
-  }
-
+  .access-code-copy-btn:hover { background: var(--gray-50); color: var(--gray-600); border-color: var(--gray-300); }
   .access-code-copy-btn svg { width: 14px; height: 14px; }
 
   /* ── User List Card ── */
@@ -500,12 +279,21 @@
     overflow: hidden;
   }
 
+  /* ── Card Header: left group (title + button) | right strip (seats) ── */
   .user-list-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--sp-5) var(--sp-6);
+    padding: var(--sp-4) var(--sp-6);
     border-bottom: 1px solid var(--gray-100);
+    gap: var(--sp-6);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    flex-shrink: 0;
   }
 
   .user-list-title {
@@ -515,11 +303,11 @@
     letter-spacing: -0.01em;
   }
 
-  /* ── Seats Indicator ── */
-  .seats-indicator {
+  /* Seats strip: text → bar → badge */
+  .seats-strip {
     display: flex;
     align-items: center;
-    gap: var(--sp-4);
+    gap: var(--sp-3);
   }
 
   .seats-text {
@@ -527,982 +315,170 @@
     color: var(--gray-500);
     font-weight: 400;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
-
-  .seats-text strong {
-    font-weight: 600;
-    color: var(--gray-700);
-  }
-
-  .seats-available {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-1);
-    font-size: var(--text-xs);
-    font-weight: 500;
-    color: var(--gray-500);
-    background: var(--gray-50);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-pill);
-    padding: 3px 10px 3px 6px;
-    white-space: nowrap;
-  }
-
-  .seats-available svg { width: 14px; height: 14px; }
+  .seats-text strong { font-weight: 600; color: var(--gray-700); }
 
   .seats-progress {
-    width: 120px;
-    height: 6px;
+    width: 88px; height: 6px;
     background: var(--gray-100);
     border-radius: var(--radius-pill);
-    overflow: hidden;
-    flex-shrink: 0;
+    overflow: hidden; flex-shrink: 0;
   }
-
   .seats-progress-fill {
-    height: 100%;
-    border-radius: var(--radius-pill);
+    height: 100%; border-radius: var(--radius-pill);
     background: var(--purple-600);
     transition: width 0.4s ease;
   }
-
-  /* Warning state when nearly full */
   .seats-progress-fill.warning {
-    background: linear-gradient(90deg, var(--purple-600) 60%, var(--purple-400) 100%);
+    background: linear-gradient(90deg, var(--purple-600) 50%, var(--purple-400) 100%);
   }
+
+  .seats-available {
+    display: inline-flex; align-items: center; gap: var(--sp-1);
+    font-size: var(--text-xs); font-weight: 500;
+    color: var(--gray-500);
+    background: var(--gray-50); border: 1px solid var(--gray-200);
+    border-radius: var(--radius-pill);
+    padding: 3px 10px 3px 6px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .seats-available svg { width: 14px; height: 14px; }
+
+  /* Add user button — in header */
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: 0 var(--sp-4);
+    height: 34px;
+    border-radius: var(--radius-md);
+    background: var(--purple-600); color: var(--white);
+    font-size: var(--text-sm); font-weight: 500;
+    border: none; cursor: pointer; font-family: inherit;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(124, 58, 237, 0.2);
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .btn-primary:hover { background: var(--purple-700); box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); }
+  .btn-primary:active { background: var(--purple-800); transform: translateY(0.5px); }
+  .btn-primary svg { width: 14px; height: 14px; }
 
   /* ── User Table ── */
-  .user-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-
-  .user-table thead tr { background: var(--gray-50); }
+  .user-table { width: 100%; border-collapse: collapse; }
 
   .user-table thead th {
     text-align: left;
-    font-size: var(--text-xs);
-    font-weight: 500;
-    color: var(--gray-500);
-    padding: var(--sp-3) var(--sp-4);
-    border-bottom: 1px solid var(--gray-200);
-    white-space: nowrap;
+    font-size: var(--text-xs); font-weight: 600;
+    color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.04em;
+    padding: var(--sp-3) var(--sp-6);
+    border-bottom: 1px solid var(--gray-100);
+    background: var(--gray-50);
   }
 
   .user-table tbody tr {
     border-bottom: 1px solid var(--gray-100);
     transition: background 0.1s ease;
   }
-
-  .user-table tbody tr:last-child {
-    border-bottom: none;
-  }
-
-  .user-table tbody tr:hover {
-    background: var(--gray-50);
-  }
-
-  .user-table td {
-    padding: var(--sp-4) var(--sp-4);
-    vertical-align: middle;
-  }
+  .user-table tbody tr:last-child { border-bottom: none; }
+  .user-table tbody tr:hover { background: var(--purple-50); }
+  .user-table td { padding: var(--sp-3) var(--sp-6); vertical-align: middle; }
 
   /* User cell */
-  .user-cell {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
+  .user-cell { display: flex; flex-direction: column; gap: 1px; }
+  .user-cell-name { font-size: var(--text-base); font-weight: 500; color: var(--gray-800); }
+  .user-cell-email { font-size: var(--text-sm); color: var(--gray-400); }
 
-  .user-cell-name {
-    font-size: var(--text-base);
-    font-weight: 500;
-    color: var(--gray-800);
-  }
-
-  .user-cell-email {
-    font-size: var(--text-xs);
-    color: var(--gray-500);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-  }
-
-  /* Role badge */
+  /* ═══════════════════════════════════════════
+     Role Badges — 4 profiles, distinct icon per type
+     ═══════════════════════════════════════════ */
   .role-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    padding: 3px var(--sp-3) 3px 6px;
-    border-radius: var(--radius-sm);
-    background: var(--purple-50);
-    color: var(--purple-700);
-    border: 1px solid var(--purple-100);
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: var(--text-xs); font-weight: 600;
+    padding: 4px 10px 4px 8px;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
   }
-
   .role-badge-icon {
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
+    width: 13px; height: 13px; flex-shrink: 0;
   }
 
-  .role-badge.editor {
-    background: var(--blue-50);
-    color: var(--blue-700);
-    border-color: var(--blue-100);
+  /* Administrador — Purple (highest authority) */
+  .role-badge.admin { background: var(--purple-50); color: var(--purple-700); border: 1px solid var(--purple-200); }
+  .role-badge.admin .role-badge-icon { color: var(--purple-500); }
+
+  /* Editor — Blue (editorial power) */
+  .role-badge.editor { background: var(--blue-50); color: var(--blue-700); border: 1px solid var(--blue-200); }
+  .role-badge.editor .role-badge-icon { color: var(--blue-500); }
+
+  /* Operacional — Amber (field/operations) */
+  .role-badge.operacional { background: var(--amber-50); color: var(--amber-700); border: 1px solid var(--amber-200); }
+  .role-badge.operacional .role-badge-icon { color: var(--amber-500); }
+
+  /* Membro — Gray (standard access) */
+  .role-badge.membro { background: var(--gray-50); color: var(--gray-600); border: 1px solid var(--gray-200); }
+  .role-badge.membro .role-badge-icon { color: var(--gray-400); }
+
+  /* No profile assigned */
+  .role-empty { font-size: var(--text-sm); color: var(--gray-400); font-style: italic; }
+
+  /* ═══════════════════════════════════════════
+     Seat Type — icon + label, no background
+     ═══════════════════════════════════════════ */
+  .seat-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: var(--text-xs); font-weight: 600;
+    white-space: nowrap;
   }
-  .role-badge.editor .role-badge-dot { background: var(--blue-400); }
+  .seat-pill-icon { width: 13px; height: 13px; flex-shrink: 0; }
 
-  .role-badge.membro {
-    background: var(--gray-100);
-    color: var(--gray-600);
-    border-color: var(--gray-200);
-  }
-  .role-badge.membro .role-badge-dot { background: var(--gray-400); }
+  /* Pago — purple text + checkmark icon */
+  .seat-pill.pago { color: var(--purple-600); }
+  .seat-pill.pago .seat-pill-icon { color: var(--purple-500); }
 
-  /* Seat type */
-  .seat-select {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    padding: var(--sp-1) var(--sp-2);
-    border-radius: var(--radius-sm);
-    transition: background 0.1s ease;
-  }
+  /* Gratuito — muted gray text + dash icon */
+  .seat-pill.gratuito { color: var(--gray-400); }
+  .seat-pill.gratuito .seat-pill-icon { color: var(--gray-400); }
 
-  .seat-select:hover { background: var(--gray-100); }
-  .seat-select .chevron-icon { width: 13px; height: 13px; color: var(--gray-300); }
-
-  .seat-paid { color: var(--gray-700); }
-  .seat-paid:hover { background: var(--gray-100); }
-
-  .seat-paid-badge {
-    font-size: 9px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.07em;
-    background: var(--amber-100);
-    color: var(--amber-700);
-    border: 1px solid var(--amber-200);
-    border-radius: var(--radius-pill);
-    padding: 1px 6px;
-    line-height: 1.4;
-  }
-
-  .seat-free { color: var(--gray-400); font-weight: 400; }
-
-  /* Status badge */
+  /* ═══════════════════════════════════════════
+     Status Badges — text only, no dot
+     ═══════════════════════════════════════════ */
   .status-badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    padding: 3px var(--sp-3);
+    display: inline-flex; align-items: center;
+    font-size: var(--text-xs); font-weight: 600;
+    padding: 4px 10px;
     border-radius: var(--radius-pill);
+    white-space: nowrap;
+  }
+  .status-badge.active { background: var(--green-50); color: var(--green-700); border: 1px solid var(--green-100); }
+  .status-badge.pendente {
+    background: var(--amber-50); color: var(--amber-700); border: 1px solid var(--amber-200);
+    animation: pendenteFade 2.4s ease-in-out infinite;
   }
 
-  .status-badge.active {
-    background: var(--green-50);
-    color: var(--green-700);
-    border: 1px solid var(--green-100);
-  }
-
-  .status-badge.pending {
-    background: var(--amber-50);
-    color: var(--amber-700);
-    border: 1px solid var(--amber-100);
-  }
-
-  /* ── Color swatches ── */
-  .color-picker-swatches {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
-    margin-top: var(--sp-2);
-  }
-
-  .color-swatch {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 2px solid transparent;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: transform 0.12s;
-    outline: none;
-  }
-
-  .color-swatch:hover { transform: scale(1.15); }
-
-  .color-swatch.selected {
-    border-color: white;
-    box-shadow: 0 0 0 2px var(--gray-700);
-  }
-
-  .color-picker-popover {
-    position: fixed;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
-    padding: var(--sp-3);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
-    width: 196px; /* 5 × 28px + 4 × 8px gap + 2 × 12px padding */
-    z-index: 150;
-  }
-
-  /* ── Context menu ── */
-  .context-menu {
-    position: fixed;
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
-    min-width: 168px;
-    z-index: 150;
-    overflow: hidden;
-    padding: var(--sp-1) 0;
-  }
-
-  .context-menu-item {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    width: 100%;
-    padding: var(--sp-2) var(--sp-4);
-    font-size: var(--text-sm);
-    color: var(--gray-700);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    text-align: left;
-    transition: background 0.1s;
-  }
-
-  .context-menu-item:hover { background: var(--gray-50); }
-  .context-menu-item svg { width: 14px; height: 14px; color: var(--gray-400); flex-shrink: 0; }
-
-  /* ── Profile picker ── */
-  .profile-options { display: flex; flex-direction: column; gap: var(--sp-2); }
-
-  .profile-option {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    padding: var(--sp-3) var(--sp-4);
-    border-radius: var(--radius-md);
-    border: 1.5px solid var(--gray-200);
-    background: var(--white);
-    cursor: pointer;
-    font-family: inherit;
-    text-align: left;
-    transition: all 0.15s;
-    width: 100%;
-  }
-
-  .profile-option:hover { border-color: var(--purple-300); background: var(--purple-50); }
-
-  .profile-option.selected {
-    border-color: var(--purple-500);
-    background: var(--purple-50);
-  }
-
-  .profile-option-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    background: var(--gray-100);
-    color: var(--gray-500);
-    transition: all 0.15s;
-  }
-
-  .profile-option.selected .profile-option-icon { background: var(--purple-100); color: var(--purple-600); }
-  .profile-option-icon svg { width: 15px; height: 15px; }
-
-  .profile-option-info { flex: 1; }
-  .profile-option-name { font-size: var(--text-sm); font-weight: 600; color: var(--gray-800); }
-  .profile-option-desc { font-size: var(--text-xs); color: var(--gray-500); margin-top: 1px; }
-
-  .profile-option-radio {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    border: 1.5px solid var(--gray-300);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-  }
-
-  .profile-option.selected .profile-option-radio {
-    border-color: var(--purple-600);
-    background: var(--purple-600);
-  }
-
-  .profile-option.selected .profile-option-radio::after {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--white);
-    display: block;
-  }
-
-  /* ── Inline name edit ── */
-  .inline-name-input {
-    font-size: var(--text-base);
-    font-weight: 500;
-    color: var(--gray-800);
-    border: 1.5px solid var(--purple-400);
-    border-radius: var(--radius-sm);
-    padding: 2px 6px;
-    font-family: inherit;
-    outline: none;
-    width: 100%;
-    min-width: 140px;
-    background: var(--white);
+  @keyframes pendenteFade {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.65; }
   }
 
   /* Actions menu button */
   .actions-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    border: none;
-    background: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--gray-400);
-    transition: all 0.15s ease;
+    width: 32px; height: 32px; border-radius: var(--radius-sm);
+    border: none; background: none;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: var(--gray-400); transition: all 0.15s ease;
   }
-
-  .actions-btn:hover {
-    background: var(--gray-100);
-    color: var(--gray-600);
-  }
-
+  .actions-btn:hover { background: var(--gray-100); color: var(--gray-600); }
   .actions-btn svg { width: 16px; height: 16px; }
-
-  /* ── Add User Button ── */
-  .add-user-row {
-    margin-top: var(--sp-5);
-  }
-
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    padding: var(--sp-2) var(--sp-5) var(--sp-2) var(--sp-4);
-    height: 40px;
-    border-radius: var(--radius-md);
-    background: var(--purple-600);
-    color: var(--white);
-    font-size: var(--text-base);
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
-    box-shadow: 0 1px 2px rgba(124, 58, 237, 0.2);
-  }
-
-  .btn-primary:hover {
-    background: var(--purple-700);
-    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
-  }
-
-  .btn-primary:active {
-    background: var(--purple-800);
-    transform: translateY(0.5px);
-  }
-
-  .btn-primary svg { width: 16px; height: 16px; }
-
-  /* ── Groups Section ── */
-  .groups-section { margin-top: var(--sp-6); }
-
-  /* Premium Gate */
-  .premium-gate {
-    overflow: hidden;
-  }
-
-  .premium-gate-inner {
-    display: flex;
-    gap: var(--sp-6);
-    padding: var(--sp-8);
-    align-items: flex-start;
-  }
-
-  .premium-gate-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: var(--radius-lg);
-    background: var(--amber-50);
-    border: 1px solid var(--amber-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: var(--amber-600);
-  }
-
-  .premium-gate-icon svg { width: 22px; height: 22px; }
-
-  .premium-gate-badge {
-    display: inline-flex;
-    align-items: center;
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--amber-700);
-    background: var(--amber-100);
-    border: 1px solid var(--amber-200);
-    border-radius: var(--radius-pill);
-    padding: 2px 10px;
-    margin-bottom: var(--sp-2);
-  }
-
-  .premium-gate-body h3 {
-    font-size: var(--text-xl);
-    font-weight: 700;
-    color: var(--gray-900);
-    letter-spacing: -0.01em;
-    line-height: 1.3;
-    margin-bottom: var(--sp-2);
-  }
-
-  .premium-gate-body p {
-    font-size: var(--text-sm);
-    color: var(--gray-500);
-    line-height: 1.6;
-    margin-bottom: var(--sp-5);
-    max-width: 440px;
-  }
-
-  .premium-gate-footer {
-    padding: var(--sp-3) var(--sp-8);
-    border-top: 1px solid var(--amber-100);
-    background: var(--amber-50);
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-  }
-
-  .demo-hint {
-    font-size: var(--text-xs);
-    color: var(--gray-400);
-    margin-right: auto;
-  }
-
-  .btn-demo-enable {
-    font-size: var(--text-xs);
-    color: var(--gray-400);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    padding: var(--sp-1) var(--sp-2);
-    border-radius: var(--radius-sm);
-    transition: color 0.1s;
-  }
-
-  .btn-demo-enable:hover { color: var(--gray-600); text-decoration: underline; }
-
-  /* Groups Card */
-  .groups-card {
-    background: var(--white);
-    border: 1px solid var(--gray-200);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-  }
-
-  .groups-card-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--sp-5) var(--sp-6);
-    border-bottom: 1px solid var(--gray-100);
-  }
-
-  .groups-card-title {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-  }
-
-  .feature-tag {
-    font-size: 10px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--amber-700);
-    background: var(--amber-100);
-    border: 1px solid var(--amber-200);
-    border-radius: var(--radius-pill);
-    padding: 2px 8px;
-  }
-
-  /* Groups table header */
-  .groups-table-header {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-4);
-    padding: var(--sp-3) var(--sp-6);
-    background: var(--gray-50);
-    border-bottom: 1px solid var(--gray-200);
-    font-size: var(--text-xs);
-    font-weight: 500;
-    color: var(--gray-500);
-    white-space: nowrap;
-  }
-
-  /* Mirror the exact flex slots of .group-row */
-  .groups-th-dot     { width: 10px; flex-shrink: 0; }
-  .groups-th-name    { flex: 1; min-width: 0; }
-  .groups-th-stack   { min-width: 88px; flex-shrink: 0; } /* matches stabilised member-stack */
-  .groups-th-count   { min-width: 72px; white-space: nowrap; }
-  .groups-th-actions { width: 68px; flex-shrink: 0; }     /* 2×32px + 4px gap */
-
-  /* Group rows */
-  .group-row {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-4);
-    padding: var(--sp-4) var(--sp-6);
-    border-bottom: 1px solid var(--gray-100);
-    transition: background 0.1s;
-  }
-
-  .group-row:last-child { border-bottom: none; }
-  .group-row:hover { background: var(--gray-50); }
-
-  .group-color-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    cursor: pointer;
-    transition: transform 0.12s, opacity 0.12s;
-  }
-
-  .group-color-dot:hover { transform: scale(1.4); opacity: 0.85; }
-
-  .group-name-wrap { flex: 1; min-width: 0; }
-
-  .group-name {
-    font-size: var(--text-base);
-    font-weight: 600;
-    color: var(--gray-800);
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    border-radius: var(--radius-sm);
-    padding: 2px 6px;
-    margin: -2px -6px;
-    transition: background 0.1s;
-  }
-
-  .group-name:hover { background: var(--gray-100); }
-
-  .group-name-input {
-    font-size: var(--text-base);
-    font-weight: 600;
-    color: var(--gray-800);
-    border: 1.5px solid var(--purple-400);
-    border-radius: var(--radius-sm);
-    padding: 2px 8px;
-    font-family: inherit;
-    outline: none;
-    width: 220px;
-    background: var(--white);
-  }
-
-  /* Member avatar stack */
-  .member-stack {
-    display: flex;
-    align-items: center;
-    min-width: 88px; /* max 4 avatars: 28 + 3×20px = 88px — keeps column stable */
-    flex-shrink: 0;
-  }
-
-  .member-avatar {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: var(--purple-100);
-    border: 2px solid var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 600;
-    color: var(--purple-700);
-    margin-left: -8px;
-    flex-shrink: 0;
-  }
-
-  .member-stack .member-avatar:first-child { margin-left: 0; }
-
-  .member-count-chip {
-    font-size: var(--text-sm);
-    color: var(--gray-400);
-    white-space: nowrap;
-    min-width: 72px;
-  }
-
-  /* Group action buttons — visible on row hover */
-  .group-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-1);
-    opacity: 0;
-    transition: opacity 0.1s;
-  }
-
-  .group-row:hover .group-actions { opacity: 1; }
-
-  /* Groups empty state */
-  .groups-empty {
-    padding: var(--sp-10) var(--sp-6);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    color: var(--gray-400);
-    font-size: var(--text-sm);
-    gap: var(--sp-3);
-  }
-
-  /* Secondary button */
-  .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    padding: var(--sp-2) var(--sp-4);
-    height: 36px;
-    border-radius: var(--radius-md);
-    background: var(--white);
-    color: var(--gray-700);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    border: 1px solid var(--gray-200);
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
-  }
-
-  .btn-secondary:hover { background: var(--gray-50); border-color: var(--gray-300); }
-  .btn-secondary svg { width: 14px; height: 14px; }
-
-  /* Danger button */
-  .btn-danger {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    padding: var(--sp-2) var(--sp-4);
-    height: 36px;
-    border-radius: var(--radius-md);
-    background: var(--red-600);
-    color: var(--white);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.15s ease;
-  }
-
-  .btn-danger:hover { background: var(--red-700); }
-  .btn-danger:disabled { cursor: not-allowed; }
-
-  /* Text button */
-  .btn-text {
-    font-size: var(--text-sm);
-    color: var(--gray-500);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    padding: var(--sp-2) var(--sp-3);
-    border-radius: var(--radius-sm);
-    font-weight: 500;
-    transition: all 0.1s;
-  }
-
-  .btn-text:hover { color: var(--gray-700); background: var(--gray-100); }
-
-  /* ── Modals ── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    backdrop-filter: blur(2px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.15s ease;
-  }
-
-  .modal-overlay.open {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  .modal {
-    background: var(--white);
-    border-radius: var(--radius-xl);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.08);
-    width: 100%;
-    max-width: 480px;
-    margin: var(--sp-4);
-    transform: translateY(8px);
-    transition: transform 0.15s ease;
-  }
-
-  .modal-overlay.open .modal { transform: translateY(0); }
-
-  .modal-header {
-    padding: var(--sp-5) var(--sp-6);
-    border-bottom: 1px solid var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .modal-header h3 {
-    font-size: var(--text-lg);
-    font-weight: 600;
-    color: var(--gray-900);
-    letter-spacing: -0.01em;
-  }
-
-  .modal-close {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-sm);
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--gray-400);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.1s;
-  }
-
-  .modal-close:hover { background: var(--gray-100); color: var(--gray-600); }
-  .modal-close svg { width: 16px; height: 16px; }
-
-  .modal-body { padding: var(--sp-5) var(--sp-6); }
-
-  .modal-footer {
-    padding: var(--sp-4) var(--sp-6);
-    border-top: 1px solid var(--gray-100);
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: var(--sp-3);
-  }
-
-  /* Form */
-  .form-field { margin-bottom: var(--sp-1); }
-
-  .form-label {
-    display: block;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--gray-700);
-    margin-bottom: var(--sp-2);
-  }
-
-  .form-input {
-    width: 100%;
-    height: 40px;
-    border: 1.5px solid var(--gray-200);
-    border-radius: var(--radius-md);
-    padding: 0 var(--sp-3);
-    font-size: var(--text-base);
-    font-family: inherit;
-    color: var(--gray-800);
-    outline: none;
-    transition: border-color 0.15s;
-  }
-
-  .form-input:focus { border-color: var(--purple-400); }
-
-  /* Member list (manage modal) */
-  .member-list { display: flex; flex-direction: column; gap: 2px; }
-
-  .member-list-item {
-    display: flex;
-    align-items: center;
-    gap: var(--sp-3);
-    padding: var(--sp-2) var(--sp-3);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: background 0.1s;
-    user-select: none;
-  }
-
-  .member-list-item:hover { background: var(--gray-50); }
-
-  .member-list-checkbox {
-    width: 18px;
-    height: 18px;
-    border-radius: 5px;
-    border: 1.5px solid var(--gray-300);
-    background: var(--white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.1s;
-  }
-
-  .member-list-item.checked .member-list-checkbox {
-    background: var(--purple-600);
-    border-color: var(--purple-600);
-  }
-
-  .member-check-icon { display: none; color: var(--white); }
-  .member-list-item.checked .member-check-icon { display: block; }
-
-  .member-list-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--purple-100);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--purple-700);
-    flex-shrink: 0;
-  }
-
-  .member-list-info { flex: 1; min-width: 0; }
-  .member-list-name { font-size: var(--text-sm); font-weight: 500; color: var(--gray-800); }
-  .member-list-email { font-size: var(--text-xs); color: var(--gray-400); }
-
-  /* Delete warning */
-  .delete-warning {
-    display: flex;
-    gap: var(--sp-3);
-    padding: var(--sp-4);
-    background: var(--red-50);
-    border: 1px solid var(--red-100);
-    border-radius: var(--radius-md);
-    margin-bottom: var(--sp-1);
-  }
-
-  .delete-warning svg { width: 18px; height: 18px; color: var(--red-500); flex-shrink: 0; margin-top: 1px; }
-  .delete-warning p { font-size: var(--text-sm); color: var(--red-700); line-height: 1.5; }
-
-  .delete-confirm-text {
-    font-size: var(--text-sm);
-    color: var(--gray-600);
-    line-height: 1.6;
-  }
-
-  /* ── Tabs ── */
-  .tabs-bar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 var(--sp-6);
-    border-bottom: 1px solid var(--gray-100);
-  }
-
-  .tabs-nav {
-    display: flex;
-    align-items: center;
-  }
-
-  .tab-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--sp-2);
-    padding: var(--sp-4) var(--sp-1);
-    margin-right: var(--sp-5);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--gray-500);
-    background: none;
-    border: none;
-    border-bottom: 2px solid transparent;
-    cursor: pointer;
-    font-family: inherit;
-    transition: color 0.15s;
-    white-space: nowrap;
-    margin-bottom: -1px;
-  }
-
-  .tab-btn:hover { color: var(--gray-700); }
-
-  .tab-btn.active {
-    color: var(--purple-700);
-    border-bottom-color: var(--purple-600);
-    font-weight: 600;
-  }
-
-  .tabs-actions { padding: var(--sp-3) 0; }
-
-  .users-panel-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--sp-3) var(--sp-6);
-    border-bottom: 1px solid var(--gray-100);
-  }
 
   /* ── Responsive ── */
   @media (max-width: 1024px) {
-    .main {
-      padding: var(--sp-6) var(--sp-6);
-    }
-    .seats-indicator {
-      flex-wrap: wrap;
-      gap: var(--sp-2);
-    }
+    .main { padding: var(--sp-6) var(--sp-6); }
+    .user-list-header { flex-wrap: wrap; }
+    .seats-strip { flex-wrap: wrap; gap: var(--sp-2); }
   }
-
   @media (max-width: 768px) {
     .sidebar { display: none; }
-    .access-code-banner {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--sp-3);
-    }
-    .user-list-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--sp-3);
-    }
+    .access-code-banner { flex-direction: column; align-items: flex-start; gap: var(--sp-3); }
   }
 </style>
 </head>
@@ -1519,7 +495,6 @@
     </svg>
     <span class="topbar-logo-text">Lais</span>
   </div>
-
   <div class="topbar-right">
     <button class="topbar-bell" aria-label="Notificações">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1530,8 +505,7 @@
     <button class="topbar-user">
       <div class="topbar-user-avatar">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
         </svg>
       </div>
       <span class="topbar-user-name">Ceboline Mitu</span>
@@ -1554,9 +528,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
     </div>
-
     <nav class="sidebar-nav">
-      <!-- Top-level -->
       <a href="#" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Início
@@ -1565,14 +537,11 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         Conversas
       </a>
-
-      <!-- Atendimento comercial -->
       <div class="nav-section-label">Atendimento comercial</div>
       <a href="#" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         Leads
       </a>
-
       <a href="#" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         Visitas
@@ -1582,8 +551,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         Relatório
       </a>
-
-      <!-- Gestão de prateleira -->
       <div class="nav-section-label">Gestão de prateleira de imóveis</div>
       <a href="#" class="nav-item">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
@@ -1597,8 +564,6 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         Captação
       </a>
-
-      <!-- Configurações -->
       <div class="nav-section-label">Configurações</div>
       <a href="#" class="nav-item active">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1614,13 +579,12 @@
   <!-- ── Main Content ── -->
   <main class="main">
 
-    <!-- Page Header -->
     <div class="page-header">
       <h1>Acessos</h1>
       <p>Gerencie quem pode acessar e administrar sua Casa da Lais</p>
     </div>
 
-    <!-- Access Code — compact inline banner -->
+    <!-- Access Code Banner -->
     <div class="access-code-banner">
       <div class="access-code-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1637,7 +601,7 @@
           <span class="access-code-number">2239</span>
           <span class="access-code-label">Código da Lais</span>
         </div>
-        <button class="access-code-copy-btn" aria-label="Copiar código" title="Copiar código">
+        <button class="access-code-copy-btn" aria-label="Copiar código">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
             <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
@@ -1649,876 +613,228 @@
     <!-- User List Card -->
     <div class="user-list-card">
 
-      <!-- Tab Bar -->
-      <div class="tabs-bar">
-        <div class="tabs-nav">
-          <button class="tab-btn active" id="tabBtnUsers" onclick="switchTab('users')">Lista de Usuários</button>
-          <button class="tab-btn" id="tabBtnGroups" onclick="switchTab('groups')">
-            Grupos
-            <span class="feature-tag">Lais para Atendentes</span>
+      <!-- Card Header: [title + button] | [seats text → bar → badge] -->
+      <div class="user-list-header">
+        <div class="header-left">
+          <h2 class="user-list-title">Lista de Usuários</h2>
+          <button class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Adicionar usuário
           </button>
+        </div>
+
+        <div class="seats-strip">
+          <span class="seats-text"><strong>4</strong> de <strong>5</strong> assentos pagos utilizados</span>
+          <div class="seats-progress">
+            <div class="seats-progress-fill warning" style="width: 80%"></div>
+          </div>
+          <span class="seats-available">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            1 disponível
+          </span>
         </div>
       </div>
 
-      <!-- Users Tab Panel -->
-      <div id="tabPanelUsers">
-        <div class="users-panel-header">
-          <div style="display:flex;align-items:center;gap:var(--sp-5)">
-            <div style="display:flex;align-items:baseline;gap:var(--sp-2)">
-              <span id="userCounterNumber" style="font-size:var(--text-xl);font-weight:700;color:var(--gray-900);letter-spacing:-0.02em;line-height:1">5</span>
-              <span style="font-size:var(--text-sm);color:var(--gray-500)">pessoas na equipe</span>
-            </div>
-            <button class="btn-primary" onclick="openAddUserModal()" style="height:36px;font-size:var(--text-sm)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Adicionar usuário
-            </button>
-          </div>
-          <div class="seats-indicator">
-            <span class="seats-text"><strong>4</strong> de <strong>5</strong> assentos utilizados</span>
-            <div class="seats-progress">
-              <div class="seats-progress-fill warning" style="width: 80%"></div>
-            </div>
-            <span class="seats-available">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              1 disponível
-            </span>
-          </div>
-        </div>
-
-      <!-- User Table -->
+      <!-- User Table — sorted: Administrador → Editor → Operacional → Membro → Pendente -->
       <table class="user-table">
         <thead>
           <tr>
             <th>Usuário</th>
             <th>Perfil</th>
-            <th>Assento de atendente</th>
+            <th>Assento</th>
             <th>Status</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
 
-          <!-- Administrador -->
+          <!-- ── ADMINISTRADOR ──────────────────────────────── -->
+          <!-- icon: shield -->
           <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Gabriel Zogbi</span><span class="user-cell-email">gmzogbi@gmail.com</span></div></td>
             <td>
-              <div class="user-cell">
-                <span class="user-cell-name">Filho do Zogbi</span>
-                <span class="user-cell-email">gabrielzogbi1999@gmail.com</span>
-              </div>
-            </td>
-            <td>
-              <span class="role-badge">
-                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <span class="role-badge admin">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                 Administrador
               </span>
             </td>
-            <td>
-              <button class="seat-select seat-paid">
-                Pago
-                <span class="seat-paid-badge">PRO</span>
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </td>
+            <td><span class="seat-pill pago"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Pago</span></td>
             <td><span class="status-badge active">Ativo</span></td>
-            <td>
-              <button class="actions-btn" aria-label="Mais opções">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-              </button>
-            </td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
 
-          <!-- Editor -->
           <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Gabriel Zogbi Jr.</span><span class="user-cell-email">gabrielzogbi1999@gmail.com</span></div></td>
             <td>
-              <div class="user-cell">
-                <span class="user-cell-name">Kadu</span>
-                <span class="user-cell-email">kadu23977@gmail.com</span>
-              </div>
+              <span class="role-badge admin">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Administrador
+              </span>
             </td>
+            <td><span class="seat-pill pago"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Pago</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <!-- ── EDITOR ──────────────────────────────────────── -->
+          <!-- icon: pencil -->
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Beatriz Nakamura</span><span class="user-cell-email">bia.nakamura@imovy.com.br</span></div></td>
             <td>
               <span class="role-badge editor">
-                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                 Editor
               </span>
             </td>
-            <td>
-              <button class="seat-select seat-free">
-                Gratuito
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </td>
+            <td><span class="seat-pill pago"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Pago</span></td>
             <td><span class="status-badge active">Ativo</span></td>
-            <td>
-              <button class="actions-btn" aria-label="Mais opções">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-              </button>
-            </td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
 
-          <!-- Membros -->
           <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Kadu Oliveira</span><span class="user-cell-email">kadu23977@gmail.com</span></div></td>
             <td>
-              <div class="user-cell">
-                <span class="user-cell-name">Gabriel Zogbi</span>
-                <span class="user-cell-email">gmzogbi@gmail.com</span>
-              </div>
-            </td>
-            <td>
-              <span class="role-badge membro">
-                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Membro
+              <span class="role-badge editor">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Editor
               </span>
             </td>
-            <td>
-              <button class="seat-select seat-paid">
-                Pago
-                <span class="seat-paid-badge">PRO</span>
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
             <td><span class="status-badge active">Ativo</span></td>
-            <td>
-              <button class="actions-btn" aria-label="Mais opções">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-              </button>
-            </td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
+
           <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Camila Ribeiro</span><span class="user-cell-email">camila.ribeiro@imovy.com.br</span></div></td>
             <td>
-              <div class="user-cell">
-                <span class="user-cell-name">Mariana Costa</span>
-                <span class="user-cell-email">mariana.costa@imovy.com.br</span>
-              </div>
-            </td>
-            <td>
-              <span class="role-badge membro">
-                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                Membro
+              <span class="role-badge editor">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                Editor
               </span>
             </td>
-            <td>
-              <button class="seat-select seat-paid">
-                Pago
-                <span class="seat-paid-badge">PRO</span>
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
             <td><span class="status-badge active">Ativo</span></td>
-            <td>
-              <button class="actions-btn" aria-label="Mais opções">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-              </button>
-            </td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
+
+          <!-- ── OPERACIONAL ──────────────────────────────────── -->
+          <!-- icon: wrench -->
           <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Rafael Mendes</span><span class="user-cell-email">rafael.mendes@imovy.com.br</span></div></td>
             <td>
-              <div class="user-cell">
-                <span class="user-cell-name">Lucas Ferreira</span>
-                <span class="user-cell-email">lucas.ferreira@imovy.com.br</span>
-              </div>
+              <span class="role-badge operacional">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Operacional
+              </span>
             </td>
+            <td><span class="seat-pill pago"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Pago</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Larissa Duarte</span><span class="user-cell-email">larissa.duarte@imovy.com.br</span></div></td>
+            <td>
+              <span class="role-badge operacional">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Operacional
+              </span>
+            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Diego Santos</span><span class="user-cell-email">diego.santos@imovy.com.br</span></div></td>
+            <td>
+              <span class="role-badge operacional">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                Operacional
+              </span>
+            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <!-- ── MEMBRO ───────────────────────────────────────── -->
+          <!-- icon: user silhouette -->
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Mariana Costa</span><span class="user-cell-email">mariana.costa@imovy.com.br</span></div></td>
             <td>
               <span class="role-badge membro">
-                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 Membro
               </span>
             </td>
-            <td>
-              <button class="seat-select seat-paid">
-                Pago
-                <span class="seat-paid-badge">PRO</span>
-                <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
             <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Thiago Ferreira</span><span class="user-cell-email">thiago.ferreira@gmail.com</span></div></td>
             <td>
-              <button class="actions-btn" aria-label="Mais opções">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-              </button>
+              <span class="role-badge membro">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Membro
+              </span>
             </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Felipe Araújo</span><span class="user-cell-email">felipe.araujo@hotmail.com</span></div></td>
+            <td>
+              <span class="role-badge membro">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Membro
+              </span>
+            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Juliana Pereira</span><span class="user-cell-email">juliana.pereira@outlook.com</span></div></td>
+            <td>
+              <span class="role-badge membro">
+                <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                Membro
+              </span>
+            </td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge active">Ativo</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <!-- ── PENDENTE (sem perfil) ───────────────────────── -->
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Lucas Tavares</span><span class="user-cell-email">lucas.tavares@gmail.com</span></div></td>
+            <td><span class="role-empty">Sem perfil</span></td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge pendente">Pendente</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
+          </tr>
+
+          <tr>
+            <td><div class="user-cell"><span class="user-cell-name">Ana Clara Souza</span><span class="user-cell-email">anaclara.souza@hotmail.com</span></div></td>
+            <td><span class="role-empty">Sem perfil</span></td>
+            <td><span class="seat-pill gratuito"><svg class="seat-pill-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>Gratuito</span></td>
+            <td><span class="status-badge pendente">Pendente</span></td>
+            <td><button class="actions-btn" aria-label="Mais opções"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg></button></td>
           </tr>
 
         </tbody>
       </table>
-      </div><!-- /tabPanelUsers -->
-
-      <!-- Groups Tab Panel -->
-      <div id="tabPanelGroups" style="display:none">
-
-        <!-- Premium Gate — shown when Lais para Atendentes is disabled -->
-        <div class="premium-gate" id="premiumGate">
-          <div class="premium-gate-inner">
-            <div class="premium-gate-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-            </div>
-            <div class="premium-gate-body">
-              <div class="premium-gate-badge">Lais para Atendentes</div>
-              <h3>Organize sua equipe em grupos</h3>
-              <p>Crie grupos de atendentes para distribuir leads, organizar plantões e segmentar o atendimento por especialidade ou região.</p>
-              <button class="btn-primary" onclick="enableFeature()" style="height:36px;font-size:var(--text-sm)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                Ativar Lais para Atendentes
-              </button>
-            </div>
-          </div>
-          <div class="premium-gate-footer">
-            <span class="demo-hint">Demo: feature desativada</span>
-            <button class="btn-demo-enable" onclick="enableFeature()">Simular feature ativa →</button>
-          </div>
-        </div>
-
-        <!-- Groups list — shown when Lais para Atendentes is enabled -->
-        <div id="groupsCard" style="display:none">
-          <div class="users-panel-header">
-            <div style="display:flex;align-items:center;gap:var(--sp-5)">
-              <div style="display:flex;align-items:baseline;gap:var(--sp-2)">
-                <span id="groupCounterNumber" style="font-size:var(--text-xl);font-weight:700;color:var(--gray-900);letter-spacing:-0.02em;line-height:1">0</span>
-                <span style="font-size:var(--text-sm);color:var(--gray-500)">grupos criados</span>
-              </div>
-              <button class="btn-primary" onclick="openCreateGroup()" style="height:36px;font-size:var(--text-sm)">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                Criar grupo
-              </button>
-            </div>
-            <div style="display:flex;align-items:center;gap:var(--sp-3)">
-              <span class="demo-hint">Demo ativa</span>
-              <button class="btn-demo-enable" onclick="disableFeature()">← Simular bloqueada</button>
-            </div>
-          </div>
-          <div class="groups-table-header" id="groupsTableHeader" style="display:none">
-            <div class="groups-th-dot"></div>
-            <span class="groups-th-name">Nome</span>
-            <div class="groups-th-stack"></div>
-            <span class="groups-th-count">Número de Membros</span>
-            <div class="groups-th-actions"></div>
-          </div>
-          <div class="groups-list" id="groupsList"></div>
-          <div class="groups-empty" id="groupsEmpty" style="display:none">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:var(--gray-300)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            <p>Nenhum grupo criado ainda.</p>
-            <button class="btn-secondary" onclick="openCreateGroup()">Criar primeiro grupo</button>
-          </div>
-        </div>
-
-      </div><!-- /tabPanelGroups -->
-
-    </div><!-- /user-list-card -->
+    </div>
 
   </main>
 </div>
-
-<!-- ── Modals ── -->
-
-<!-- Add User -->
-<div class="modal-overlay" id="addUserModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Adicionar usuário</h3>
-      <button class="modal-close" onclick="closeModal('addUserModal')" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-field" style="margin-bottom:var(--sp-4)">
-        <label class="form-label" for="addUserName">Nome completo</label>
-        <input class="form-input" id="addUserName" type="text" placeholder="Ex: João Silva" autocomplete="off" onkeydown="if(event.key==='Enter') document.getElementById('addUserEmail').focus()">
-      </div>
-      <div class="form-field">
-        <label class="form-label" for="addUserEmail">E-mail</label>
-        <input class="form-input" id="addUserEmail" type="email" placeholder="joao@imovy.com.br" autocomplete="off" onkeydown="if(event.key==='Enter') submitAddUser()">
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-text" onclick="closeModal('addUserModal')">Cancelar</button>
-      <button class="btn-primary" onclick="submitAddUser()" style="height:36px;font-size:var(--text-sm)">Adicionar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Edit Profile -->
-<div class="modal-overlay" id="editProfileModal">
-  <div class="modal" style="max-width:400px">
-    <div class="modal-header">
-      <h3>Editar perfil</h3>
-      <button class="modal-close" onclick="closeModal('editProfileModal')" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <p style="font-size:var(--text-sm);color:var(--gray-500);margin-bottom:var(--sp-4)">Selecione o perfil deste usuário na equipe.</p>
-      <div class="profile-options">
-        <button class="profile-option" id="profileOptEditor" onclick="selectProfile('editor')">
-          <div class="profile-option-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
-          </div>
-          <div class="profile-option-info">
-            <div class="profile-option-name">Editor</div>
-            <div class="profile-option-desc">Pode criar e editar leads e propriedades</div>
-          </div>
-          <div class="profile-option-radio"></div>
-        </button>
-        <button class="profile-option" id="profileOptMembro" onclick="selectProfile('membro')">
-          <div class="profile-option-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          </div>
-          <div class="profile-option-info">
-            <div class="profile-option-name">Membro</div>
-            <div class="profile-option-desc">Acessa leads e propriedades atribuídas</div>
-          </div>
-          <div class="profile-option-radio"></div>
-        </button>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-text" onclick="closeModal('editProfileModal')">Cancelar</button>
-      <button class="btn-primary" onclick="submitEditProfile()" style="height:36px;font-size:var(--text-sm)">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Create Group -->
-<div class="modal-overlay" id="createGroupModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Criar grupo</h3>
-      <button class="modal-close" onclick="closeModal('createGroupModal')" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="form-field" style="margin-bottom:var(--sp-4)">
-        <label class="form-label" for="createGroupInput">Nome do grupo</label>
-        <input class="form-input" id="createGroupInput" type="text" placeholder="Ex: Equipe SP, Plantão, Leads Alto Padrão…" autocomplete="off" onkeydown="if(event.key==='Enter') submitCreateGroup()">
-      </div>
-      <div class="form-field">
-        <label class="form-label">Cor do grupo</label>
-        <div class="color-picker-swatches" id="modalColorSwatches"></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-text" onclick="closeModal('createGroupModal')">Cancelar</button>
-      <button class="btn-primary" onclick="submitCreateGroup()" style="height:36px;font-size:var(--text-sm)">Criar grupo</button>
-    </div>
-  </div>
-</div>
-
-<!-- Manage Members -->
-<div class="modal-overlay" id="manageMembersModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Membros de <span id="manageMembersTitle"></span></h3>
-      <button class="modal-close" onclick="closeManageMembers()" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="member-list" id="manageMembersList"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-primary" onclick="closeManageMembers()" style="height:36px;font-size:var(--text-sm)">Fechar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Delete Group -->
-<div class="modal-overlay" id="deleteGroupModal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3 id="deleteModalTitle">Excluir grupo</h3>
-      <button class="modal-close" onclick="closeModal('deleteGroupModal')" aria-label="Fechar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-      </button>
-    </div>
-    <div class="modal-body">
-      <div class="delete-warning" id="deleteWarning" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <p>Este grupo ainda tem membros. Remova todos os membros antes de excluí-lo.</p>
-      </div>
-      <p class="delete-confirm-text" id="deleteConfirmText"></p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn-text" onclick="closeModal('deleteGroupModal')">Cancelar</button>
-      <button class="btn-danger" id="deleteConfirmBtn" onclick="submitDeleteGroup()">Excluir</button>
-    </div>
-  </div>
-</div>
-
-<script>
-  const USERS = [
-    { id: 1, name: 'Gabriel Zogbi',  email: 'gmzogbi@gmail.com' },
-    { id: 2, name: 'Kadu',           email: 'kadu23977@gmail.com' },
-    { id: 3, name: 'Filho do Zogbi', email: 'gabrielzogbi1999@gmail.com' },
-    { id: 4, name: 'Mariana Costa',  email: 'mariana.costa@imovy.com.br' },
-    { id: 5, name: 'Lucas Ferreira', email: 'lucas.ferreira@imovy.com.br' },
-  ];
-
-  let groups = [
-    { id: 1, name: 'Equipe SP',          members: [1, 4], color: '#8B5CF6' },
-    { id: 2, name: 'Leads Alto Padrão',  members: [2, 3], color: '#22C55E' },
-    { id: 3, name: 'Plantão',            members: [],     color: '#F59E0B' },
-  ];
-
-  const COLORS = [
-    '#EF4444', // Vermelho
-    '#F97316', // Laranja
-    '#F59E0B', // Âmbar  ← Plantão
-    '#22C55E', // Verde   ← Leads Alto Padrão
-    '#14B8A6', // Teal
-    '#0EA5E9', // Azul-claro
-    '#3B82F6', // Azul
-    '#8B5CF6', // Roxo    ← Equipe SP
-    '#EC4899', // Rosa
-    '#78716C', // Cinza-quente
-  ];
-
-  let selectedGroupColor = COLORS[0];
-  let nextGroupId = 4;
-  let featureEnabled = false;
-  let activeGroupId = null;
-  let activeModal = null;
-  let activeColorDotPicker = null;
-
-  function esc(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function initials(name) {
-    return name.split(/[\s._@]+/).filter(Boolean).map(p => p[0]).join('').toUpperCase().slice(0, 2);
-  }
-
-  // ── Tab switching ─────────────────────────────
-  function switchTab(tab) {
-    document.getElementById('tabBtnUsers').classList.toggle('active', tab === 'users');
-    document.getElementById('tabBtnGroups').classList.toggle('active', tab === 'groups');
-    document.getElementById('tabPanelUsers').style.display  = tab === 'users'  ? '' : 'none';
-    document.getElementById('tabPanelGroups').style.display = tab === 'groups' ? '' : 'none';
-  }
-
-  // ── Feature flag ──────────────────────────────
-  function enableFeature() {
-    featureEnabled = true;
-    document.getElementById('premiumGate').style.display = 'none';
-    document.getElementById('groupsCard').style.display  = '';
-    renderGroups();
-  }
-
-  function disableFeature() {
-    featureEnabled = false;
-    document.getElementById('premiumGate').style.display = '';
-    document.getElementById('groupsCard').style.display  = 'none';
-  }
-
-  // ── Render groups ─────────────────────────────
-  function renderGroups() {
-    const list  = document.getElementById('groupsList');
-    const empty = document.getElementById('groupsEmpty');
-    const counter = document.getElementById('groupCounterNumber');
-    const header  = document.getElementById('groupsTableHeader');
-    if (counter) counter.textContent = groups.length;
-
-    if (groups.length === 0) {
-      list.innerHTML = '';
-      empty.style.display = '';
-      if (header) header.style.display = 'none';
-      return;
-    }
-    empty.style.display = 'none';
-    if (header) header.style.display = '';
-
-    list.innerHTML = groups.map(g => {
-      const members = USERS.filter(u => g.members.includes(u.id));
-      const shown   = members.slice(0, 4);
-      const extra   = members.length > 4 ? members.length - 4 : 0;
-      const stacked = shown.map(u => `<div class="member-avatar" title="${esc(u.name)}">${initials(u.name)}</div>`).join('')
-                    + (extra > 0 ? `<div class="member-avatar">+${extra}</div>` : '');
-      const countLabel = members.length === 0 ? 'Sem membros'
-                       : members.length === 1  ? '1 membro'
-                       : `${members.length} membros`;
-
-      return `
-        <div class="group-row" data-id="${g.id}">
-          <div class="group-color-dot" style="background:${g.color}" onclick="openColorDotPicker(event, ${g.id})" title="Alterar cor"></div>
-          <div class="group-name-wrap">
-            <span class="group-name" onclick="startRenameInline(${g.id}, this)" title="Clique para renomear">
-              ${esc(g.name)}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;flex-shrink:0;opacity:0.3"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            </span>
-          </div>
-          <div class="member-stack">${stacked}</div>
-          <span class="member-count-chip">${countLabel}</span>
-          <div class="group-actions">
-            <button class="actions-btn" onclick="openManageMembers(${g.id})" title="Gerenciar membros" aria-label="Gerenciar membros">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            </button>
-            <button class="actions-btn" onclick="openDeleteGroup(${g.id})" title="Excluir grupo" aria-label="Excluir grupo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-            </button>
-          </div>
-        </div>`;
-    }).join('');
-  }
-
-  // ── Inline rename ─────────────────────────────
-  function startRenameInline(groupId, el) {
-    const group = groups.find(g => g.id === groupId);
-    if (!group) return;
-    const wrap  = el.closest('.group-name-wrap');
-    const input = document.createElement('input');
-    input.className = 'group-name-input';
-    input.value = group.name;
-    wrap.innerHTML = '';
-    wrap.appendChild(input);
-    input.focus();
-    input.select();
-
-    let saved = false;
-    function save() {
-      if (saved) return;
-      saved = true;
-      const v = input.value.trim();
-      if (v) group.name = v;
-      renderGroups();
-    }
-    input.addEventListener('blur', save);
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter')  { e.preventDefault(); save(); }
-      if (e.key === 'Escape') { saved = true; renderGroups(); }
-    });
-  }
-
-  // ── Create group ──────────────────────────────
-  function renderModalColorPicker() {
-    const container = document.getElementById('modalColorSwatches');
-    if (!container) return;
-    container.innerHTML = COLORS.map(c =>
-      `<button type="button" class="color-swatch${c === selectedGroupColor ? ' selected' : ''}"
-        style="background:${c}" onclick="selectModalColor('${c}')" title="${c}"></button>`
-    ).join('');
-  }
-
-  function selectModalColor(color) {
-    selectedGroupColor = color;
-    renderModalColorPicker();
-  }
-
-  function openCreateGroup() {
-    document.getElementById('createGroupInput').value = '';
-    const usedColors = groups.map(g => g.color);
-    selectedGroupColor = COLORS.find(c => !usedColors.includes(c)) || COLORS[0];
-    renderModalColorPicker();
-    openModal('createGroupModal');
-    setTimeout(() => document.getElementById('createGroupInput').focus(), 50);
-  }
-
-  function submitCreateGroup() {
-    const name = document.getElementById('createGroupInput').value.trim();
-    if (!name) return;
-    groups.push({ id: nextGroupId++, name, members: [], color: selectedGroupColor });
-    closeModal('createGroupModal');
-    renderGroups();
-  }
-
-  // ── Manage members ────────────────────────────
-  function openManageMembers(groupId) {
-    activeGroupId = groupId;
-    const group = groups.find(g => g.id === groupId);
-    document.getElementById('manageMembersTitle').textContent = group.name;
-
-    document.getElementById('manageMembersList').innerHTML = USERS.map(u => {
-      const checked = group.members.includes(u.id);
-      return `
-        <div class="member-list-item${checked ? ' checked' : ''}" onclick="toggleMember(${u.id}, this)">
-          <div class="member-list-checkbox">
-            <svg class="member-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:11px;height:11px"><polyline points="20 6 9 17 4 12"/></svg>
-          </div>
-          <div class="member-list-avatar">${initials(u.name)}</div>
-          <div class="member-list-info">
-            <div class="member-list-name">${esc(u.name)}</div>
-            <div class="member-list-email">${esc(u.email)}</div>
-          </div>
-        </div>`;
-    }).join('');
-
-    openModal('manageMembersModal');
-  }
-
-  function toggleMember(userId, el) {
-    const group = groups.find(g => g.id === activeGroupId);
-    if (!group) return;
-    const idx = group.members.indexOf(userId);
-    if (idx === -1) { group.members.push(userId); el.classList.add('checked'); }
-    else            { group.members.splice(idx, 1); el.classList.remove('checked'); }
-  }
-
-  function closeManageMembers() {
-    closeModal('manageMembersModal');
-    renderGroups();
-  }
-
-  // ── Delete group ──────────────────────────────
-  function openDeleteGroup(groupId) {
-    activeGroupId = groupId;
-    const group   = groups.find(g => g.id === groupId);
-    const warning = document.getElementById('deleteWarning');
-    const confirm = document.getElementById('deleteConfirmText');
-    const btn     = document.getElementById('deleteConfirmBtn');
-    const title   = document.getElementById('deleteModalTitle');
-
-    if (group.members.length > 0) {
-      title.textContent     = 'Não é possível excluir';
-      warning.style.display = 'flex';
-      confirm.style.display = 'none';
-      btn.disabled          = true;
-      btn.style.opacity     = '0.4';
-      btn.style.cursor      = 'not-allowed';
-    } else {
-      title.textContent     = 'Excluir grupo';
-      warning.style.display = 'none';
-      confirm.style.display = '';
-      confirm.innerHTML     = `Tem certeza que deseja excluir o grupo <strong>${esc(group.name)}</strong>? Esta ação não pode ser desfeita.`;
-      btn.disabled          = false;
-      btn.style.opacity     = '';
-      btn.style.cursor      = '';
-    }
-    openModal('deleteGroupModal');
-  }
-
-  function submitDeleteGroup() {
-    const group = groups.find(g => g.id === activeGroupId);
-    if (!group || group.members.length > 0) return;
-    groups = groups.filter(g => g.id !== activeGroupId);
-    closeModal('deleteGroupModal');
-    renderGroups();
-  }
-
-  // ── Modal utilities ───────────────────────────
-  function openModal(id) {
-    document.getElementById(id).classList.add('open');
-    activeModal = id;
-  }
-
-  function closeModal(id) {
-    document.getElementById(id).classList.remove('open');
-    activeModal = null;
-  }
-
-  // Close on overlay click or ESC
-  document.addEventListener('click', e => {
-    if (activeModal && e.target.id === activeModal) {
-      if (activeModal === 'manageMembersModal') closeManageMembers();
-      else closeModal(activeModal);
-    }
-  });
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && activeModal) {
-      if (activeModal === 'manageMembersModal') closeManageMembers();
-      else closeModal(activeModal);
-    }
-  });
-
-  // ── Add user ──────────────────────────────────
-  function openAddUserModal() {
-    document.getElementById('addUserName').value = '';
-    document.getElementById('addUserEmail').value = '';
-    openModal('addUserModal');
-    setTimeout(() => document.getElementById('addUserName').focus(), 50);
-  }
-
-  function submitAddUser() {
-    const name  = document.getElementById('addUserName').value.trim();
-    const email = document.getElementById('addUserEmail').value.trim();
-    if (!name || !email) return;
-
-    const tbody = document.querySelector('.user-table tbody');
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>
-        <div class="user-cell">
-          <span class="user-cell-name">${esc(name)}</span>
-          <span class="user-cell-email">${esc(email)}</span>
-        </div>
-      </td>
-      <td>
-        <span class="role-badge membro">
-          <svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Membro
-        </span>
-      </td>
-      <td>
-        <button class="seat-select seat-free">
-          Gratuito
-          <svg class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
-      </td>
-      <td><span class="status-badge pending">Pendente</span></td>
-      <td>
-        <button class="actions-btn" aria-label="Mais opções">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
-        </button>
-      </td>`;
-    tbody.appendChild(tr);
-
-    const count = tbody.querySelectorAll('tr').length;
-    document.getElementById('userCounterNumber').textContent = count;
-    closeModal('addUserModal');
-  }
-
-  // ── Context menu (3-dot) ──────────────────────
-  let activeContextMenu = null;
-  let editProfileRow = null;
-  let selectedProfile = null;
-
-  document.querySelector('.user-table').addEventListener('click', e => {
-    const btn = e.target.closest('.actions-btn');
-    if (btn) { e.stopPropagation(); openContextMenu(btn, btn.closest('tr')); }
-  });
-
-  function openContextMenu(btn, row) {
-    closeContextMenu();
-    const badge   = row.querySelector('.role-badge');
-    const isAdmin = !badge.classList.contains('membro') && !badge.classList.contains('editor');
-
-    const menu = document.createElement('div');
-    menu.className = 'context-menu';
-
-    const editNameItem = document.createElement('button');
-    editNameItem.className = 'context-menu-item';
-    editNameItem.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Editar nome`;
-    editNameItem.onclick = () => { closeContextMenu(); startInlineNameEdit(row); };
-    menu.appendChild(editNameItem);
-
-    if (!isAdmin) {
-      const editProfileItem = document.createElement('button');
-      editProfileItem.className = 'context-menu-item';
-      editProfileItem.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Editar perfil`;
-      editProfileItem.onclick = () => { closeContextMenu(); openEditProfileModal(row); };
-      menu.appendChild(editProfileItem);
-    }
-
-    const rect = btn.getBoundingClientRect();
-    menu.style.top   = (rect.bottom + 4) + 'px';
-    menu.style.right = (window.innerWidth - rect.right) + 'px';
-    document.body.appendChild(menu);
-    activeContextMenu = menu;
-  }
-
-  function closeContextMenu() {
-    if (activeContextMenu) { activeContextMenu.remove(); activeContextMenu = null; }
-  }
-
-  document.addEventListener('click', e => {
-    if (activeContextMenu && !activeContextMenu.contains(e.target)) closeContextMenu();
-    if (activeColorDotPicker && !activeColorDotPicker.contains(e.target)) closeColorDotPicker();
-  });
-
-  // ── Group color dot picker ─────────────────────
-  function openColorDotPicker(event, groupId) {
-    event.stopPropagation();
-    closeColorDotPicker();
-    const dot   = event.currentTarget;
-    const rect  = dot.getBoundingClientRect();
-    const group = groups.find(g => g.id === groupId);
-    if (!group) return;
-
-    const picker = document.createElement('div');
-    picker.className = 'color-picker-popover';
-    picker.innerHTML = COLORS.map(c =>
-      `<button type="button" class="color-swatch${c === group.color ? ' selected' : ''}"
-        style="background:${c}" onclick="changeGroupColor(${groupId}, '${c}')" title="${c}"></button>`
-    ).join('');
-
-    // position below the dot, aligned to its left edge
-    picker.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
-    picker.style.top  = (rect.bottom + 6) + 'px';
-    document.body.appendChild(picker);
-    activeColorDotPicker = picker;
-  }
-
-  function closeColorDotPicker() {
-    if (activeColorDotPicker) { activeColorDotPicker.remove(); activeColorDotPicker = null; }
-  }
-
-  function changeGroupColor(groupId, color) {
-    const group = groups.find(g => g.id === groupId);
-    if (group) group.color = color;
-    closeColorDotPicker();
-    renderGroups();
-  }
-
-  // ── Inline name edit ──────────────────────────
-  function startInlineNameEdit(row) {
-    const nameEl = row.querySelector('.user-cell-name');
-    const orig   = nameEl.textContent.trim();
-    const input  = document.createElement('input');
-    input.className = 'inline-name-input';
-    input.value = orig;
-    nameEl.replaceWith(input);
-    input.focus(); input.select();
-
-    let saved = false;
-    function save() {
-      if (saved) return; saved = true;
-      const val = input.value.trim() || orig;
-      const span = document.createElement('span');
-      span.className = 'user-cell-name';
-      span.textContent = val;
-      input.replaceWith(span);
-    }
-    input.addEventListener('blur', save);
-    input.addEventListener('keydown', e => {
-      if (e.key === 'Enter')  { e.preventDefault(); save(); }
-      if (e.key === 'Escape') { saved = true; const s = document.createElement('span'); s.className='user-cell-name'; s.textContent=orig; input.replaceWith(s); }
-    });
-  }
-
-  // ── Edit profile ──────────────────────────────
-  function openEditProfileModal(row) {
-    editProfileRow = row;
-    const badge = row.querySelector('.role-badge');
-    selectedProfile = badge.classList.contains('editor') ? 'editor' : 'membro';
-    updateProfileOptions();
-    openModal('editProfileModal');
-  }
-
-  function selectProfile(profile) {
-    selectedProfile = profile;
-    updateProfileOptions();
-  }
-
-  function updateProfileOptions() {
-    document.getElementById('profileOptEditor').classList.toggle('selected', selectedProfile === 'editor');
-    document.getElementById('profileOptMembro').classList.toggle('selected', selectedProfile === 'membro');
-  }
-
-  function submitEditProfile() {
-    if (!editProfileRow || !selectedProfile) return;
-    const badge = editProfileRow.querySelector('.role-badge');
-    if (selectedProfile === 'editor') {
-      badge.className = 'role-badge editor';
-      badge.innerHTML = `<svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg> Editor`;
-    } else {
-      badge.className = 'role-badge membro';
-      badge.innerHTML = `<svg class="role-badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Membro`;
-    }
-    closeModal('editProfileModal');
-    editProfileRow = null;
-  }
-
-  // Copy access code
-  const copyBtn = document.querySelector('.access-code-copy-btn');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', () => {
-      const code = document.querySelector('.access-code-number').textContent;
-      navigator.clipboard?.writeText(code).catch(() => {});
-      copyBtn.title = 'Copiado!';
-      setTimeout(() => { copyBtn.title = 'Copiar código'; }, 1500);
-    });
-  }
-</script>
 
 </body>
 </html>
