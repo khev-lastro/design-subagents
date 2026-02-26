@@ -4,7 +4,14 @@
       "mcp__plugin_figma_figma-desktop__get_design_context",
       "Bash(powershell.exe:)",
       "Bash(powershell.exe:*)",
-      "mcp__plugin_figma_figma-desktop__get_screenshot"
+      "mcp__plugin_figma_figma-desktop__get_screenshot",
+      "mcp__plugin_figma_figma-desktop__get_variable_defs",
+      "Bash(git fetch origin)",
+      "Bash(git rebase origin/main)",
+      "Bash(git stash)",
+      "Bash(git stash pop)",
+      "Bash(git add .claude/settings.local.json .claude/commands/ .claude/skills/)",
+      "Bash(git commit:*)"
     ]
   }
 }
