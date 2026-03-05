@@ -1591,14 +1591,6 @@
             <span class="feature-tag">Lais para Atendentes</span>
           </button>
         </div>
-        <div class="tabs-actions">
-          <div id="tabActionGroups" style="display:none">
-            <button class="btn-secondary" onclick="openCreateGroup()">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-              Criar grupo
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- Users Tab Panel -->
@@ -1813,6 +1805,22 @@
 
         <!-- Groups list — shown when Lais para Atendentes is enabled -->
         <div id="groupsCard" style="display:none">
+          <div class="users-panel-header">
+            <div style="display:flex;align-items:center;gap:var(--sp-5)">
+              <div style="display:flex;align-items:baseline;gap:var(--sp-2)">
+                <span id="groupCounterNumber" style="font-size:var(--text-xl);font-weight:700;color:var(--gray-900);letter-spacing:-0.02em;line-height:1">0</span>
+                <span style="font-size:var(--text-sm);color:var(--gray-500)">grupos criados</span>
+              </div>
+              <button class="btn-primary" onclick="openCreateGroup()" style="height:36px;font-size:var(--text-sm)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Criar grupo
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:var(--sp-3)">
+              <span class="demo-hint">Demo ativa</span>
+              <button class="btn-demo-enable" onclick="disableFeature()">← Simular bloqueada</button>
+            </div>
+          </div>
           <div class="groups-list" id="groupsList"></div>
           <div class="groups-empty" id="groupsEmpty" style="display:none">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:var(--gray-300)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -1994,8 +2002,6 @@
     document.getElementById('tabBtnGroups').classList.toggle('active', tab === 'groups');
     document.getElementById('tabPanelUsers').style.display  = tab === 'users'  ? '' : 'none';
     document.getElementById('tabPanelGroups').style.display = tab === 'groups' ? '' : 'none';
-    document.getElementById('tabActionUsers').style.display  = tab === 'users' ? '' : 'none';
-    document.getElementById('tabActionGroups').style.display = (tab === 'groups' && featureEnabled) ? '' : 'none';
   }
 
   // ── Feature flag ──────────────────────────────
@@ -2003,22 +2009,21 @@
     featureEnabled = true;
     document.getElementById('premiumGate').style.display = 'none';
     document.getElementById('groupsCard').style.display  = '';
-    const isGroupsTab = document.getElementById('tabBtnGroups').classList.contains('active');
-    document.getElementById('tabActionGroups').style.display = isGroupsTab ? '' : 'none';
     renderGroups();
   }
 
   function disableFeature() {
     featureEnabled = false;
-    document.getElementById('premiumGate').style.display     = '';
-    document.getElementById('groupsCard').style.display      = 'none';
-    document.getElementById('tabActionGroups').style.display = 'none';
+    document.getElementById('premiumGate').style.display = '';
+    document.getElementById('groupsCard').style.display  = 'none';
   }
 
   // ── Render groups ─────────────────────────────
   function renderGroups() {
     const list  = document.getElementById('groupsList');
     const empty = document.getElementById('groupsEmpty');
+    const counter = document.getElementById('groupCounterNumber');
+    if (counter) counter.textContent = groups.length;
 
     if (groups.length === 0) {
       list.innerHTML = '';
