@@ -722,6 +722,46 @@
     border: 1px solid var(--amber-100);
   }
 
+  /* ── Color swatches ── */
+  .color-picker-swatches {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    margin-top: var(--sp-2);
+  }
+
+  .color-swatch {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.12s;
+    outline: none;
+  }
+
+  .color-swatch:hover { transform: scale(1.15); }
+
+  .color-swatch.selected {
+    border-color: white;
+    box-shadow: 0 0 0 2px var(--gray-700);
+  }
+
+  .color-picker-popover {
+    position: fixed;
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+    padding: var(--sp-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    width: 196px; /* 5 × 28px + 4 × 8px gap + 2 × 12px padding */
+    z-index: 150;
+  }
+
   /* ── Context menu ── */
   .context-menu {
     position: fixed;
@@ -1061,7 +1101,11 @@
     height: 10px;
     border-radius: 50%;
     flex-shrink: 0;
+    cursor: pointer;
+    transition: transform 0.12s, opacity 0.12s;
   }
+
+  .group-color-dot:hover { transform: scale(1.4); opacity: 0.85; }
 
   .group-name-wrap { flex: 1; min-width: 0; }
 
@@ -1945,9 +1989,13 @@
       </button>
     </div>
     <div class="modal-body">
-      <div class="form-field">
+      <div class="form-field" style="margin-bottom:var(--sp-4)">
         <label class="form-label" for="createGroupInput">Nome do grupo</label>
         <input class="form-input" id="createGroupInput" type="text" placeholder="Ex: Equipe SP, Plantão, Leads Alto Padrão…" autocomplete="off" onkeydown="if(event.key==='Enter') submitCreateGroup()">
+      </div>
+      <div class="form-field">
+        <label class="form-label">Cor do grupo</label>
+        <div class="color-picker-swatches" id="modalColorSwatches"></div>
       </div>
     </div>
     <div class="modal-footer">
@@ -2013,10 +2061,25 @@
     { id: 3, name: 'Plantão',            members: [],     color: '#F59E0B' },
   ];
 
+  const COLORS = [
+    '#EF4444', // Vermelho
+    '#F97316', // Laranja
+    '#F59E0B', // Âmbar  ← Plantão
+    '#22C55E', // Verde   ← Leads Alto Padrão
+    '#14B8A6', // Teal
+    '#0EA5E9', // Azul-claro
+    '#3B82F6', // Azul
+    '#8B5CF6', // Roxo    ← Equipe SP
+    '#EC4899', // Rosa
+    '#78716C', // Cinza-quente
+  ];
+
+  let selectedGroupColor = COLORS[0];
   let nextGroupId = 4;
   let featureEnabled = false;
   let activeGroupId = null;
   let activeModal = null;
+  let activeColorDotPicker = null;
 
   function esc(str) {
     return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -2077,7 +2140,7 @@
 
       return `
         <div class="group-row" data-id="${g.id}">
-          <div class="group-color-dot" style="background:${g.color}"></div>
+          <div class="group-color-dot" style="background:${g.color}" onclick="openColorDotPicker(event, ${g.id})" title="Alterar cor"></div>
           <div class="group-name-wrap">
             <span class="group-name" onclick="startRenameInline(${g.id}, this)" title="Clique para renomear">
               ${esc(g.name)}
@@ -2127,8 +2190,25 @@
   }
 
   // ── Create group ──────────────────────────────
+  function renderModalColorPicker() {
+    const container = document.getElementById('modalColorSwatches');
+    if (!container) return;
+    container.innerHTML = COLORS.map(c =>
+      `<button type="button" class="color-swatch${c === selectedGroupColor ? ' selected' : ''}"
+        style="background:${c}" onclick="selectModalColor('${c}')" title="${c}"></button>`
+    ).join('');
+  }
+
+  function selectModalColor(color) {
+    selectedGroupColor = color;
+    renderModalColorPicker();
+  }
+
   function openCreateGroup() {
     document.getElementById('createGroupInput').value = '';
+    const usedColors = groups.map(g => g.color);
+    selectedGroupColor = COLORS.find(c => !usedColors.includes(c)) || COLORS[0];
+    renderModalColorPicker();
     openModal('createGroupModal');
     setTimeout(() => document.getElementById('createGroupInput').focus(), 50);
   }
@@ -2136,8 +2216,7 @@
   function submitCreateGroup() {
     const name = document.getElementById('createGroupInput').value.trim();
     if (!name) return;
-    const palette = ['#8B5CF6','#22C55E','#F59E0B','#3B82F6','#EC4899','#14B8A6','#F97316'];
-    groups.push({ id: nextGroupId++, name, members: [], color: palette[groups.length % palette.length] });
+    groups.push({ id: nextGroupId++, name, members: [], color: selectedGroupColor });
     closeModal('createGroupModal');
     renderGroups();
   }
@@ -2333,7 +2412,42 @@
 
   document.addEventListener('click', e => {
     if (activeContextMenu && !activeContextMenu.contains(e.target)) closeContextMenu();
+    if (activeColorDotPicker && !activeColorDotPicker.contains(e.target)) closeColorDotPicker();
   });
+
+  // ── Group color dot picker ─────────────────────
+  function openColorDotPicker(event, groupId) {
+    event.stopPropagation();
+    closeColorDotPicker();
+    const dot   = event.currentTarget;
+    const rect  = dot.getBoundingClientRect();
+    const group = groups.find(g => g.id === groupId);
+    if (!group) return;
+
+    const picker = document.createElement('div');
+    picker.className = 'color-picker-popover';
+    picker.innerHTML = COLORS.map(c =>
+      `<button type="button" class="color-swatch${c === group.color ? ' selected' : ''}"
+        style="background:${c}" onclick="changeGroupColor(${groupId}, '${c}')" title="${c}"></button>`
+    ).join('');
+
+    // position below the dot, aligned to its left edge
+    picker.style.left = Math.min(rect.left, window.innerWidth - 220) + 'px';
+    picker.style.top  = (rect.bottom + 6) + 'px';
+    document.body.appendChild(picker);
+    activeColorDotPicker = picker;
+  }
+
+  function closeColorDotPicker() {
+    if (activeColorDotPicker) { activeColorDotPicker.remove(); activeColorDotPicker = null; }
+  }
+
+  function changeGroupColor(groupId, color) {
+    const group = groups.find(g => g.id === groupId);
+    if (group) group.color = color;
+    closeColorDotPicker();
+    renderGroups();
+  }
 
   // ── Inline name edit ──────────────────────────
   function startInlineNameEdit(row) {
