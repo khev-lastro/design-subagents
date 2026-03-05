@@ -1022,6 +1022,26 @@
     padding: 2px 8px;
   }
 
+  /* Groups table header */
+  .groups-table-header {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-4);
+    padding: var(--sp-3) var(--sp-6);
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    font-size: var(--text-xs);
+    font-weight: 500;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .groups-th-name { flex: 1; min-width: 0; padding-left: 18px; /* color-dot 10px + gap 8px */ }
+  .groups-th-members { display: flex; align-items: center; gap: var(--sp-4); }
+  .groups-th-members-label { min-width: 72px; }
+  .groups-th-actions { width: 64px; } /* placeholder to match group-actions width */
+
   /* Group rows */
   .group-row {
     display: flex;
@@ -1821,6 +1841,12 @@
               <button class="btn-demo-enable" onclick="disableFeature()">← Simular bloqueada</button>
             </div>
           </div>
+          <div class="groups-table-header" id="groupsTableHeader" style="display:none">
+            <span class="groups-th-name">Nome</span>
+            <div class="groups-th-members">
+              <span class="groups-th-members-label">Número de Membros</span>
+            </div>
+          </div>
           <div class="groups-list" id="groupsList"></div>
           <div class="groups-empty" id="groupsEmpty" style="display:none">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;color:var(--gray-300)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -2023,14 +2049,17 @@
     const list  = document.getElementById('groupsList');
     const empty = document.getElementById('groupsEmpty');
     const counter = document.getElementById('groupCounterNumber');
+    const header  = document.getElementById('groupsTableHeader');
     if (counter) counter.textContent = groups.length;
 
     if (groups.length === 0) {
       list.innerHTML = '';
       empty.style.display = '';
+      if (header) header.style.display = 'none';
       return;
     }
     empty.style.display = 'none';
+    if (header) header.style.display = '';
 
     list.innerHTML = groups.map(g => {
       const members = USERS.filter(u => g.members.includes(u.id));
