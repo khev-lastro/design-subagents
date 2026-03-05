@@ -1037,10 +1037,12 @@
     letter-spacing: 0.04em;
   }
 
-  .groups-th-name { flex: 1; min-width: 0; padding-left: 18px; /* color-dot 10px + gap 8px */ }
-  .groups-th-members { display: flex; align-items: center; gap: var(--sp-4); }
-  .groups-th-members-label { min-width: 72px; }
-  .groups-th-actions { width: 64px; } /* placeholder to match group-actions width */
+  /* Mirror the exact flex slots of .group-row */
+  .groups-th-dot     { width: 10px; flex-shrink: 0; }
+  .groups-th-name    { flex: 1; min-width: 0; }
+  .groups-th-stack   { min-width: 88px; flex-shrink: 0; } /* matches stabilised member-stack */
+  .groups-th-count   { min-width: 72px; white-space: nowrap; }
+  .groups-th-actions { width: 68px; flex-shrink: 0; }     /* 2×32px + 4px gap */
 
   /* Group rows */
   .group-row {
@@ -1097,6 +1099,8 @@
   .member-stack {
     display: flex;
     align-items: center;
+    min-width: 88px; /* max 4 avatars: 28 + 3×20px = 88px — keeps column stable */
+    flex-shrink: 0;
   }
 
   .member-avatar {
@@ -1842,10 +1846,11 @@
             </div>
           </div>
           <div class="groups-table-header" id="groupsTableHeader" style="display:none">
+            <div class="groups-th-dot"></div>
             <span class="groups-th-name">Nome</span>
-            <div class="groups-th-members">
-              <span class="groups-th-members-label">Número de Membros</span>
-            </div>
+            <div class="groups-th-stack"></div>
+            <span class="groups-th-count">Número de Membros</span>
+            <div class="groups-th-actions"></div>
           </div>
           <div class="groups-list" id="groupsList"></div>
           <div class="groups-empty" id="groupsEmpty" style="display:none">
