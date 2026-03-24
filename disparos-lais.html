@@ -558,6 +558,25 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 .selection-clear { color: var(--purple-500); cursor: pointer; font-weight: 500; }
 .selection-clear:hover { color: var(--purple-700); }
 
+/* Step 2 — Contact Filters */
+.contact-filters { display: flex; align-items: flex-end; gap: var(--sp-3); margin-bottom: var(--sp-3); flex-wrap: wrap; }
+.contact-filter-group { display: flex; flex-direction: column; gap: 3px; }
+.contact-filter-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; }
+.cfilter-select { width: auto; height: 32px; padding: 0 28px 0 10px; background-color: var(--white); font-size: var(--text-xs); background-position: right 8px center; }
+.cfilter-select.active { border-color: var(--purple-600); background-color: var(--purple-50); color: var(--purple-700); }
+.interacao-wrap { display: flex; align-items: center; gap: 4px; }
+.interacao-number-box { display: flex; align-items: stretch; height: 32px; border: 1px solid var(--gray-200); border-radius: var(--radius-sm); overflow: hidden; background: var(--white); transition: border-color .15s; }
+.interacao-number-box:focus-within { border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(150,100,250,.15); }
+.interacao-num-input { width: 44px; border: none; outline: none; text-align: center; font-size: var(--text-xs); color: var(--gray-800); font-family: inherit; -moz-appearance: textfield; background: transparent; padding: 0; }
+.interacao-num-input::-webkit-outer-spin-button, .interacao-num-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.interacao-spins { display: flex; flex-direction: column; width: 20px; border-left: 1px solid var(--gray-200); }
+.interacao-spin { flex: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; border: none; background: transparent; color: var(--gray-400); padding: 0; font-size: 7px; line-height: 1; transition: background .1s, color .1s; }
+.interacao-spin:hover { background: var(--gray-50); color: var(--gray-700); }
+.interacao-spin + .interacao-spin { border-top: 1px solid var(--gray-200); }
+.cfilter-clear { height: 32px; padding: 0 var(--sp-3); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); background: transparent; font-size: var(--text-xs); color: var(--gray-500); cursor: pointer; font-family: inherit; align-self: flex-end; transition: all .15s; }
+.cfilter-clear:hover { border-color: var(--gray-300); color: var(--gray-700); background: var(--gray-50); }
+.contact-interacao-cell { font-size: var(--text-xs); color: var(--gray-500); white-space: nowrap; }
+
 /* Step 3 — Templates */
 .template-list { display: flex; flex-direction: column; gap: var(--sp-3); }
 .template-card {
@@ -756,21 +775,21 @@ const MOCK_DISPAROS = [
 ];
 
 const MOCK_CONTACTS = [
-  { id: 1, nome: "Ana Beatriz Costa", telefone: "(11) 99201-3847", tag: "lead" },
-  { id: 2, nome: "Carlos Mendonça", telefone: "(11) 97543-2198", tag: "inativo" },
-  { id: 3, nome: "Fernanda Oliveira", telefone: "(11) 98832-5541", tag: "lead" },
-  { id: 4, nome: "Roberto Alves", telefone: "(11) 91122-8874", tag: "proprietario" },
-  { id: 5, nome: "Juliana Ferreira", telefone: "(11) 99034-6652", tag: "inativo" },
-  { id: 6, nome: "Paulo Sousa", telefone: "(11) 98765-4321", tag: "lead" },
-  { id: 7, nome: "Mariana Lima", telefone: "(11) 97201-0033", tag: "proprietario" },
-  { id: 8, nome: "Thiago Ramos", telefone: "(11) 99901-7766", tag: "inativo" },
-  { id: 9, nome: "Camila Pires", telefone: "(11) 98234-5567", tag: "lead" },
-  { id: 10, nome: "Diego Nascimento", telefone: "(11) 99100-2244", tag: "inativo" },
-  { id: 11, nome: "Letícia Barbosa", telefone: "(11) 97890-3318", tag: "lead" },
-  { id: 12, nome: "Renato Cardoso", telefone: "(11) 98011-9922", tag: "proprietario" },
+  { id: 1,  nome: "Ana Beatriz Costa",  telefone: "(11) 99201-3847", tag: "lead",         ultimaInteracao: "1 dia atrás",    interacaoDias: 1  },
+  { id: 2,  nome: "Carlos Mendonça",    telefone: "(11) 97543-2198", tag: "lead",         ultimaInteracao: "3 dias atrás",   interacaoDias: 3  },
+  { id: 3,  nome: "Fernanda Oliveira",  telefone: "(11) 98832-5541", tag: "lead",         ultimaInteracao: "5 dias atrás",   interacaoDias: 5  },
+  { id: 4,  nome: "Roberto Alves",      telefone: "(11) 91122-8874", tag: "proprietario", ultimaInteracao: "7 dias atrás",   interacaoDias: 7  },
+  { id: 5,  nome: "Juliana Ferreira",   telefone: "(11) 99034-6652", tag: "lead",         ultimaInteracao: "14 dias atrás",  interacaoDias: 14 },
+  { id: 6,  nome: "Paulo Sousa",        telefone: "(11) 98765-4321", tag: "lead",         ultimaInteracao: "21 dias atrás",  interacaoDias: 21 },
+  { id: 7,  nome: "Mariana Lima",       telefone: "(11) 97201-0033", tag: "proprietario", ultimaInteracao: "30 dias atrás",  interacaoDias: 30 },
+  { id: 8,  nome: "Thiago Ramos",       telefone: "(11) 99901-7766", tag: "lead",         ultimaInteracao: "2 meses atrás",  interacaoDias: 60 },
+  { id: 9,  nome: "Camila Pires",       telefone: "(11) 98234-5567", tag: "proprietario", ultimaInteracao: "2 meses atrás",  interacaoDias: 60 },
+  { id: 10, nome: "Diego Nascimento",   telefone: "(11) 99100-2244", tag: "lead",         ultimaInteracao: "3 meses atrás",  interacaoDias: 90 },
+  { id: 11, nome: "Letícia Barbosa",    telefone: "(11) 97890-3318", tag: "lead",         ultimaInteracao: "4 meses atrás",  interacaoDias: 120 },
+  { id: 12, nome: "Renato Cardoso",     telefone: "(11) 98011-9922", tag: "proprietario", ultimaInteracao: "7 dias atrás",   interacaoDias: 7  },
 ];
 
-const TAG_LABELS = { lead: "Lead", inativo: "Inativo", proprietario: "Proprietário" };
+const TAG_LABELS = { lead: "Lead", proprietario: "Proprietário" };
 
 const MOCK_SEGMENTS = [
   { id: 1, nome: "Leads inativos há mais de 60 dias", desc: "Contatos que não interagiram nos últimos 60 dias", contatos: 142 },
@@ -1140,14 +1159,14 @@ function renderStep2() {
   const segCount = [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0);
   const segSelected = wizardData.selectedSegments.size;
 
-  const searchQ = (wizardData.contactSearch || '').toLowerCase();
   const contactRows = MOCK_CONTACTS.map((c, i) => {
-    if (searchQ && !c.nome.toLowerCase().includes(searchQ) && !c.telefone.includes(searchQ) && !TAG_LABELS[c.tag].toLowerCase().includes(searchQ)) return '';
+    const visible = passesContactFilters(c);
     const sel = wizardData.selectedContacts.has(i);
-    return `<tr class="${sel ? 'csel' : ''}" onclick="toggleContact(${i})">
+    return `<tr class="${sel ? 'csel' : ''}" style="${visible ? '' : 'display:none'}" onclick="toggleContact(${i})">
       <td style="width:36px;padding-left:12px"><input class="cbx" type="checkbox" ${sel ? 'checked' : ''} onclick="event.stopPropagation();toggleContact(${i})"></td>
       <td><div class="contact-name-cell">${c.nome}</div><div class="contact-phone-cell">${c.telefone}</div></td>
       <td><span class="tag-pill ${c.tag}">${TAG_LABELS[c.tag]}</span></td>
+      <td><span class="contact-interacao-cell">${c.ultimaInteracao}</span></td>
     </tr>`;
   }).join('');
 
@@ -1166,14 +1185,46 @@ function renderStep2() {
     </div>`;
   }).join('');
 
+  const tipoF = wizardData.contactFilterTipo || '';
+  const interacaoValor = wizardData.contactFilterInteracaoValor || '';
+  const interacaoUnidade = wizardData.contactFilterInteracaoUnidade || 'dias';
+  const hasActiveFilters = tipoF || interacaoValor;
+
   const panelHtml = isIndiv ? `
     <div class="contact-search">
-      <input type="text" id="contactSearch" placeholder="Buscar por nome, telefone ou tag…" oninput="filterContacts(this.value)">
-      <button class="btn btn-ghost" style="font-size:var(--text-xs)">${SVG.filter} Filtrar</button>
+      <input type="text" id="contactSearch" value="${wizardData.contactSearch || ''}" placeholder="Buscar por nome ou telefone…" oninput="filterContacts(this.value)">
+    </div>
+    <div class="contact-filters">
+      <div class="contact-filter-group">
+        <span class="contact-filter-label">Tipo</span>
+        <select class="cfilter-select${tipoF ? ' active' : ''}" onchange="setContactFilterTipo(this.value)">
+          <option value="">Todos</option>
+          <option value="lead" ${tipoF === 'lead' ? 'selected' : ''}>Lead</option>
+          <option value="proprietario" ${tipoF === 'proprietario' ? 'selected' : ''}>Proprietário</option>
+        </select>
+      </div>
+      <div class="contact-filter-group">
+        <span class="contact-filter-label">Última Interação</span>
+        <div class="interacao-wrap">
+          <div class="interacao-number-box">
+            <input class="interacao-num-input" type="number" min="1" value="${interacaoValor}" placeholder="—" oninput="setContactFilterInteracaoValor(this.value)">
+            <div class="interacao-spins">
+              <button class="interacao-spin" type="button" onclick="adjustInteracaoValor(1)">&#9650;</button>
+              <button class="interacao-spin" type="button" onclick="adjustInteracaoValor(-1)">&#9660;</button>
+            </div>
+          </div>
+          <select class="cfilter-select" onchange="setContactFilterInteracaoUnidade(this.value)">
+            <option value="dias" ${interacaoUnidade === 'dias' ? 'selected' : ''}>Dias</option>
+            <option value="meses" ${interacaoUnidade === 'meses' ? 'selected' : ''}>Meses</option>
+          </select>
+          <span style="font-size:var(--text-xs);color:var(--gray-400);white-space:nowrap;padding-bottom:2px">ou mais</span>
+        </div>
+      </div>
+      ${hasActiveFilters ? `<button type="button" class="cfilter-clear" onclick="clearContactFilters()">Limpar filtros</button>` : ''}
     </div>
     <div class="contact-table-wrap">
       <table class="ctable">
-        <thead><tr><th style="width:36px"></th><th>Contato</th><th>Tipo</th></tr></thead>
+        <thead><tr><th style="width:36px"></th><th>Nome</th><th>Tipo</th><th>Última Interação</th></tr></thead>
         <tbody>${contactRows}</tbody>
       </table>
     </div>
@@ -1329,6 +1380,7 @@ function openWizard(mode = 'create', id = null) {
       selectedSegments: new Set(),
       selectedTemplate: null,
       contactSearch: '',
+      contactFilterTipo: '', contactFilterInteracaoValor: '', contactFilterInteracaoUnidade: 'dias',
     };
   } else {
     wizardData = {
@@ -1339,6 +1391,7 @@ function openWizard(mode = 'create', id = null) {
       selectedSegments: new Set(),
       selectedTemplate: null,
       contactSearch: '',
+      contactFilterTipo: '', contactFilterInteracaoValor: '', contactFilterInteracaoUnidade: 'dias',
     };
   }
   renderWizardView();
@@ -1417,7 +1470,44 @@ function toggleSegment(i) {
   else wizardData.selectedSegments.add(i);
   renderWizardView();
 }
-function filterContacts(q) { wizardData.contactSearch = q; const tb = document.querySelector('.ctable tbody'); if (tb) { const searchQ = q.toLowerCase(); MOCK_CONTACTS.forEach((c, i) => { const row = tb.rows[i]; if (!row) return; const match = !q || c.nome.toLowerCase().includes(searchQ) || c.telefone.includes(searchQ) || TAG_LABELS[c.tag].toLowerCase().includes(searchQ); row.style.display = match ? '' : 'none'; }); } }
+function passesContactFilters(c) {
+  const searchQ = (wizardData.contactSearch || '').toLowerCase();
+  const tipoF = wizardData.contactFilterTipo || '';
+  const interacaoValor = parseInt(wizardData.contactFilterInteracaoValor) || 0;
+  const interacaoUnidade = wizardData.contactFilterInteracaoUnidade || 'dias';
+  const interacaoLimiteDias = interacaoValor > 0 ? interacaoValor * (interacaoUnidade === 'meses' ? 30 : 1) : 0;
+  if (searchQ && !c.nome.toLowerCase().includes(searchQ) && !c.telefone.includes(searchQ)) return false;
+  if (tipoF && c.tag !== tipoF) return false;
+  if (interacaoLimiteDias > 0 && c.interacaoDias < interacaoLimiteDias) return false;
+  return true;
+}
+function applyContactFilters() {
+  const tb = document.querySelector('.ctable tbody');
+  if (!tb) return;
+  MOCK_CONTACTS.forEach((c, i) => {
+    const row = tb.rows[i];
+    if (row) row.style.display = passesContactFilters(c) ? '' : 'none';
+  });
+}
+function filterContacts(q) { wizardData.contactSearch = q; applyContactFilters(); }
+function setContactFilterTipo(v) { wizardData.contactFilterTipo = v; renderWizardView(); }
+function setContactFilterInteracaoUnidade(v) { wizardData.contactFilterInteracaoUnidade = v; renderWizardView(); }
+function setContactFilterInteracaoValor(v) { wizardData.contactFilterInteracaoValor = v; applyContactFilters(); }
+function adjustInteracaoValor(delta) {
+  const current = parseInt(wizardData.contactFilterInteracaoValor) || 0;
+  const newVal = Math.max(1, current + delta);
+  wizardData.contactFilterInteracaoValor = String(newVal);
+  const input = document.querySelector('.interacao-num-input');
+  if (input) input.value = newVal;
+  applyContactFilters();
+}
+function clearContactFilters() {
+  wizardData.contactFilterTipo = '';
+  wizardData.contactFilterInteracaoValor = '';
+  wizardData.contactFilterInteracaoUnidade = 'dias';
+  wizardData.contactSearch = '';
+  renderWizardView();
+}
 function clearContacts() { wizardData.selectedContacts.clear(); renderWizardView(); }
 function clearSegments() { wizardData.selectedSegments.clear(); renderWizardView(); }
 function selectTemplate(i) { wizardData.selectedTemplate = i; renderWizardView(); }
