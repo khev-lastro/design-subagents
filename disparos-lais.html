@@ -451,7 +451,102 @@
   </main>
 </div>
 <script>
-  // JS goes here
+  // ── Mock Data ──────────────────────────────────────────────────
+const MOCK_DISPAROS = [
+  // STATUS: agendado (3)
+  { id: 1, nome: "Reativação Leads Março", tipo: "remarketing", objetivo: "Reativar Lead", data: "25 março 2026", hora: "09:00", contatos: 142, status: "agendado" },
+  { id: 2, nome: "Captação Zona Sul — Abril", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "2 abril 2026", hora: "14:00", contatos: 89, status: "agendado" },
+  { id: 3, nome: "Follow-up Semana Santa", tipo: "remarketing", objetivo: "Reativar Lead", data: "17 abril 2026", hora: "10:00", contatos: 203, status: "agendado" },
+  // STATUS: enviado (12)
+  { id: 4, nome: "Lançamento Residencial Pinheiros", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "18 março 2026", hora: "09:00", contatos: 311, status: "enviado" },
+  { id: 5, nome: "Reativação Inativos Fevereiro", tipo: "remarketing", objetivo: "Reativar Lead", data: "14 março 2026", hora: "10:30", contatos: 78, status: "enviado" },
+  { id: 6, nome: "Oportunidade Zona Norte", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "10 março 2026", hora: "11:00", contatos: 54, status: "enviado" },
+  { id: 7, nome: "Reativação Março Geral", tipo: "remarketing", objetivo: "Reativar Lead", data: "5 março 2026", hora: "09:00", contatos: 190, status: "enviado" },
+  { id: 8, nome: "Captação Proprietários Sul", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "28 fevereiro 2026", hora: "14:00", contatos: 42, status: "enviado" },
+  { id: 9, nome: "Newsletter Imóveis Disponíveis", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "21 fevereiro 2026", hora: "09:00", contatos: 215, status: "enviado" },
+  { id: 10, nome: "Leads Dormentes Jan", tipo: "remarketing", objetivo: "Reativar Lead", data: "15 fevereiro 2026", hora: "10:00", contatos: 93, status: "enviado" },
+  { id: 11, nome: "Campanha Carnaval", tipo: "remarketing", objetivo: "Reativar Lead", data: "28 fevereiro 2026", hora: "08:00", contatos: 130, status: "enviado" },
+  { id: 12, nome: "Atualização de Listagens", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "7 fevereiro 2026", hora: "14:00", contatos: 67, status: "enviado" },
+  { id: 13, nome: "Captação Jardins", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "1 fevereiro 2026", hora: "09:00", contatos: 38, status: "enviado" },
+  { id: 14, nome: "Reativação Janeiro", tipo: "remarketing", objetivo: "Reativar Lead", data: "20 janeiro 2026", hora: "10:00", contatos: 144, status: "enviado" },
+  { id: 15, nome: "Black Friday Imóveis", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "25 novembro 2025", hora: "09:00", contatos: 290, status: "enviado" },
+  // STATUS: erro (7)
+  { id: 16, nome: "Disparo Proprietários Lapa", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "12 março 2026", hora: "08:00", contatos: 29, status: "erro" },
+  { id: 17, nome: "Reativação Contatos Antigos", tipo: "remarketing", objetivo: "Reativar Lead", data: "8 março 2026", hora: "11:00", contatos: 61, status: "erro" },
+  { id: 18, nome: "Atualização Zona Oeste", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "3 março 2026", hora: "09:30", contatos: 14, status: "erro" },
+  { id: 19, nome: "Follow-up Leads Frios", tipo: "remarketing", objetivo: "Reativar Lead", data: "24 fevereiro 2026", hora: "10:00", contatos: 47, status: "erro" },
+  { id: 20, nome: "Captação Santana Fev", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "18 fevereiro 2026", hora: "14:00", contatos: 33, status: "erro" },
+  { id: 21, nome: "Reativação Dezembro 2025", tipo: "remarketing", objetivo: "Reativar Lead", data: "20 dezembro 2025", hora: "09:00", contatos: 88, status: "erro" },
+  { id: 22, nome: "Campanha Fim de Ano", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "12 dezembro 2025", hora: "11:00", contatos: 52, status: "erro" },
+  // STATUS: cancelado (2)
+  { id: 23, nome: "Disparo Teste Segmentação", tipo: "remarketing", objetivo: "Reativar Lead", data: "1 março 2026", hora: "12:00", contatos: 5, status: "cancelado" },
+  { id: 24, nome: "Captação Vila Madalena", tipo: "captacao", objetivo: "Recomendar Imóvel", data: "15 março 2026", hora: "09:00", contatos: 71, status: "cancelado" },
+];
+
+const MOCK_CONTACTS = [
+  { id: 1, nome: "Ana Beatriz Costa", telefone: "(11) 99201-3847", tag: "lead" },
+  { id: 2, nome: "Carlos Mendonça", telefone: "(11) 97543-2198", tag: "inativo" },
+  { id: 3, nome: "Fernanda Oliveira", telefone: "(11) 98832-5541", tag: "lead" },
+  { id: 4, nome: "Roberto Alves", telefone: "(11) 91122-8874", tag: "proprietario" },
+  { id: 5, nome: "Juliana Ferreira", telefone: "(11) 99034-6652", tag: "inativo" },
+  { id: 6, nome: "Paulo Sousa", telefone: "(11) 98765-4321", tag: "lead" },
+  { id: 7, nome: "Mariana Lima", telefone: "(11) 97201-0033", tag: "proprietario" },
+  { id: 8, nome: "Thiago Ramos", telefone: "(11) 99901-7766", tag: "inativo" },
+  { id: 9, nome: "Camila Pires", telefone: "(11) 98234-5567", tag: "lead" },
+  { id: 10, nome: "Diego Nascimento", telefone: "(11) 99100-2244", tag: "inativo" },
+  { id: 11, nome: "Letícia Barbosa", telefone: "(11) 97890-3318", tag: "lead" },
+  { id: 12, nome: "Renato Cardoso", telefone: "(11) 98011-9922", tag: "proprietario" },
+];
+
+const TAG_LABELS = { lead: "Lead", inativo: "Inativo", proprietario: "Proprietário" };
+
+const MOCK_SEGMENTS = [
+  { id: 1, nome: "Leads inativos há mais de 60 dias", desc: "Contatos que não interagiram nos últimos 60 dias", contatos: 142 },
+  { id: 2, nome: "Proprietários com imóvel desatualizado", desc: "Imóveis sem atualização de preço há mais de 30 dias", contatos: 89 },
+  { id: 3, nome: "Leads com interesse em 2–3 quartos", desc: "Baseado em buscas e interações anteriores", contatos: 67 },
+  { id: 4, nome: "Todos os leads da Zona Sul", desc: "Contatos com imóvel ou interesse na Zona Sul", contatos: 53 },
+  { id: 5, nome: "Leads sem resposta ao último follow-up", desc: "Não responderam ao disparo de fevereiro", contatos: 38 },
+];
+
+const MOCK_TEMPLATES = [
+  { id: 1, nome: "Reativação — Olá, novidades esperando por você", corpo: "Olá, {nome}! Faz um tempo que não nos falamos. Temos novidades que combinam com o que você busca. Posso te apresentar algumas opções?", aprovado: true, pendente: false, tipo: "Remarketing" },
+  { id: 2, nome: "Recomendação de Imóvel — Seleção Personalizada", corpo: "Oi, {nome}! Separei {quantidade} imóveis em {bairro} que combinam com o seu perfil. Quer dar uma olhada?", aprovado: true, pendente: false, tipo: "Captação" },
+  { id: 3, nome: "Atualização de Listagem — Proprietário", corpo: "{nome}, as informações do seu imóvel na {endereco} precisam de uma atualização para continuar aparecendo nos resultados. Leva menos de 2 minutos!", aprovado: true, pendente: false, tipo: "Captação" },
+  { id: 4, nome: "Oferta Especial — Condições do Mês", corpo: "Oi {nome}! Este mês temos condições especiais de financiamento para imóveis em {regiao}. Quer saber mais?", aprovado: false, pendente: true, tipo: "Remarketing" },
+  { id: 5, nome: "Follow-up Personalizado — Template Livre", corpo: "Mensagem totalmente personalizada. Atenção: templates não aprovados pelo Meta podem ter entrega limitada.", aprovado: false, pendente: false, tipo: "Geral" },
+];
+
+// ── App state ───────────────────────────────────────────────────
+let currentView = 'main'; // 'main' | 'wizard'
+let currentTab = 'todos';
+let activeFilters = { tipo: null, objetivo: null };
+
+// wizard state
+let wizardStep = 1;
+let wizardMode = 'create'; // 'create' | 'edit'
+let editingId = null;
+let wizardData = {
+  nome: '', descricao: '', tipo: 'remarketing', objetivo: 'Reativar Lead',
+  data: '', hora: '09:00',
+  contactMethod: 'individual',
+  selectedContacts: new Set(),
+  selectedSegments: new Set(),
+  selectedTemplate: null,
+};
+
+// ── Utilities ───────────────────────────────────────────────────
+function getFilteredDisparos(tab) {
+  let rows = [...MOCK_DISPAROS];
+  if (tab !== 'todos') rows = rows.filter(d => d.status === tab);
+  if (activeFilters.tipo) rows = rows.filter(d => d.tipo === activeFilters.tipo);
+  if (activeFilters.objetivo) rows = rows.filter(d => d.objetivo === activeFilters.objetivo);
+  return rows;
+}
+
+function getTabCount(tab) {
+  if (tab === 'todos') return MOCK_DISPAROS.length;
+  return MOCK_DISPAROS.filter(d => d.status === tab).length;
+}
 </script>
 </body>
 </html>
