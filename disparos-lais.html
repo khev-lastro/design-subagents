@@ -580,6 +580,9 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 }
 .warning-box svg { width: 14px; height: 14px; color: var(--amber-600); flex-shrink: 0; margin-top: 1px; }
 .warning-box p { font-size: var(--text-xs); color: var(--amber-700); line-height: 1.5; }
+.warning-box.red { background: var(--red-50); border-color: var(--red-100); }
+.warning-box.red svg { color: var(--red-600); }
+.warning-box.red p { color: var(--red-600); }
 
 /* Step 4 — Preview */
 .preview-stack { display: flex; flex-direction: column; gap: var(--sp-4); }
@@ -874,8 +877,8 @@ function renderTableSection() {
           <span class="section-title">Lista de Disparos</span>
           <div class="filters">
             <div class="filter-btn" onclick="openFilterDropdown('tipo', this)">Tipo ${SVG.chevronDown}</div>
-            <div class="filter-btn" onclick="openFilterDropdown('objetivo', this)">Objetivo ${SVG.chevronDown}</div>
             <div class="filter-btn" onclick="openFilterDropdown('data', this)">Data ${SVG.chevronDown}</div>
+            <div class="filter-btn" onclick="openFilterDropdown('objetivo', this)">Objetivo ${SVG.chevronDown}</div>
           </div>
         </div>
         <button class="btn btn-primary" onclick="openWizard()">${SVG.plus} Novo Disparo</button>
@@ -1013,7 +1016,9 @@ function renderStep2() {
   const segCount = [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0);
   const segSelected = wizardData.selectedSegments.size;
 
+  const searchQ = (wizardData.contactSearch || '').toLowerCase();
   const contactRows = MOCK_CONTACTS.map((c, i) => {
+    if (searchQ && !c.nome.toLowerCase().includes(searchQ) && !c.telefone.includes(searchQ) && !TAG_LABELS[c.tag].toLowerCase().includes(searchQ)) return '';
     const sel = wizardData.selectedContacts.has(i);
     return `<tr class="${sel ? 'csel' : ''}" onclick="toggleContact(${i})">
       <td style="width:36px;padding-left:12px"><input class="cbx" type="checkbox" ${sel ? 'checked' : ''} onclick="event.stopPropagation();toggleContact(${i})"></td>
@@ -1039,7 +1044,7 @@ function renderStep2() {
 
   const panelHtml = isIndiv ? `
     <div class="contact-search">
-      <input type="text" placeholder="Buscar por nome, telefone ou tag…">
+      <input type="text" id="contactSearch" placeholder="Buscar por nome, telefone ou tag…" oninput="filterContacts(this.value)">
       <button class="btn btn-ghost" style="font-size:var(--text-xs)">${SVG.filter} Filtrar</button>
     </div>
     <div class="contact-table-wrap">
@@ -1109,7 +1114,7 @@ function renderStep3() {
     const warnText = t.pendente
       ? 'Este template ainda não foi aprovado pelo Meta e pode ter taxa de entrega reduzida.'
       : 'Template não aprovado pelo Meta. Mensagens enviadas podem ter entrega altamente limitada e resultar em bloqueio da conta.';
-    const warningHtml = isSelected && isWarn ? `<div class="warning-box">${SVG.warning}<p>${warnText}</p></div>` : '';
+    const warningHtml = isSelected && isWarn ? `<div class="warning-box${t.pendente ? '' : ' red'}">${SVG.warning}<p>${warnText}</p></div>` : '';
     return `
       <div class="template-card ${isSelected ? 'selected' : ''} ${isWarn ? 'warn' : ''}" onclick="selectTemplate(${i})">
         <div class="tpl-header">
@@ -1194,11 +1199,12 @@ function openWizard(mode = 'create', id = null) {
     const d = MOCK_DISPAROS.find(x => x.id === id);
     wizardData = {
       nome: d.nome, descricao: '', tipo: d.tipo, objetivo: d.objetivo,
-      data: '', hora: d.hora,
+      data: d.data, hora: d.hora,
       contactMethod: 'individual',
       selectedContacts: new Set([0, 2, 4]),
       selectedSegments: new Set(),
       selectedTemplate: null,
+      contactSearch: '',
     };
   } else {
     wizardData = {
@@ -1208,6 +1214,7 @@ function openWizard(mode = 'create', id = null) {
       selectedContacts: new Set(),
       selectedSegments: new Set(),
       selectedTemplate: null,
+      contactSearch: '',
     };
   }
   renderWizardView();
@@ -1235,25 +1242,44 @@ function wizardPrev() {
   if (wizardStep > 1) { wizardStep--; renderWizardView(); document.querySelector('.wizard-body')?.scrollTo(0, 0); }
 }
 
+function applyEditSave() {
+  const d = MOCK_DISPAROS.find(x => x.id === editingId);
+  if (d) { d.nome = wizardData.nome || d.nome; d.tipo = wizardData.tipo; d.objetivo = wizardData.objetivo; d.hora = wizardData.hora; }
+  closeWizard();
+}
+
 function wizardConfirm() {
   if (wizardMode === 'edit') {
     const d = MOCK_DISPAROS.find(x => x.id === editingId);
-    if (d) { d.nome = wizardData.nome || d.nome; d.tipo = wizardData.tipo; d.objetivo = wizardData.objetivo; d.hora = wizardData.hora; }
-  } else {
-    const newId = Math.max(...MOCK_DISPAROS.map(d => d.id)) + 1;
-    MOCK_DISPAROS.unshift({
-      id: newId,
-      nome: wizardData.nome || 'Novo Disparo',
-      tipo: wizardData.tipo,
-      objetivo: wizardData.objetivo,
-      data: wizardData.data || formatDatePtBr(getTomorrowDate()),
-      hora: wizardData.hora,
-      contatos: wizardData.selectedContacts.size || [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0) || 0,
-      status: 'agendado',
-    });
+    if (wizardData.selectedTemplate !== null && d) {
+      const newTpl = MOCK_TEMPLATES[wizardData.selectedTemplate];
+      showModal(`
+        <div class="modal-title">Confirmar alteração de template?</div>
+        <div class="modal-body">O template foi alterado para <strong>"${newTpl.nome}"</strong>. Deseja salvar as alterações?</div>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+          <button class="btn btn-success" onclick="closeModal();applyEditSave()">Salvar Alterações</button>
+        </div>
+      `);
+    } else {
+      applyEditSave();
+    }
+    return;
   }
+  const newId = Math.max(...MOCK_DISPAROS.map(d => d.id)) + 1;
+  MOCK_DISPAROS.unshift({
+    id: newId,
+    nome: wizardData.nome || 'Novo Disparo',
+    tipo: wizardData.tipo,
+    objetivo: wizardData.objetivo,
+    data: wizardData.data || formatDatePtBr(getTomorrowDate()),
+    hora: wizardData.hora,
+    contatos: wizardData.selectedContacts.size || [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0) || 0,
+    status: 'agendado',
+  });
   closeWizard();
-  if (wizardMode === 'create') { currentTab = 'agendado'; renderMainView(); }
+  currentTab = 'agendado';
+  renderMainView();
 }
 
 function setContactMethod(m) { wizardData.contactMethod = m; renderWizardView(); }
@@ -1267,6 +1293,7 @@ function toggleSegment(i) {
   else wizardData.selectedSegments.add(i);
   renderWizardView();
 }
+function filterContacts(q) { wizardData.contactSearch = q; const tb = document.querySelector('.ctable tbody'); if (tb) { const searchQ = q.toLowerCase(); MOCK_CONTACTS.forEach((c, i) => { const row = tb.rows[i]; if (!row) return; const match = !q || c.nome.toLowerCase().includes(searchQ) || c.telefone.includes(searchQ) || TAG_LABELS[c.tag].toLowerCase().includes(searchQ); row.style.display = match ? '' : 'none'; }); } }
 function clearContacts() { wizardData.selectedContacts.clear(); renderWizardView(); }
 function clearSegments() { wizardData.selectedSegments.clear(); renderWizardView(); }
 function selectTemplate(i) { wizardData.selectedTemplate = i; renderWizardView(); }
@@ -1325,8 +1352,8 @@ function openFilterDropdown(type, el) { el.classList.toggle('active'); }
 // ── Main render ─────────────────────────────────────────────────
 function renderMainView() {
   document.getElementById('mainArea').innerHTML =
-    renderPageHeader() +
     renderErrorBanner() +
+    renderPageHeader() +
     renderSummaryCard() +
     renderTableSection();
 }
