@@ -396,6 +396,24 @@ tr.row:hover .row-actions { opacity: 1; }
 .action-btn svg { width: 13px; height: 13px; }
 .action-btn:hover { background: var(--purple-50); color: var(--purple-600); border-color: var(--purple-200); }
 .action-btn.danger:hover { background: var(--red-50); color: var(--red-600); border-color: var(--red-100); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.35);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000; animation: fadeIn .15s ease;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.modal {
+  background: var(--white); border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg); padding: var(--sp-6);
+  width: 100%; max-width: 400px; margin: var(--sp-4);
+  animation: slideUp .2s cubic-bezier(.16,1,.3,1);
+}
+@keyframes slideUp { from { transform: translateY(8px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+.modal-title { font-size: var(--text-lg); font-weight: 700; color: var(--gray-900); margin-bottom: var(--sp-2); }
+.modal-body { font-size: var(--text-sm); color: var(--gray-500); line-height: var(--leading-normal); margin-bottom: var(--sp-6); }
+.modal-actions { display: flex; justify-content: flex-end; gap: var(--sp-2); }
 </style>
 </head>
 <body>
@@ -700,8 +718,56 @@ function switchTab(tab) {
 function viewDetails(id) { alert('Ver detalhes: disparo #' + id); }
 function editDisparo(id) { openWizard('edit', id); }
 function openWizard(mode, id) { alert('Wizard: ' + (mode||'create') + (id ? ' #'+id : '')); } // stub until Task 8
-function confirmCancel(id) { alert('Cancelar disparo #' + id); } // stub until Task 7
-function confirmDelete(id) { alert('Excluir disparo #' + id); } // stub until Task 7
+function showModal(html) {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'modalOverlay';
+  overlay.innerHTML = `<div class="modal">${html}</div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.body.appendChild(overlay);
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay')?.remove();
+}
+
+function confirmCancel(id) {
+  const d = MOCK_DISPAROS.find(x => x.id === id);
+  showModal(`
+    <div class="modal-title">Cancelar disparo?</div>
+    <div class="modal-body">O disparo <strong>"${d.nome}"</strong> agendado para ${d.data} às ${d.hora} será cancelado e não poderá ser desfeito.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Manter agendado</button>
+      <button class="btn btn-danger" onclick="executeCancel(${id})">Sim, cancelar</button>
+    </div>
+  `);
+}
+
+function executeCancel(id) {
+  const d = MOCK_DISPAROS.find(x => x.id === id);
+  d.status = 'cancelado';
+  closeModal();
+  renderMainView();
+}
+
+function confirmDelete(id) {
+  const d = MOCK_DISPAROS.find(x => x.id === id);
+  showModal(`
+    <div class="modal-title">Excluir disparo?</div>
+    <div class="modal-body">O registro <strong>"${d.nome}"</strong> será removido permanentemente do histórico.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Não excluir</button>
+      <button class="btn btn-danger" onclick="executeDelete(${id})">Sim, excluir</button>
+    </div>
+  `);
+}
+
+function executeDelete(id) {
+  const idx = MOCK_DISPAROS.findIndex(x => x.id === id);
+  MOCK_DISPAROS.splice(idx, 1);
+  closeModal();
+  renderMainView();
+}
 function openFilterDropdown(type, el) { el.classList.toggle('active'); }
 
 // ── Main render ─────────────────────────────────────────────────
