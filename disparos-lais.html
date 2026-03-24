@@ -250,6 +250,33 @@
     display: flex;
     flex-direction: column;
   }
+  .header {
+    padding: var(--sp-6) var(--sp-8) var(--sp-4);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: var(--sp-4);
+  }
+  .header-left h1 {
+    font-size: var(--text-2xl); font-weight: 700; color: var(--gray-900);
+    letter-spacing: -0.02em; line-height: var(--leading-tight);
+  }
+  .header-left p { font-size: var(--text-sm); color: var(--gray-500); margin-top: var(--sp-1); }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-4); border-radius: var(--radius-sm);
+    font-size: var(--text-sm); font-weight: 600; cursor: pointer;
+    transition: all .15s ease; border: 1px solid transparent;
+    white-space: nowrap; line-height: var(--leading-tight); min-height: 34px;
+  }
+  .btn svg { width: 14px; height: 14px; flex-shrink: 0; }
+  .btn-ghost { background: var(--white); border-color: var(--gray-200); color: var(--gray-600); font-weight: 500; }
+  .btn-ghost:hover { background: var(--gray-50); border-color: var(--gray-300); color: var(--gray-700); }
+  .btn-primary { background: var(--purple-600); color: var(--white); border-color: var(--purple-600); }
+  .btn-primary:hover { background: var(--purple-700); border-color: var(--purple-700); }
+  .btn-danger { background: var(--red-600); color: var(--white); border-color: var(--red-600); }
+  .btn-danger:hover { background: var(--red-700); }
+  .btn-success { background: var(--green-600); color: var(--white); border-color: var(--green-600); }
+  .btn-success:hover { background: var(--green-700); }
 </style>
 </head>
 <body>
@@ -315,8 +342,18 @@
       </div>
     </div>
   </aside>
-  <!-- main (placeholder) -->
-  <main class="main" id="mainArea"><p style="padding:2rem">placeholder</p></main>
+  <!-- main -->
+  <main class="main" id="mainArea">
+    <div class="header" id="pageHeader">
+      <div class="header-left">
+        <h1>Disparos</h1>
+        <p>Mensagens em massa via WhatsApp</p>
+      </div>
+    </div>
+    <!-- error banner goes here -->
+    <!-- summary card goes here -->
+    <!-- table section goes here -->
+  </main>
 </div>
 <script>
   // JS goes here
