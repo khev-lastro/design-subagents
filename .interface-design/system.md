@@ -4,11 +4,13 @@
 Brazilian PropTech CRM for real estate agents (corretores). The AI assistant "Lais" surfaces contextual insights. Feels like a knowledgeable colleague tapping your shoulder — not an alarm system.
 
 ## Palette
-- **Brand:** Purple 600 `#9333ea` (Lais identity)
-- **Surfaces:** White `#fff`, Gray-50 `#f9fafb` (canvas)
-- **Borders:** Gray-200 `#e5e7eb` (standard), Gray-100 `#f3f4f6` (soft)
-- **Text:** Gray-900 (primary), Gray-700 (secondary), Gray-400 (tertiary)
-- **Semantic:** Green-600 (success/sent), Amber-500 (warning/urgent), Red-600 (error), Blue-500 (discovery)
+- **Brand:** `#49317A` (primary) / `#6845AD` (primary-600) / `#9664FA` (primary-400 / ring)
+- **Surfaces:** White `#FFFFFF` (card), `#F8F8FA` (canvas/background)
+- **Borders:** `#D1D1D9` (standard), `#E5E5EB` (soft/sidebar)
+- **Neutral scale:** 900=`#1A1A2E` 700=`#4A4A5A` 600=`#6B6B7B` 400=`#B0B0BC` 200=`#E5E5EB` 100=`#F0F0F4` 50=`#F8F8FA`
+- **Text:** neutral-800 `#2D2D3F` (primary), neutral-600 `#6B6B7B` (muted)
+- **Semantic:** success=`#16A34A`, info=`#2563EB`, warning=`#F59E0B`, danger=`#EF4444`
+- **Semantic tints (badge/banner):** each semantic color has 50/100/700 stops
 
 ## Depth Strategy
 Borders-first. Shadows only on floating elements (cards, popovers, toast). shadow-xs for inline containers, shadow-lg for floating.
@@ -17,7 +19,10 @@ Borders-first. Shadows only on floating elements (cards, popovers, toast). shado
 4px base grid. Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48.
 
 ## Typography
-System font stack: -apple-system, Inter, Segoe UI. Scale: 11/13/14/16/20/24px. Hierarchy via weight (400/500/600/700) + tracking, not size alone. Tabular nums for data.
+- **Body:** Red Hat Text, -apple-system, sans-serif. Base 14px / 0.875rem.
+- **Headings:** Red Hat Display, -apple-system, sans-serif. Use `.font-heading`, tracking -0.01em.
+- Scale: 11/13/14/16/18/20/24px. Hierarchy via weight (400/500/600/700) + tracking, not size alone.
+- Tabular nums for data. Font smoothing: antialiased.
 
 ## Radius
 6px (inputs/buttons), 8px (cards/nav), 12px (containers), 16px (modals).
@@ -87,3 +92,83 @@ White bg, gray-200 top border. Selection count (xs, gray-400) + divider + primar
 - Entry animation: fadeIn overlay (.15s) + slideUp modal (.2s cubic-bezier(.16,1,.3,1), translateY 8px→0)
 - Clicking outside overlay closes modal
 - Actions row: justify flex-end, gap sp-2 — ghost "keep/cancel action" left + btn-danger "confirm" right
+
+---
+
+## Component Library — prd-design-components (Extracted 2026-03-24)
+
+Stack: React + TypeScript + Tailwind CSS v4 (`@theme`), shadcn/ui, CVA, Radix UI, Lucide icons.
+
+### Button
+- Base: `rounded-md text-sm font-medium gap-1.5 disabled:opacity-45`
+- Sizes: default `h-10 px-4`, sm `h-8 px-3`, lg `h-11 px-6`, icon `size-9 rounded-full`, icon-square `size-9 rounded-xl`
+- Variants: default (primary bg white text), destructive (danger bg), outline (border+bg-white), secondary (white bg neutral text), ghost (transparent hover:bg-accent), link (underline)
+
+### Card
+- `rounded-lg border border-neutral-200 bg-card shadow-sm hover:border-neutral-300 hover:shadow-md`
+- CardHeader: `p-6 gap-3` — CardContent: `p-6 pt-0`
+- CardTitle: `text-lg font-heading font-semibold`
+
+### Input / Select trigger
+- `h-10 rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm`
+- Hover: `border-neutral-300`; Focus: `border-primary ring-2 ring-ring/15`
+- Disabled: `bg-neutral-50 opacity-50`; Invalid: `border-danger-500 ring-danger-500/15`
+
+### Badge
+- Base: `rounded-full px-2.5 py-0.5 text-xs font-medium`
+- 9 variants: default (primary), secondary, destructive, outline, success, warning, danger, info, neutral
+- Semantic tints: `bg-{color}-100 text-{color}-700`
+
+### InlineTabs (underline style)
+- List: `inline-flex items-center gap-6 border-b border-neutral-200`
+- Trigger: `pb-2.5 pt-1 text-sm font-medium text-muted-foreground`
+- Active: `text-primary` + `::after` 2px `bg-primary rounded-full` bottom underline
+- Use for page-level navigation tabs (like disparos filter tabs)
+
+### Tabs (pill style)
+- List: `h-9 bg-muted rounded-md p-1`; Trigger: `px-3 py-1 text-sm font-medium`
+- Active: `bg-card shadow-xs rounded-xs`
+- Use for contained tab switchers
+
+### Dialog / Modal
+- Overlay: `bg-black/40 backdrop-blur-[2px]`
+- Content: `max-w-lg rounded-lg border border-neutral-200 bg-card p-6 shadow-xl`
+- Title: `text-lg font-heading font-semibold`; Description: `text-sm text-muted-foreground`
+- Close button: `size-7 rounded-full text-neutral-400 hover:bg-neutral-100`
+
+### Banner (4 variants)
+- Base: `rounded-lg px-5 py-4` with icon slot + title (font-heading semibold) + description + action + close
+- `gradient`: `bg-gradient-to-r from-[#2E1F4D] to-[#49317A] text-white`
+- `info/success/warning`: `bg-{color}-50 text-{color}-700 border border-current/20`
+- Close: `size-7 rounded-full` — gradient: `text-white/70 hover:bg-white/10`; semantic: `hover:bg-black/5`
+
+### Sidebar
+- `w-[240px] min-h-screen bg-white border-r border-neutral-200`
+- Active nav item: `text-primary font-medium bg-primary-50` + `absolute left-0 w-1 bg-primary rounded-r-full` accent bar
+- Section labels: `text-[11px] font-medium text-neutral-400 uppercase tracking-wider`
+- Nav items: `px-5 py-2.5 text-sm text-neutral-600`; icons: `w-5 h-5`
+
+### ActionBar (bulk selection)
+- `fixed bottom-0 inset-x-0 border-t border-neutral-200 bg-white px-6 py-3 shadow-lg`
+- Only renders when `selectedCount > 0`
+- Layout: clear-X + "N items selected" (left) + action buttons (ml-auto right)
+
+### StepProgress
+- Horizontal segments: `h-1 flex-1 rounded-full` — active: `bg-primary`, inactive: `bg-neutral-200`
+
+### Table
+- TableHead: `h-10 px-4 text-left font-medium text-muted-foreground`
+- TableCell: `p-4 align-middle`
+- TableRow: `border-b border-neutral-100 hover:bg-muted/50`
+
+### Shadows
+```
+xs: 0 1px 2px rgba(0,0,0,0.03)
+sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)
+md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)
+lg: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04)
+xl: 0 16px 48px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.05)
+```
+
+### Radius Scale
+sm=4px, md=6px, lg=8px, xl=12px, 2xl=16px, full=9999px
