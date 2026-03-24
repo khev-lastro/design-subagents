@@ -919,10 +919,17 @@ function rowActionsHtml(disparo) {
 
 function mockTaxa(d) {
   if (d.status === 'agendado') return null;
-  if (d.status === 'cancelado') return 0;
-  const seed = (d.id * 7 + 13) % 100;
-  if (d.status === 'erro') return Math.round(seed % 11);
-  return Math.round(18 + seed % 32);
+  // 21 non-agendado rows: 2 red (≈10%), 16 orange (≈75%), 3 green (≈15%)
+  const MAP = {
+    // enviado (12): 3 green + 9 orange
+     4: 22,  5: 15,  6: 14,  7: 13,  8: 16,
+     9: 25, 10: 18, 11: 17, 12: 12, 13: 19, 14: 15, 15: 21,
+    // erro (7): all orange
+    16: 11, 17: 12, 18: 13, 19: 10, 20: 14, 21: 11, 22: 12,
+    // cancelado (2): red
+    23: 0, 24: 0,
+  };
+  return MAP[d.id] ?? 0;
 }
 
 function renderRow(d) {
