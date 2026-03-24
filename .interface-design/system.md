@@ -60,3 +60,30 @@ Pulsing 8px blue dot (absolute, top-right of target element). Click → popover 
 
 ### Bottom Bar
 White bg, gray-200 top border. Selection count (xs, gray-400) + divider + primary buttons + outline button + ghost button. Hierarchy via fill weight.
+
+---
+
+## Disparos — New Patterns (2026-03-24)
+
+### Wizard Pattern
+- Full-page takeover: sidebar stays visible, `#mainArea` innerHTML replaced with wizard
+- Sticky header: back link (left) + title (center) + step indicator (right)
+- Step dots: 24px circle, done=purple-600 filled, active=purple-600 outline, pending=gray-300
+- Step connectors: 32px line, gray-200 pending → purple-300 done
+- Sticky footer: step counter (left) + ghost Voltar + primary/success Avançar/Confirm (right)
+- Max content width: 720px centered in `.wizard-body`
+- Confirm button: green-600 on final step, primary on intermediate steps
+
+### Summary Card (Two-Group)
+- Single card (white, gray-200 border, radius-lg, shadow-xs), two groups side-by-side
+- Groups separated by a 1px gray-200 vertical divider (via border-left on second group)
+- Group label: text-xs, 600, gray-400, uppercase, .05em tracking
+- Metric value: text-xl, 700, tabular-nums, gray-900 (default), green-600 or purple-600 for accented metrics
+- No dividers between metrics within the same group (flex row with gap)
+
+### Confirmation Dialog (Modal)
+- Overlay: rgba(0,0,0,.35), fixed inset, centered flex, z-index 1000
+- Modal: white, radius-xl (16px), shadow-lg, max-width 400px, padding sp-6
+- Entry animation: fadeIn overlay (.15s) + slideUp modal (.2s cubic-bezier(.16,1,.3,1), translateY 8px→0)
+- Clicking outside overlay closes modal
+- Actions row: justify flex-end, gap sp-2 — ghost "keep/cancel action" left + btn-danger "confirm" right
