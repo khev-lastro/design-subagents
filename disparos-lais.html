@@ -456,6 +456,7 @@ tr.row:hover .row-actions { opacity: 1; }
 .step-connector.done { background: var(--purple-300); }
 .wizard-body { flex: 1; overflow-y: auto; padding: var(--sp-8); display: flex; justify-content: center; }
 .wizard-content { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: var(--sp-6); }
+.wizard-content.wide { max-width: 900px; }
 .wizard-footer {
   background: var(--white); border-top: 1px solid var(--gray-200);
   padding: var(--sp-4) var(--sp-8);
@@ -499,7 +500,7 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 .date-notice svg { width: 12px; height: 12px; flex-shrink: 0; }
 
 /* Step 2 — Contacts */
-.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+.method-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-3); }
 .method-card {
   background: var(--white); border: 1.5px solid var(--gray-200); border-radius: var(--radius-lg);
   padding: var(--sp-5); cursor: pointer; transition: all .15s ease; display: flex; flex-direction: column; gap: var(--sp-3);
@@ -510,6 +511,7 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 .method-icon svg { width: 18px; height: 18px; }
 .method-icon.purple { background: var(--purple-100); color: var(--purple-700); }
 .method-icon.amber { background: var(--amber-50); color: var(--amber-700); }
+.method-icon.green { background: var(--green-50); color: var(--green-700); }
 .method-card h3 { font-size: var(--text-sm); font-weight: 700; color: var(--gray-900); }
 .method-card p { font-size: var(--text-xs); color: var(--gray-500); line-height: 1.5; }
 .method-best { font-size: var(--text-xs); font-weight: 600; color: var(--purple-600); margin-top: var(--sp-1); }
@@ -576,6 +578,32 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 .cfilter-clear { height: 32px; padding: 0 var(--sp-3); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); background: transparent; font-size: var(--text-xs); color: var(--gray-500); cursor: pointer; font-family: inherit; align-self: flex-end; transition: all .15s; }
 .cfilter-clear:hover { border-color: var(--gray-300); color: var(--gray-700); background: var(--gray-50); }
 .contact-interacao-cell { font-size: var(--text-xs); color: var(--gray-500); white-space: nowrap; }
+
+/* Step 2 — XLS Upload */
+.xls-dl-box { display: flex; align-items: center; gap: var(--sp-3); background: var(--green-50); border: 1px solid var(--green-100); border-radius: var(--radius-md); padding: var(--sp-3) var(--sp-4); }
+.xls-dl-icon { width: 36px; height: 36px; border-radius: var(--radius-md); background: var(--green-100); color: var(--green-700); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.xls-dl-icon svg { width: 18px; height: 18px; }
+.xls-dl-title { font-size: var(--text-sm); font-weight: 600; color: var(--green-800); line-height: 1.3; }
+.xls-dl-link { font-size: var(--text-xs); color: var(--green-700); font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 2px; }
+.xls-dl-link:hover { color: var(--green-800); }
+.xls-inst-label { font-size: 11px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; margin-bottom: var(--sp-2); }
+.xls-inst-list { list-style: none; counter-reset: xls-steps; display: flex; flex-direction: column; gap: var(--sp-2); margin: 0; padding: 0; }
+.xls-inst-list li { counter-increment: xls-steps; display: flex; align-items: flex-start; gap: var(--sp-2); font-size: var(--text-sm); color: var(--gray-700); line-height: var(--leading-normal); }
+.xls-inst-list li::before { content: counter(xls-steps); min-width: 20px; height: 20px; border-radius: 50%; background: var(--gray-100); color: var(--gray-600); font-size: 10px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+.xls-dropzone { border: 2px dashed var(--gray-200); border-radius: var(--radius-md); padding: var(--sp-8) var(--sp-4); display: flex; flex-direction: column; align-items: center; gap: var(--sp-2); cursor: pointer; transition: all .2s; background: var(--white); text-align: center; }
+.xls-dropzone:hover { border-color: var(--purple-300); background: var(--purple-50); }
+.xls-dropzone.drag-over { border-color: var(--purple-600); background: var(--purple-50); }
+.xls-dropzone-icon { width: 40px; height: 40px; border-radius: var(--radius-md); background: var(--gray-100); color: var(--gray-400); display: flex; align-items: center; justify-content: center; margin-bottom: var(--sp-1); }
+.xls-dropzone-icon svg { width: 20px; height: 20px; }
+.xls-dropzone-text { font-size: var(--text-sm); color: var(--gray-600); }
+.xls-dropzone-link { color: var(--purple-600); font-weight: 600; }
+.xls-dropzone-hint { font-size: var(--text-xs); color: var(--gray-400); }
+.xls-file-ready { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-3) var(--sp-4); background: var(--green-50); border: 1px solid var(--green-200); border-radius: var(--radius-md); }
+.xls-file-ready-icon { color: var(--green-600); }
+.xls-file-ready-icon svg { width: 16px; height: 16px; }
+.xls-file-ready-name { font-size: var(--text-sm); font-weight: 600; color: var(--green-800); flex: 1; }
+.xls-file-ready-clear { font-size: var(--text-xs); color: var(--gray-400); cursor: pointer; padding: var(--sp-1); }
+.xls-file-ready-clear:hover { color: var(--gray-700); }
 
 /* Step 3 — Templates */
 .template-list { display: flex; flex-direction: column; gap: var(--sp-3); }
@@ -880,6 +908,8 @@ const SVG = {
   checkCircle: `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6l3 4L11 2"/></svg>`,
   clock: `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="6" r="5"/><path d="M6 3.5v3l2 1.5"/></svg>`,
   filter: `<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 3h10M3 6h6M5 9h2"/></svg>`,
+  upload: `<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 13V5M7 8l3-3 3 3"/><path d="M4 14v2a1 1 0 001 1h10a1 1 0 001-1v-2"/></svg>`,
+  spreadsheet: `<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="2.5" width="15" height="13" rx="1.5"/><path d="M1.5 7.5h15M1.5 11.5h15M6.5 7.5V15.5M6.5 2.5V7.5"/></svg>`,
 };
 
 function renderErrorBanner() {
@@ -1089,7 +1119,7 @@ function renderWizardShell(stepContent) {
         <div class="steps">${renderStepIndicator()}</div>
       </div>
       <div class="wizard-body">
-        <div class="wizard-content">${stepContent}</div>
+        <div class="wizard-content${wizardStep === 2 ? ' wide' : ''}">${stepContent}</div>
       </div>
       <div class="wizard-footer">
         <span class="footer-step-text">Passo ${wizardStep} de 4</span>
@@ -1154,7 +1184,11 @@ function renderStep1() {
 }
 
 function renderStep2() {
-  const isIndiv = wizardData.contactMethod === 'individual';
+  const method = wizardData.contactMethod || 'individual';
+  const isIndiv = method === 'individual';
+  const isSeg = method === 'segment';
+  const isXls = method === 'xls';
+
   const indivCount = wizardData.selectedContacts.size;
   const segCount = [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0);
   const segSelected = wizardData.selectedSegments.size;
@@ -1189,6 +1223,44 @@ function renderStep2() {
   const interacaoValor = wizardData.contactFilterInteracaoValor || '';
   const interacaoUnidade = wizardData.contactFilterInteracaoUnidade || 'dias';
   const hasActiveFilters = tipoF || interacaoValor;
+
+  const xlsPanel = `
+    <div class="xls-dl-box">
+      <div class="xls-dl-icon">${SVG.spreadsheet}</div>
+      <div>
+        <div class="xls-dl-title">Template de importação</div>
+        <a class="xls-dl-link" href="#" onclick="return false">Baixar template .xls</a>
+      </div>
+    </div>
+    <div>
+      <div class="xls-inst-label">Como preencher:</div>
+      <ol class="xls-inst-list">
+        <li>Baixe o template acima e abra no Excel ou Google Sheets.</li>
+        <li>Preencha a coluna <strong>Nome</strong> com o nome completo de cada contato.</li>
+        <li>Preencha a coluna <strong>Telefone</strong> com o número no formato <strong>(11) 99999-0000</strong>.</li>
+        <li>Não altere os cabeçalhos das colunas — o sistema usa esses nomes para importar.</li>
+        <li>Salve como <strong>.xls</strong> ou <strong>.xlsx</strong> e faça o upload abaixo.</li>
+      </ol>
+    </div>
+    ${wizardData.xlsFileName ? `
+      <div class="xls-file-ready">
+        <div class="xls-file-ready-icon">${SVG.check}</div>
+        <span class="xls-file-ready-name">${wizardData.xlsFileName}</span>
+        <span class="xls-file-ready-clear" onclick="clearXlsFile()">Remover</span>
+      </div>
+    ` : `
+      <div class="xls-dropzone" id="xlsDropzone"
+        onclick="document.getElementById('xlsFileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('drag-over')"
+        ondragleave="this.classList.remove('drag-over')"
+        ondrop="handleXlsDrop(event)">
+        <input type="file" id="xlsFileInput" accept=".xls,.xlsx" style="display:none" onchange="handleXlsFile(this.files)">
+        <div class="xls-dropzone-icon">${SVG.upload}</div>
+        <div class="xls-dropzone-text">Arraste o arquivo aqui ou <span class="xls-dropzone-link">clique para selecionar</span></div>
+        <div class="xls-dropzone-hint">Aceita .xls e .xlsx — máx. 10 MB</div>
+      </div>
+    `}
+  `;
 
   const panelHtml = isIndiv ? `
     <div class="contact-search">
@@ -1232,7 +1304,7 @@ function renderStep2() {
       <span>${indivCount} contato${indivCount !== 1 ? 's' : ''} selecionado${indivCount !== 1 ? 's' : ''}</span>
       <span class="selection-clear" onclick="clearContacts()">Limpar seleção</span>
     </div>
-  ` : `
+  ` : isXls ? xlsPanel : `
     <div class="segment-list">${segRows}</div>
     <div class="selection-bar">
       <span>${segCount} contato${segCount !== 1 ? 's' : ''} em ${segSelected} segmento${segSelected !== 1 ? 's' : ''}</span>
@@ -1248,7 +1320,10 @@ function renderStep2() {
     <div class="method-grid">
       <div class="method-card ${isIndiv ? 'selected' : ''}" onclick="setContactMethod('individual')">
         <div class="method-icon purple">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2a3 3 0 100 6 3 3 0 000-6zM4 16a5 5 0 0110 0"/><circle cx="14" cy="6" r="2"/><path d="M16 13a3 3 0 013 3"/></svg>
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="9" cy="6" r="3.5"/>
+            <path d="M2.5 17a6.5 6.5 0 0113 0"/>
+          </svg>
         </div>
         <div>
           <h3>Seleção Individual</h3>
@@ -1256,14 +1331,32 @@ function renderStep2() {
           <div class="method-best">Melhor para: listas menores, alto controle</div>
         </div>
       </div>
-      <div class="method-card ${!isIndiv ? 'selected' : ''}" onclick="setContactMethod('segment')">
+      <div class="method-card ${isSeg ? 'selected' : ''}" onclick="setContactMethod('segment')">
         <div class="method-icon amber">
-          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h14M2 9h10M2 14h7"/><circle cx="15" cy="12" r="3"/><path d="M15 10v2l1.5 1.5"/></svg>
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="6" cy="6" r="2.5"/>
+            <path d="M1 16a5 5 0 0110 0"/>
+            <circle cx="13.5" cy="6" r="2"/>
+            <path d="M11.5 14.5a4.5 4.5 0 015.5 0"/>
+          </svg>
         </div>
         <div>
           <h3>Por Segmento</h3>
           <p>Selecione grupos pré-definidos com base em comportamento ou perfil.</p>
           <div class="method-best">Melhor para: campanhas em escala, listas grandes</div>
+        </div>
+      </div>
+      <div class="method-card ${isXls ? 'selected' : ''}" onclick="setContactMethod('xls')">
+        <div class="method-icon green">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="1.5" y="2.5" width="15" height="13" rx="1.5"/>
+            <path d="M1.5 7.5h15M1.5 11.5h15M6.5 2.5v13"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Subindo .xls</h3>
+          <p>Suba uma tabela .xls com contatos selecionados.</p>
+          <div class="method-best">Melhor para: listas externas, importações pontuais</div>
         </div>
       </div>
     </div>
@@ -1381,6 +1474,7 @@ function openWizard(mode = 'create', id = null) {
       selectedTemplate: null,
       contactSearch: '',
       contactFilterTipo: '', contactFilterInteracaoValor: '', contactFilterInteracaoUnidade: 'dias',
+      xlsFileName: '',
     };
   } else {
     wizardData = {
@@ -1392,6 +1486,7 @@ function openWizard(mode = 'create', id = null) {
       selectedTemplate: null,
       contactSearch: '',
       contactFilterTipo: '', contactFilterInteracaoValor: '', contactFilterInteracaoUnidade: 'dias',
+      xlsFileName: '',
     };
   }
   renderWizardView();
@@ -1508,6 +1603,17 @@ function clearContactFilters() {
   wizardData.contactSearch = '';
   renderWizardView();
 }
+function handleXlsDrop(e) {
+  e.preventDefault();
+  document.getElementById('xlsDropzone')?.classList.remove('drag-over');
+  const file = e.dataTransfer?.files?.[0];
+  if (file) { wizardData.xlsFileName = file.name; renderWizardView(); }
+}
+function handleXlsFile(files) {
+  const file = files?.[0];
+  if (file) { wizardData.xlsFileName = file.name; renderWizardView(); }
+}
+function clearXlsFile() { wizardData.xlsFileName = ''; renderWizardView(); }
 function clearContacts() { wizardData.selectedContacts.clear(); renderWizardView(); }
 function clearSegments() { wizardData.selectedSegments.clear(); renderWizardView(); }
 function selectTemplate(i) { wizardData.selectedTemplate = i; renderWizardView(); }
