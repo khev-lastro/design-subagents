@@ -307,6 +307,23 @@
   }
   .error-banner-dismiss:hover { color: var(--red-500); background: var(--red-100); }
   .error-banner-dismiss svg { width: 12px; height: 12px; }
+
+/* ── Summary Card ── */
+.summary-section { padding: 0 var(--sp-8) var(--sp-5); }
+.summary-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); padding: var(--sp-5) var(--sp-6);
+  box-shadow: var(--shadow-xs); display: flex; align-items: stretch;
+}
+.summary-group { display: flex; flex-direction: column; gap: var(--sp-3); flex: 1; padding-right: var(--sp-8); }
+.summary-group + .summary-group { padding-left: var(--sp-8); padding-right: 0; border-left: 1px solid var(--gray-200); }
+.summary-group-label { font-size: var(--text-xs); font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; }
+.summary-stats-row { display: flex; gap: var(--sp-8); }
+.summary-stat { display: flex; flex-direction: column; gap: 2px; }
+.summary-value { font-size: var(--text-xl); font-weight: 700; color: var(--gray-900); font-variant-numeric: tabular-nums; line-height: 1; }
+.summary-value.green { color: var(--green-600); }
+.summary-value.purple { color: var(--purple-600); }
+.summary-sub { font-size: var(--text-xs); color: var(--gray-400); font-weight: 400; margin-top: 2px; }
 </style>
 </head>
 <body>
@@ -399,7 +416,37 @@
       </svg>
     </div>
   </div>
-    <!-- summary card goes here -->
+  <!-- summary card -->
+  <div class="summary-section">
+    <div class="summary-card">
+      <div class="summary-group">
+        <div class="summary-group-label">Disparos</div>
+        <div class="summary-stats-row">
+          <div class="summary-stat">
+            <div class="summary-value">3</div>
+            <div class="summary-sub">agendados</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-value green">12</div>
+            <div class="summary-sub">enviados este mês</div>
+          </div>
+        </div>
+      </div>
+      <div class="summary-group">
+        <div class="summary-group-label">Alcance</div>
+        <div class="summary-stats-row">
+          <div class="summary-stat">
+            <div class="summary-value">847</div>
+            <div class="summary-sub">contatos únicos</div>
+          </div>
+          <div class="summary-stat">
+            <div class="summary-value purple">23%</div>
+            <div class="summary-sub">taxa de resposta</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
     <!-- table section goes here -->
   </main>
 </div>
