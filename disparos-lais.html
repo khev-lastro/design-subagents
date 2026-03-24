@@ -381,6 +381,7 @@ tr.row:last-child td { border-bottom: none; }
 .taxa-zero { color: var(--gray-400); font-size: var(--text-sm); font-variant-numeric: tabular-nums; }
 .taxa-high { color: var(--green-600); font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
 .taxa-mid  { color: var(--amber-600); font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
+.taxa-abs  { font-weight: 400; opacity: 0.65; }
 .taxa-low  { color: var(--red-600);   font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
 .type-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 999px; font-size: var(--text-xs); font-weight: 600; }
 .type-badge.remarketing { background: var(--purple-100); color: var(--purple-700); }
@@ -930,10 +931,11 @@ function renderRow(d) {
   if (taxa === null) {
     taxaHtml = `<span class="taxa-null">—</span>`;
   } else if (taxa === 0) {
-    taxaHtml = `<span class="taxa-zero">0%</span>`;
+    taxaHtml = `<span class="taxa-zero">0% <span class="taxa-abs">(0)</span></span>`;
   } else {
-    const cls = taxa >= 25 ? 'taxa-high' : taxa >= 12 ? 'taxa-mid' : 'taxa-low';
-    taxaHtml = `<span class="${cls}">${taxa}%</span>`;
+    const abs = Math.round(taxa / 100 * d.contatos);
+    const cls = taxa >= 20 ? 'taxa-high' : taxa >= 10 ? 'taxa-mid' : 'taxa-low';
+    taxaHtml = `<span class="${cls}">${taxa}% <span class="taxa-abs">(${abs})</span></span>`;
   }
   return `<tr class="row">
     <td>
