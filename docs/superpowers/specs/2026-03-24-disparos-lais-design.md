@@ -49,11 +49,19 @@ Tabs + Table in one container (white, gray-200 border, radius-lg, shadow-xs):
 - Clicking tab filters the table; filters (Tipo/Data/Objetivo) apply across all tabs
 
 Table columns: Nome | Tipo | Objetivo | Data agendada | Contatos | Status | Actions
+
+**Tipo column** displays the disparo category badge (Remarketing or Captação) — this is the "Tipo de Disparo" field set in Step 1 of the wizard.
+
+**Objetivo column** displays the goal text (Reativar Lead or Recomendar Imóvel) — this is the "Objetivo Principal" field set in Step 1. These are two distinct fields, both visible in the table.
+
 - Date format: "25 março 2026" + sub-line "às 09:00"
 - Type badges: remarketing (purple-100/700) · captação (amber-50/700)
 - Status badges: Agendado (blue) · Enviado (green) · Com Erro (red) · Cancelado (gray)
-- Row actions appear on hover (opacity 0→1): Ver detalhes always; Edit + Cancel for agendado only
+- Row actions appear on hover (opacity 0→1):
+  - `agendado`: Ver detalhes · Editar · Cancelar (danger) · Excluir (danger)
+  - `enviado` / `erro` / `cancelado`: Ver detalhes · Excluir (danger)
 - Cancel triggers a confirmation dialog before proceeding
+- Delete (excluir) triggers a separate confirmation dialog before removing from history
 
 ### Mock Database: 24 disparos (3 agendados, 12 enviados, 7 erro, 2 cancelados)
 
@@ -124,13 +132,15 @@ Confirming creates the disparo → returns to main screen → new disparo appear
 ---
 
 ## Screen 3 — Edit Scheduled Disparo
-Reuses wizard layout, pre-populated. All fields editable. Step 4 shows "Salvar Alterações". Confirmation dialog if template changed.
+Reuses the full 4-step wizard layout (same steps, same structure as creation), pre-populated with the existing disparo's values. All fields are editable across all steps. Step 4 shows "Salvar Alterações" (green-600) instead of "Criar Disparo". A confirmation dialog is shown before saving if the template was changed.
 
 ---
 
 ## Confirmation Dialogs
 **Cancel disparo:** "Este disparo será cancelado e não poderá ser desfeito." Actions: Manter agendado (ghost) · Sim, cancelar (red)
-**Delete from history:** "Este registro será removido permanentemente." Actions: Não excluir (ghost) · Sim, excluir (red)
+**Delete disparo:** "Este registro será removido permanentemente do histórico." Actions: Não excluir (ghost) · Sim, excluir (red)
+
+Both dialogs are modals (radius-xl, shadow-lg, white, centered overlay).
 
 ---
 
