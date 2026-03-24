@@ -414,6 +414,193 @@ tr.row:hover .row-actions { opacity: 1; }
 .modal-title { font-size: var(--text-lg); font-weight: 700; color: var(--gray-900); margin-bottom: var(--sp-2); }
 .modal-body { font-size: var(--text-sm); color: var(--gray-500); line-height: var(--leading-normal); margin-bottom: var(--sp-6); }
 .modal-actions { display: flex; justify-content: flex-end; gap: var(--sp-2); }
+
+/* ── Wizard ── */
+.wizard-wrap { display: flex; flex-direction: column; flex: 1; min-height: 100vh; }
+.wizard-header {
+  background: var(--white); border-bottom: 1px solid var(--gray-200);
+  padding: var(--sp-5) var(--sp-8);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-6);
+  position: sticky; top: 0; z-index: 10;
+}
+.wizard-back { display: flex; align-items: center; gap: var(--sp-2); font-size: var(--text-sm); color: var(--gray-500); cursor: pointer; font-weight: 500; transition: color .15s; }
+.wizard-back:hover { color: var(--gray-800); }
+.wizard-back svg { width: 14px; height: 14px; }
+.wizard-title { font-size: var(--text-base); font-weight: 600; color: var(--gray-900); }
+.steps { display: flex; align-items: center; }
+.step-item { display: flex; align-items: center; gap: var(--sp-2); }
+.step-dot {
+  width: 24px; height: 24px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-xs); font-weight: 600; flex-shrink: 0;
+  border: 1.5px solid var(--gray-300); color: var(--gray-400);
+  background: var(--white); transition: all .2s ease;
+}
+.step-dot.done { background: var(--purple-600); border-color: var(--purple-600); color: var(--white); }
+.step-dot.active { border-color: var(--purple-600); color: var(--purple-700); }
+.step-dot svg { width: 10px; height: 10px; }
+.step-label { font-size: var(--text-xs); font-weight: 500; color: var(--gray-400); white-space: nowrap; transition: color .2s; }
+.step-label.active { color: var(--purple-700); font-weight: 600; }
+.step-label.done { color: var(--gray-600); }
+.step-connector { width: 32px; height: 1px; background: var(--gray-200); margin: 0 var(--sp-2); flex-shrink: 0; }
+.step-connector.done { background: var(--purple-300); }
+.wizard-body { flex: 1; overflow-y: auto; padding: var(--sp-8); display: flex; justify-content: center; }
+.wizard-content { width: 100%; max-width: 720px; display: flex; flex-direction: column; gap: var(--sp-6); }
+.wizard-footer {
+  background: var(--white); border-top: 1px solid var(--gray-200);
+  padding: var(--sp-4) var(--sp-8);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; bottom: 0;
+}
+.footer-step-text { font-size: var(--text-xs); color: var(--gray-400); font-weight: 500; }
+.footer-right { display: flex; align-items: center; gap: var(--sp-2); }
+
+/* Step 1 — Form */
+.step-heading { margin-bottom: var(--sp-1); }
+.step-heading h2 { font-size: var(--text-xl); font-weight: 700; color: var(--gray-900); letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); }
+.step-heading p { font-size: var(--text-sm); color: var(--gray-500); margin-top: var(--sp-1); }
+.form-card {
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-lg); padding: var(--sp-6);
+  box-shadow: var(--shadow-xs); display: flex; flex-direction: column; gap: var(--sp-5);
+}
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.form-field { display: flex; flex-direction: column; gap: var(--sp-1); }
+.form-field.full { grid-column: 1 / -1; }
+label { font-size: var(--text-xs); font-weight: 600; color: var(--gray-700); text-transform: uppercase; letter-spacing: .04em; display: flex; gap: var(--sp-2); align-items: baseline; }
+.field-hint { font-size: var(--text-xs); color: var(--gray-400); font-weight: 400; text-transform: none; letter-spacing: 0; }
+input[type=text], input[type=date], input[type=time], textarea, select {
+  background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius-sm);
+  padding: 8px 12px; font-size: var(--text-sm); color: var(--gray-900);
+  font-family: inherit; width: 100%; transition: border-color .15s, box-shadow .15s;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none; border-color: var(--purple-400);
+  box-shadow: 0 0 0 3px rgba(167,139,250,.12); background: var(--white);
+}
+textarea { resize: vertical; min-height: 72px; line-height: var(--leading-normal); }
+select { cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='none' stroke='%239ca3af' stroke-width='1.5' d='M2 4l4 4 4-4'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.date-notice {
+  display: flex; align-items: center; gap: var(--sp-2);
+  background: var(--blue-50); border: 1px solid #bfdbfe;
+  border-radius: var(--radius-sm); padding: 7px 10px;
+  font-size: var(--text-xs); color: var(--blue-600); margin-top: var(--sp-1);
+}
+.date-notice svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* Step 2 — Contacts */
+.method-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-3); }
+.method-card {
+  background: var(--white); border: 1.5px solid var(--gray-200); border-radius: var(--radius-lg);
+  padding: var(--sp-5); cursor: pointer; transition: all .15s ease; display: flex; flex-direction: column; gap: var(--sp-3);
+}
+.method-card:hover { border-color: var(--purple-300); background: var(--purple-50); }
+.method-card.selected { border-color: var(--purple-600); background: var(--purple-50); box-shadow: 0 0 0 3px rgba(147,51,234,.08); }
+.method-icon { width: 36px; height: 36px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; }
+.method-icon svg { width: 18px; height: 18px; }
+.method-icon.purple { background: var(--purple-100); color: var(--purple-700); }
+.method-icon.amber { background: var(--amber-50); color: var(--amber-700); }
+.method-card h3 { font-size: var(--text-sm); font-weight: 700; color: var(--gray-900); }
+.method-card p { font-size: var(--text-xs); color: var(--gray-500); line-height: 1.5; }
+.method-best { font-size: var(--text-xs); font-weight: 600; color: var(--purple-600); margin-top: var(--sp-1); }
+.contact-search { display: flex; gap: var(--sp-2); margin-bottom: var(--sp-3); }
+.contact-search input { flex: 1; background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-sm); padding: 7px 12px; font-size: var(--text-sm); color: var(--gray-900); font-family: inherit; }
+.contact-search input:focus { outline: none; border-color: var(--purple-400); box-shadow: 0 0 0 3px rgba(167,139,250,.12); }
+.contact-table-wrap { border: 1px solid var(--gray-200); border-radius: var(--radius-md); overflow: hidden; max-height: 300px; overflow-y: auto; }
+.ctable { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+.ctable thead { position: sticky; top: 0; background: var(--gray-50); z-index: 1; }
+.ctable th { padding: 8px 12px; text-align: left; font-size: var(--text-xs); font-weight: 500; color: var(--gray-500); border-bottom: 1px solid var(--gray-200); }
+.ctable td { padding: 9px 12px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+.ctable tr:last-child td { border-bottom: none; }
+.ctable tr.csel td { background: var(--purple-50); }
+.ctable tr:hover td { background: var(--purple-50); cursor: pointer; }
+.cbx { width: 15px; height: 15px; border: 1.5px solid var(--gray-300); border-radius: 3px; appearance: none; cursor: pointer; background: var(--white); vertical-align: middle; }
+.cbx:checked { background: var(--purple-600); border-color: var(--purple-600); background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E"); }
+.contact-name-cell { font-weight: 600; color: var(--gray-900); font-size: var(--text-sm); }
+.contact-phone-cell { font-size: var(--text-xs); color: var(--gray-400); font-variant-numeric: tabular-nums; }
+.tag-pill { display: inline-flex; padding: 1px 7px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+.tag-pill.lead { background: var(--purple-100); color: var(--purple-700); }
+.tag-pill.inativo { background: var(--amber-50); color: var(--amber-700); }
+.tag-pill.proprietario { background: var(--green-50); color: var(--green-700); }
+.segment-list { display: flex; flex-direction: column; gap: var(--sp-2); }
+.seg-row {
+  display: flex; align-items: center; gap: var(--sp-3);
+  background: var(--white); border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4); cursor: pointer; transition: all .15s;
+}
+.seg-row:hover { border-color: var(--purple-300); background: var(--purple-50); }
+.seg-row.selected { border-color: var(--purple-600); background: var(--purple-50); }
+.seg-check { width: 18px; height: 18px; border: 1.5px solid var(--gray-300); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; background: var(--white); }
+.seg-row.selected .seg-check { background: var(--purple-600); border-color: var(--purple-600); }
+.seg-check svg { width: 10px; height: 10px; color: var(--white); display: none; }
+.seg-row.selected .seg-check svg { display: block; }
+.seg-info { flex: 1; }
+.seg-name { font-size: var(--text-sm); font-weight: 600; color: var(--gray-900); }
+.seg-desc { font-size: var(--text-xs); color: var(--gray-500); margin-top: 1px; }
+.seg-count { font-size: var(--text-sm); font-weight: 700; color: var(--purple-700); font-variant-numeric: tabular-nums; }
+.seg-count-sub { font-size: var(--text-xs); color: var(--gray-400); text-align: right; }
+.selection-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--sp-2) var(--sp-3); background: var(--purple-50);
+  border: 1px solid var(--purple-200); border-radius: var(--radius-sm);
+  margin-top: var(--sp-2); font-size: var(--text-xs); color: var(--purple-700); font-weight: 600;
+}
+.selection-clear { color: var(--purple-500); cursor: pointer; font-weight: 500; }
+.selection-clear:hover { color: var(--purple-700); }
+
+/* Step 3 — Templates */
+.template-list { display: flex; flex-direction: column; gap: var(--sp-3); }
+.template-card {
+  background: var(--white); border: 1.5px solid var(--gray-200); border-radius: var(--radius-lg);
+  padding: var(--sp-4) var(--sp-5); cursor: pointer; transition: all .15s ease;
+}
+.template-card:hover { border-color: var(--purple-300); }
+.template-card.selected { border-color: var(--purple-600); box-shadow: 0 0 0 3px rgba(147,51,234,.08); }
+.template-card.warn:hover { border-color: var(--amber-400); }
+.template-card.warn.selected { border-color: var(--amber-500); box-shadow: 0 0 0 3px rgba(245,158,11,.08); }
+.tpl-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: var(--sp-2); gap: var(--sp-3); }
+.tpl-name { font-size: var(--text-sm); font-weight: 700; color: var(--gray-900); }
+.tpl-badges { display: flex; gap: var(--sp-1); align-items: center; flex-shrink: 0; }
+.badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+.badge.approved { background: var(--green-100); color: var(--green-700); }
+.badge.pending { background: var(--amber-50); color: var(--amber-700); border: 1px solid var(--amber-200); }
+.badge.rejected { background: var(--red-100); color: var(--red-600); }
+.badge svg { width: 10px; height: 10px; }
+.tpl-body {
+  font-size: var(--text-sm); color: var(--gray-600); line-height: 1.6;
+  background: var(--gray-50); border-radius: var(--radius-sm); padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--gray-200); margin-bottom: var(--sp-2);
+}
+.tpl-param { background: var(--purple-100); color: var(--purple-700); border-radius: 4px; padding: 1px 5px; font-size: 11px; font-weight: 600; }
+.tpl-type { font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); }
+.warning-box {
+  display: flex; gap: var(--sp-3); align-items: flex-start;
+  background: var(--amber-50); border: 1px solid var(--amber-200); border-radius: var(--radius-md);
+  padding: var(--sp-3) var(--sp-4); margin-top: var(--sp-2);
+}
+.warning-box svg { width: 14px; height: 14px; color: var(--amber-600); flex-shrink: 0; margin-top: 1px; }
+.warning-box p { font-size: var(--text-xs); color: var(--amber-700); line-height: 1.5; }
+
+/* Step 4 — Preview */
+.preview-stack { display: flex; flex-direction: column; gap: var(--sp-4); }
+.preview-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-xs); }
+.preview-card-header {
+  padding: var(--sp-3) var(--sp-5); background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200); font-size: var(--text-xs); font-weight: 600;
+  color: var(--gray-500); text-transform: uppercase; letter-spacing: .05em;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.preview-card-body { padding: var(--sp-5); }
+.preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
+.preview-field { display: flex; flex-direction: column; gap: 3px; }
+.preview-label { font-size: var(--text-xs); font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .04em; }
+.preview-value { font-size: var(--text-sm); color: var(--gray-800); font-weight: 500; }
+.contact-chips { display: flex; flex-wrap: wrap; gap: var(--sp-1); }
+.chip { display: inline-flex; align-items: center; gap: 5px; background: var(--gray-100); border-radius: 999px; padding: 3px 10px; font-size: var(--text-xs); color: var(--gray-700); font-weight: 500; }
+.chip.more { background: var(--purple-50); color: var(--purple-700); border: 1px solid var(--purple-200); }
+.wa-preview { background: #e8f5e9; border-radius: var(--radius-lg); padding: var(--sp-4); }
+.wa-bubble { background: var(--white); border-radius: 0 12px 12px 12px; padding: var(--sp-3) var(--sp-4); font-size: var(--text-sm); color: var(--gray-800); line-height: 1.6; box-shadow: 0 1px 2px rgba(0,0,0,.06); display: inline-block; max-width: 88%; }
+.wa-time { font-size: 10px; color: #888; margin-top: 4px; text-align: right; }
 </style>
 </head>
 <body>
@@ -717,7 +904,372 @@ function switchTab(tab) {
 
 function viewDetails(id) { alert('Ver detalhes: disparo #' + id); }
 function editDisparo(id) { openWizard('edit', id); }
-function openWizard(mode, id) { alert('Wizard: ' + (mode||'create') + (id ? ' #'+id : '')); } // stub until Task 8
+// ── Wizard ─────────────────────────────────────────────────────
+const STEP_LABELS = ['Informações', 'Contatos', 'Template', 'Revisão'];
+const MONTH_NAMES = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+
+function getTomorrowDate() {
+  const d = new Date(); d.setDate(d.getDate() + 1);
+  return d.toISOString().split('T')[0];
+}
+
+function formatDatePtBr(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${parseInt(d)} ${MONTH_NAMES[parseInt(m) - 1]} ${y}`;
+}
+
+function renderStepIndicator() {
+  return STEP_LABELS.map((label, i) => {
+    const num = i + 1;
+    const isDone = num < wizardStep;
+    const isActive = num === wizardStep;
+    const dotClass = isDone ? 'done' : isActive ? 'active' : '';
+    const labelClass = isDone ? 'done' : isActive ? 'active' : '';
+    const connector = i > 0 ? `<div class="step-connector ${isDone ? 'done' : ''}"></div>` : '';
+    const dotContent = isDone ? SVG.checkCircle : num;
+    return `${connector}<div class="step-item"><div class="step-dot ${dotClass}">${dotContent}</div><span class="step-label ${labelClass}">${label}</span></div>`;
+  }).join('');
+}
+
+function renderWizardShell(stepContent) {
+  const isLast = wizardStep === 4;
+  const title = wizardMode === 'edit' ? 'Editar Disparo' : 'Novo Disparo';
+  return `
+    <div class="wizard-wrap">
+      <div class="wizard-header">
+        <div class="wizard-back" onclick="closeWizard()">${SVG.back} Voltar para Disparos</div>
+        <div class="wizard-title">${title}</div>
+        <div class="steps">${renderStepIndicator()}</div>
+      </div>
+      <div class="wizard-body">
+        <div class="wizard-content">${stepContent}</div>
+      </div>
+      <div class="wizard-footer">
+        <span class="footer-step-text">Passo ${wizardStep} de 4</span>
+        <div class="footer-right">
+          ${wizardStep > 1 ? `<button class="btn btn-ghost" onclick="wizardPrev()">${SVG.back} Voltar</button>` : ''}
+          ${isLast
+            ? `<button class="btn btn-success" onclick="wizardConfirm()">${SVG.check} ${wizardMode === 'edit' ? 'Salvar Alterações' : 'Criar Disparo'}</button>`
+            : `<button class="btn btn-primary" onclick="wizardNext()">Avançar ${SVG.forward}</button>`
+          }
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderStep1() {
+  return `
+    <div class="step-heading">
+      <h2>Informações do Disparo</h2>
+      <p>Dê um nome, defina o objetivo e agende a data de envio.</p>
+    </div>
+    <div class="form-card">
+      <div class="form-row">
+        <div class="form-field full">
+          <label>Nome do Disparo <span class="field-hint">Visível apenas para você</span></label>
+          <input type="text" id="f-nome" value="${wizardData.nome}" placeholder="Ex: Reativação Leads Março 2026" oninput="wizardData.nome = this.value">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field full">
+          <label>Descrição <span class="field-hint">Opcional — contexto interno</span></label>
+          <textarea id="f-desc" placeholder="Ex: Foco em leads que não responderam nos últimos 90 dias…" oninput="wizardData.descricao = this.value">${wizardData.descricao}</textarea>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Tipo de Disparo</label>
+          <select id="f-tipo" onchange="wizardData.tipo = this.value">
+            <option value="remarketing" ${wizardData.tipo === 'remarketing' ? 'selected' : ''}>Remarketing — reengajamento de leads</option>
+            <option value="captacao" ${wizardData.tipo === 'captacao' ? 'selected' : ''}>Captação — atualização para proprietários</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Objetivo Principal</label>
+          <select id="f-objetivo" onchange="wizardData.objetivo = this.value">
+            <option value="Reativar Lead" ${wizardData.objetivo === 'Reativar Lead' ? 'selected' : ''}>Reativar Lead</option>
+            <option value="Recomendar Imóvel" ${wizardData.objetivo === 'Recomendar Imóvel' ? 'selected' : ''}>Recomendar Imóvel</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Data de Envio</label>
+          <input type="date" id="f-data" value="${wizardData.data}" min="${getTomorrowDate()}" onchange="wizardData.data = formatDatePtBr(this.value)">
+          <div class="date-notice">${SVG.info} Disparos só podem ser agendados a partir de amanhã.</div>
+        </div>
+        <div class="form-field">
+          <label>Horário de Envio</label>
+          <input type="time" id="f-hora" value="${wizardData.hora}" onchange="wizardData.hora = this.value">
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderStep2() {
+  const isIndiv = wizardData.contactMethod === 'individual';
+  const indivCount = wizardData.selectedContacts.size;
+  const segCount = [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0);
+  const segSelected = wizardData.selectedSegments.size;
+
+  const contactRows = MOCK_CONTACTS.map((c, i) => {
+    const sel = wizardData.selectedContacts.has(i);
+    return `<tr class="${sel ? 'csel' : ''}" onclick="toggleContact(${i})">
+      <td style="width:36px;padding-left:12px"><input class="cbx" type="checkbox" ${sel ? 'checked' : ''} onclick="event.stopPropagation();toggleContact(${i})"></td>
+      <td><div class="contact-name-cell">${c.nome}</div><div class="contact-phone-cell">${c.telefone}</div></td>
+      <td><span class="tag-pill ${c.tag}">${TAG_LABELS[c.tag]}</span></td>
+    </tr>`;
+  }).join('');
+
+  const segRows = MOCK_SEGMENTS.map((s, i) => {
+    const sel = wizardData.selectedSegments.has(i);
+    return `<div class="seg-row ${sel ? 'selected' : ''}" onclick="toggleSegment(${i})">
+      <div class="seg-check">${SVG.checkCircle}</div>
+      <div class="seg-info">
+        <div class="seg-name">${s.nome}</div>
+        <div class="seg-desc">${s.desc}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="seg-count">${s.contatos}</div>
+        <div class="seg-count-sub">contatos</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  const panelHtml = isIndiv ? `
+    <div class="contact-search">
+      <input type="text" placeholder="Buscar por nome, telefone ou tag…">
+      <button class="btn btn-ghost" style="font-size:var(--text-xs)">${SVG.filter} Filtrar</button>
+    </div>
+    <div class="contact-table-wrap">
+      <table class="ctable">
+        <thead><tr><th style="width:36px"></th><th>Contato</th><th>Tipo</th></tr></thead>
+        <tbody>${contactRows}</tbody>
+      </table>
+    </div>
+    <div class="selection-bar">
+      <span>${indivCount} contato${indivCount !== 1 ? 's' : ''} selecionado${indivCount !== 1 ? 's' : ''}</span>
+      <span class="selection-clear" onclick="clearContacts()">Limpar seleção</span>
+    </div>
+  ` : `
+    <div class="segment-list">${segRows}</div>
+    <div class="selection-bar">
+      <span>${segCount} contato${segCount !== 1 ? 's' : ''} em ${segSelected} segmento${segSelected !== 1 ? 's' : ''}</span>
+      <span class="selection-clear" onclick="clearSegments()">Limpar seleção</span>
+    </div>
+  `;
+
+  return `
+    <div class="step-heading">
+      <h2>Selecionar Contatos</h2>
+      <p>Escolha como quer selecionar os destinatários deste disparo.</p>
+    </div>
+    <div class="method-grid">
+      <div class="method-card ${isIndiv ? 'selected' : ''}" onclick="setContactMethod('individual')">
+        <div class="method-icon purple">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 2a3 3 0 100 6 3 3 0 000-6zM4 16a5 5 0 0110 0"/><circle cx="14" cy="6" r="2"/><path d="M16 13a3 3 0 013 3"/></svg>
+        </div>
+        <div>
+          <h3>Seleção Individual</h3>
+          <p>Escolha contatos um a um. Ideal quando você sabe exatamente quem quer atingir.</p>
+          <div class="method-best">Melhor para: listas menores, alto controle</div>
+        </div>
+      </div>
+      <div class="method-card ${!isIndiv ? 'selected' : ''}" onclick="setContactMethod('segment')">
+        <div class="method-icon amber">
+          <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h14M2 9h10M2 14h7"/><circle cx="15" cy="12" r="3"/><path d="M15 10v2l1.5 1.5"/></svg>
+        </div>
+        <div>
+          <h3>Por Segmento</h3>
+          <p>Selecione grupos pré-definidos com base em comportamento ou perfil.</p>
+          <div class="method-best">Melhor para: campanhas em escala, listas grandes</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-card" style="gap:var(--sp-3)">${panelHtml}</div>`;
+}
+
+function highlightParams(text) {
+  return text.replace(/\{(\w+)\}/g, '<span class="tpl-param">{$1}</span>');
+}
+
+function renderStep3() {
+  const cards = MOCK_TEMPLATES.map((t, i) => {
+    const isSelected = wizardData.selectedTemplate === i;
+    const isWarn = !t.aprovado;
+    let badgeHtml = '';
+    if (t.aprovado) {
+      badgeHtml = `<span class="badge approved">${SVG.checkCircle} Aprovado pelo Meta</span>`;
+    } else if (t.pendente) {
+      badgeHtml = `<span class="badge pending">${SVG.clock} Aprovação pendente</span>`;
+    } else {
+      badgeHtml = `<span class="badge rejected">${SVG.xSm} Sem aprovação</span>`;
+    }
+    const warnText = t.pendente
+      ? 'Este template ainda não foi aprovado pelo Meta e pode ter taxa de entrega reduzida.'
+      : 'Template não aprovado pelo Meta. Mensagens enviadas podem ter entrega altamente limitada e resultar em bloqueio da conta.';
+    const warningHtml = isSelected && isWarn ? `<div class="warning-box">${SVG.warning}<p>${warnText}</p></div>` : '';
+    return `
+      <div class="template-card ${isSelected ? 'selected' : ''} ${isWarn ? 'warn' : ''}" onclick="selectTemplate(${i})">
+        <div class="tpl-header">
+          <div class="tpl-name">${t.nome}</div>
+          <div class="tpl-badges">${badgeHtml}</div>
+        </div>
+        <div class="tpl-body">${highlightParams(t.corpo)}</div>
+        <div><span class="tpl-type">${t.tipo}</span></div>
+        ${warningHtml}
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="step-heading">
+      <h2>Template de Mensagem</h2>
+      <p>Templates aprovados pelo Meta garantem entrega via WhatsApp Business API.</p>
+    </div>
+    <div class="template-list">${cards}</div>`;
+}
+
+function renderStep4() {
+  const tpl = wizardData.selectedTemplate !== null ? MOCK_TEMPLATES[wizardData.selectedTemplate] : null;
+  const isIndiv = wizardData.contactMethod === 'individual';
+  const names = isIndiv
+    ? [...wizardData.selectedContacts].map(i => MOCK_CONTACTS[i].nome)
+    : [...wizardData.selectedSegments].map(i => MOCK_SEGMENTS[i].nome);
+  const total = isIndiv
+    ? wizardData.selectedContacts.size
+    : [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0);
+  const chips = names.slice(0, 5).map(n => `<span class="chip">${n}</span>`).join('');
+  const moreChip = total > 5 ? `<span class="chip more">+${total - 5} mais</span>` : '';
+  const methodLabel = isIndiv
+    ? `${total} contato${total !== 1 ? 's' : ''}`
+    : `${total} via ${wizardData.selectedSegments.size} segmento${wizardData.selectedSegments.size !== 1 ? 's' : ''}`;
+  const tplBadge = tpl
+    ? (tpl.aprovado ? `<span class="badge approved">${SVG.checkCircle} Aprovado pelo Meta</span>` : `<span class="badge pending">Aguardando aprovação</span>`)
+    : '';
+
+  return `
+    <div class="step-heading">
+      <h2>Revisar e Confirmar</h2>
+      <p>Confira as informações antes de agendar o disparo.</p>
+    </div>
+    <div class="preview-stack">
+      <div class="preview-card">
+        <div class="preview-card-header">Informações do Disparo</div>
+        <div class="preview-card-body">
+          <div class="preview-grid">
+            <div class="preview-field"><div class="preview-label">Nome</div><div class="preview-value">${wizardData.nome || '—'}</div></div>
+            <div class="preview-field"><div class="preview-label">Tipo</div><div class="preview-value">${TIPO_LABELS[wizardData.tipo]}</div></div>
+            <div class="preview-field"><div class="preview-label">Objetivo</div><div class="preview-value">${wizardData.objetivo}</div></div>
+            <div class="preview-field"><div class="preview-label">Data e Hora</div><div class="preview-value">${wizardData.data || '—'} às ${wizardData.hora}</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-card-header">
+          <span>Contatos Selecionados</span>
+          <span style="color:var(--purple-700);font-weight:700">${methodLabel}</span>
+        </div>
+        <div class="preview-card-body">
+          <div class="contact-chips">${chips}${moreChip}</div>
+        </div>
+      </div>
+      <div class="preview-card">
+        <div class="preview-card-header">
+          <span>Template${tpl ? ' — ' + tpl.nome : ''}</span>
+          ${tplBadge}
+        </div>
+        <div class="preview-card-body">
+          ${tpl ? `<div class="wa-preview"><div class="wa-bubble">${highlightParams(tpl.corpo)}<div class="wa-time">09:00 ✓✓</div></div></div>` : '<p style="color:var(--gray-400);font-size:var(--text-sm)">Nenhum template selecionado</p>'}
+        </div>
+      </div>
+    </div>`;
+}
+
+function openWizard(mode = 'create', id = null) {
+  wizardMode = mode;
+  editingId = id;
+  wizardStep = 1;
+  if (mode === 'edit' && id) {
+    const d = MOCK_DISPAROS.find(x => x.id === id);
+    wizardData = {
+      nome: d.nome, descricao: '', tipo: d.tipo, objetivo: d.objetivo,
+      data: '', hora: d.hora,
+      contactMethod: 'individual',
+      selectedContacts: new Set([0, 2, 4]),
+      selectedSegments: new Set(),
+      selectedTemplate: null,
+    };
+  } else {
+    wizardData = {
+      nome: '', descricao: '', tipo: 'remarketing', objetivo: 'Reativar Lead',
+      data: '', hora: '09:00',
+      contactMethod: 'individual',
+      selectedContacts: new Set(),
+      selectedSegments: new Set(),
+      selectedTemplate: null,
+    };
+  }
+  renderWizardView();
+}
+
+function closeWizard() {
+  currentView = 'main';
+  renderMainView();
+}
+
+function renderWizardView() {
+  currentView = 'wizard';
+  let stepContent = '';
+  if (wizardStep === 1) stepContent = renderStep1();
+  else if (wizardStep === 2) stepContent = renderStep2();
+  else if (wizardStep === 3) stepContent = renderStep3();
+  else stepContent = renderStep4();
+  document.getElementById('mainArea').innerHTML = renderWizardShell(stepContent);
+}
+
+function wizardNext() {
+  if (wizardStep < 4) { wizardStep++; renderWizardView(); document.querySelector('.wizard-body')?.scrollTo(0, 0); }
+}
+function wizardPrev() {
+  if (wizardStep > 1) { wizardStep--; renderWizardView(); document.querySelector('.wizard-body')?.scrollTo(0, 0); }
+}
+
+function wizardConfirm() {
+  if (wizardMode === 'edit') {
+    const d = MOCK_DISPAROS.find(x => x.id === editingId);
+    if (d) { d.nome = wizardData.nome || d.nome; d.tipo = wizardData.tipo; d.objetivo = wizardData.objetivo; d.hora = wizardData.hora; }
+  } else {
+    const newId = Math.max(...MOCK_DISPAROS.map(d => d.id)) + 1;
+    MOCK_DISPAROS.unshift({
+      id: newId,
+      nome: wizardData.nome || 'Novo Disparo',
+      tipo: wizardData.tipo,
+      objetivo: wizardData.objetivo,
+      data: wizardData.data || formatDatePtBr(getTomorrowDate()),
+      hora: wizardData.hora,
+      contatos: wizardData.selectedContacts.size || [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0) || 0,
+      status: 'agendado',
+    });
+  }
+  closeWizard();
+  if (wizardMode === 'create') { currentTab = 'agendado'; renderMainView(); }
+}
+
+function setContactMethod(m) { wizardData.contactMethod = m; renderWizardView(); }
+function toggleContact(i) {
+  if (wizardData.selectedContacts.has(i)) wizardData.selectedContacts.delete(i);
+  else wizardData.selectedContacts.add(i);
+  renderWizardView();
+}
+function toggleSegment(i) {
+  if (wizardData.selectedSegments.has(i)) wizardData.selectedSegments.delete(i);
+  else wizardData.selectedSegments.add(i);
+  renderWizardView();
+}
+function clearContacts() { wizardData.selectedContacts.clear(); renderWizardView(); }
+function clearSegments() { wizardData.selectedSegments.clear(); renderWizardView(); }
+function selectTemplate(i) { wizardData.selectedTemplate = i; renderWizardView(); }
 function showModal(html) {
   const overlay = document.createElement('div');
   overlay.className = 'modal-overlay';
