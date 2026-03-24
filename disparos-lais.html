@@ -823,7 +823,7 @@ function getTabCount(tab) {
 }
 
 // ── Render helpers ──────────────────────────────────────────────
-const STATUS_LABELS = { agendado: "Agendado", enviado: "Enviado", erro: "Com Erro", cancelado: "Cancelado" };
+const STATUS_LABELS = { agendado: "Agendado", enviado: "Enviado", erro: "Erro", cancelado: "Cancelado" };
 const TIPO_LABELS = { remarketing: "Remarketing", captacao: "Captação" };
 
 const FILTER_OPTIONS = {
@@ -988,7 +988,7 @@ function renderTableSection() {
   ];
   const GROUP2 = [
     { key: 'enviado', label: 'Enviados' },
-    { key: 'erro', label: 'Com Erro' },
+    { key: 'erro', label: 'Erro' },
     { key: 'cancelado', label: 'Cancelados' },
   ];
   const tabHtml = t => `<div class="tab ${currentTab === t.key ? 'active' : ''}" onclick="switchTab('${t.key}')">${t.label} <span class="tab-count">${getTabCount(t.key)}</span></div>`;
