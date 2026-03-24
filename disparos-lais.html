@@ -285,7 +285,7 @@
 
   /* ── Error Banner ── */
   .error-banner {
-    margin: 0 var(--sp-8) var(--sp-5);
+    margin: var(--sp-4) var(--sp-8) var(--sp-4);
     background: var(--red-50); border: 1px solid var(--red-100);
     border-left: 3px solid var(--red-500); border-radius: var(--radius-md);
     padding: var(--sp-3) var(--sp-4); display: flex; align-items: center;
@@ -608,6 +608,46 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 .wa-preview { background: #e8f5e9; border-radius: var(--radius-lg); padding: var(--sp-4); }
 .wa-bubble { background: var(--white); border-radius: 0 12px 12px 12px; padding: var(--sp-3) var(--sp-4); font-size: var(--text-sm); color: var(--gray-800); line-height: 1.6; box-shadow: 0 1px 2px rgba(0,0,0,.06); display: inline-block; max-width: 88%; }
 .wa-time { font-size: 10px; color: #888; margin-top: 4px; text-align: right; }
+
+/* ── Filter Dropdown ── */
+.filter-btn { position: relative; }
+.filter-dropdown {
+  position: absolute; top: calc(100% + var(--sp-1)); left: 0;
+  background: var(--white); border: 1px solid var(--gray-200);
+  border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+  min-width: 172px; z-index: 100; overflow: hidden;
+}
+.filter-dropdown-item {
+  padding: var(--sp-2) var(--sp-3); font-size: var(--text-sm);
+  color: var(--gray-700); cursor: pointer; white-space: nowrap;
+}
+.filter-dropdown-item:hover { background: var(--gray-50); }
+.filter-dropdown-item.active { color: var(--purple-700); background: var(--purple-50); font-weight: 600; }
+.filter-dropdown-divider { height: 1px; background: var(--gray-100); margin: var(--sp-1) 0; }
+
+/* ── Tab group divider ── */
+.tabs-group-divider {
+  width: 1px; background: var(--gray-200);
+  margin: var(--sp-2) var(--sp-1); flex-shrink: 0; align-self: stretch;
+}
+
+/* ── Category header rows ── */
+.category-header-row td {
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--gray-50);
+  border-bottom: 1px solid var(--gray-200);
+  border-top: none;
+}
+.category-separator td { border-top: 2px solid var(--gray-200); }
+.category-header-label {
+  font-size: var(--text-xs); font-weight: 600;
+  color: var(--gray-500); text-transform: uppercase; letter-spacing: .05em;
+}
+.category-header-count {
+  font-size: var(--text-xs); font-weight: 600; color: var(--gray-400);
+  margin-left: var(--sp-2); background: var(--gray-200);
+  border-radius: 999px; padding: 1px 7px; display: inline-block;
+}
 </style>
 </head>
 <body>
@@ -745,7 +785,7 @@ const MOCK_TEMPLATES = [
 // ── App state ───────────────────────────────────────────────────
 let currentView = 'main'; // 'main' | 'wizard'
 let currentTab = 'todos';
-let activeFilters = { tipo: null, objetivo: null };
+let activeFilters = { tipo: null, objetivo: null, data: null };
 
 // wizard state
 let wizardStep = 1;
@@ -766,6 +806,7 @@ function getFilteredDisparos(tab) {
   if (tab !== 'todos') rows = rows.filter(d => d.status === tab);
   if (activeFilters.tipo) rows = rows.filter(d => d.tipo === activeFilters.tipo);
   if (activeFilters.objetivo) rows = rows.filter(d => d.objetivo === activeFilters.objetivo);
+  if (activeFilters.data) rows = rows.filter(d => d.data.toLowerCase().includes(activeFilters.data));
   return rows;
 }
 
@@ -777,6 +818,24 @@ function getTabCount(tab) {
 // ── Render helpers ──────────────────────────────────────────────
 const STATUS_LABELS = { agendado: "Agendado", enviado: "Enviado", erro: "Com Erro", cancelado: "Cancelado" };
 const TIPO_LABELS = { remarketing: "Remarketing", captacao: "Captação" };
+
+const FILTER_OPTIONS = {
+  tipo: [
+    { value: 'remarketing', label: 'Remarketing' },
+    { value: 'captacao', label: 'Captação' },
+  ],
+  objetivo: [
+    { value: 'Reativar Lead', label: 'Reativar Lead' },
+    { value: 'Recomendar Imóvel', label: 'Recomendar Imóvel' },
+  ],
+  data: [
+    { value: 'abril 2026', label: 'Abril 2026' },
+    { value: 'março 2026', label: 'Março 2026' },
+    { value: 'fevereiro 2026', label: 'Fevereiro 2026' },
+    { value: 'janeiro 2026', label: 'Janeiro 2026' },
+    { value: '2025', label: '2025' },
+  ],
+};
 
 const SVG = {
   eye: `<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="7" cy="7" r="2.5"/><path d="M1 7s2-5 6-5 6 5 6 5-2 5-6 5-6-5-6-5z"/></svg>`,
@@ -851,50 +910,75 @@ function rowActionsHtml(disparo) {
   return view + trash;
 }
 
+function renderRow(d) {
+  return `<tr class="row">
+    <td><div class="disparo-name">${d.nome}</div></td>
+    <td><span class="status-badge ${d.status}"><span class="status-dot"></span>${STATUS_LABELS[d.status]}</span></td>
+    <td><span class="type-badge ${d.tipo}">${TIPO_LABELS[d.tipo]}</span></td>
+    <td><span class="goal-text">${d.objetivo}</span></td>
+    <td><div class="date-text">${d.data}</div><div class="date-time">às ${d.hora}</div></td>
+    <td><span class="contacts-count">${d.contatos}</span></td>
+    <td><div class="row-actions">${rowActionsHtml(d)}</div></td>
+  </tr>`;
+}
+
 function renderTableRows(tab) {
+  const empty = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray-400);font-size:var(--text-sm)">Nenhum disparo encontrado</td></tr>`;
+  if (tab === 'todos') {
+    const all = getFilteredDisparos('todos');
+    const agendados = all.filter(d => d.status === 'agendado');
+    const historico = all.filter(d => d.status !== 'agendado');
+    if (!all.length) return empty;
+    let html = '';
+    if (agendados.length) {
+      html += `<tr class="category-header-row"><td colspan="7"><span class="category-header-label">Agendados</span><span class="category-header-count">${agendados.length}</span></td></tr>`;
+      html += agendados.map(renderRow).join('');
+    }
+    if (historico.length) {
+      html += `<tr class="category-header-row${agendados.length ? ' category-separator' : ''}"><td colspan="7"><span class="category-header-label">Histórico</span><span class="category-header-count">${historico.length}</span></td></tr>`;
+      html += historico.map(renderRow).join('');
+    }
+    return html;
+  }
   const rows = getFilteredDisparos(tab);
-  if (rows.length === 0) return `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--gray-400);font-size:var(--text-sm)">Nenhum disparo encontrado</td></tr>`;
-  return rows.map(d => `
-    <tr class="row">
-      <td><div class="disparo-name">${d.nome}</div></td>
-      <td><span class="type-badge ${d.tipo}">${TIPO_LABELS[d.tipo]}</span></td>
-      <td><span class="goal-text">${d.objetivo}</span></td>
-      <td><div class="date-text">${d.data}</div><div class="date-time">às ${d.hora}</div></td>
-      <td><span class="contacts-count">${d.contatos}</span></td>
-      <td><span class="status-badge ${d.status}"><span class="status-dot"></span>${STATUS_LABELS[d.status]}</span></td>
-      <td><div class="row-actions">${rowActionsHtml(d)}</div></td>
-    </tr>`).join('');
+  if (!rows.length) return empty;
+  return rows.map(renderRow).join('');
 }
 
 function renderTableSection() {
-  const TAB_DEF = [
+  const GROUP1 = [
     { key: 'todos', label: 'Todos' },
     { key: 'agendado', label: 'Agendados' },
+  ];
+  const GROUP2 = [
     { key: 'enviado', label: 'Enviados' },
     { key: 'erro', label: 'Com Erro' },
     { key: 'cancelado', label: 'Cancelados' },
   ];
+  const tabHtml = t => `<div class="tab ${currentTab === t.key ? 'active' : ''}" onclick="switchTab('${t.key}')">${t.label} <span class="tab-count">${getTabCount(t.key)}</span></div>`;
   return `
     <div class="table-section">
       <div class="table-meta">
         <div class="table-meta-left">
           <span class="section-title">Lista de Disparos</span>
           <div class="filters">
-            <div class="filter-btn" onclick="openFilterDropdown('tipo', this)">Tipo ${SVG.chevronDown}</div>
-            <div class="filter-btn" onclick="openFilterDropdown('data', this)">Data ${SVG.chevronDown}</div>
-            <div class="filter-btn" onclick="openFilterDropdown('objetivo', this)">Objetivo ${SVG.chevronDown}</div>
+            ${filterBtnHtml('tipo', 'Tipo')}
+            ${filterBtnHtml('data', 'Data')}
+            ${filterBtnHtml('objetivo', 'Objetivo')}
           </div>
         </div>
         <button class="btn btn-primary" onclick="openWizard()">${SVG.plus} Novo Disparo</button>
       </div>
       <div class="tabs-table-wrap">
         <div class="tabs-row">
-          ${TAB_DEF.map(t => `<div class="tab ${currentTab === t.key ? 'active' : ''}" onclick="switchTab('${t.key}')">${t.label} <span class="tab-count">${getTabCount(t.key)}</span></div>`).join('')}
+          ${GROUP1.map(tabHtml).join('')}
+          <div class="tabs-group-divider"></div>
+          ${GROUP2.map(tabHtml).join('')}
         </div>
         <table>
           <thead><tr>
-            <th>Nome</th><th>Tipo</th><th>Objetivo</th>
-            <th>Data agendada</th><th>Contatos</th><th>Status</th>
+            <th>Nome</th><th>Status</th><th>Tipo</th><th>Objetivo</th>
+            <th>Data agendada</th><th>Contatos</th>
             <th style="width:116px"></th>
           </tr></thead>
           <tbody id="tableBody">${renderTableRows(currentTab)}</tbody>
@@ -1351,13 +1435,55 @@ function executeDelete(id) {
   closeModal();
   renderMainView();
 }
-function openFilterDropdown(type, el) { el.classList.toggle('active'); }
+function openFilterDropdown(type, el) {
+  if (document.querySelector('.filter-dropdown')) { closeDropdowns(); return; }
+  const opts = FILTER_OPTIONS[type];
+  const cur = activeFilters[type];
+  const dd = document.createElement('div');
+  dd.className = 'filter-dropdown';
+  const allItem = document.createElement('div');
+  allItem.className = 'filter-dropdown-item' + (cur === null ? ' active' : '');
+  allItem.textContent = 'Todos';
+  allItem.onclick = e => { e.stopPropagation(); setFilter(type, null); };
+  dd.appendChild(allItem);
+  const divEl = document.createElement('div');
+  divEl.className = 'filter-dropdown-divider';
+  dd.appendChild(divEl);
+  opts.forEach(o => {
+    const item = document.createElement('div');
+    item.className = 'filter-dropdown-item' + (cur === o.value ? ' active' : '');
+    item.textContent = o.label;
+    item.onclick = e => { e.stopPropagation(); setFilter(type, o.value); };
+    dd.appendChild(item);
+  });
+  el.appendChild(dd);
+  setTimeout(() => document.addEventListener('click', closeDropdowns, { once: true }), 0);
+}
+
+function closeDropdowns() {
+  document.querySelectorAll('.filter-dropdown').forEach(d => d.remove());
+}
+
+function setFilter(type, value) {
+  activeFilters[type] = value;
+  closeDropdowns();
+  renderMainView();
+}
+
+function filterBtnHtml(type, label) {
+  const val = activeFilters[type];
+  if (val) {
+    const opt = FILTER_OPTIONS[type].find(o => o.value === val);
+    return `<div class="filter-btn active" onclick="openFilterDropdown('${type}', this)">${opt ? opt.label : val} ${SVG.chevronDown}</div>`;
+  }
+  return `<div class="filter-btn" onclick="openFilterDropdown('${type}', this)">${label} ${SVG.chevronDown}</div>`;
+}
 
 // ── Main render ─────────────────────────────────────────────────
 function renderMainView() {
   document.getElementById('mainArea').innerHTML =
-    renderErrorBanner() +
     renderPageHeader() +
+    renderErrorBanner() +
     renderSummaryCard() +
     renderTableSection();
 }
