@@ -278,6 +278,35 @@
   .btn-danger:hover { background: var(--red-700); }
   .btn-success { background: var(--green-600); color: var(--white); border-color: var(--green-600); }
   .btn-success:hover { background: var(--green-700); }
+
+  /* ── Error Banner ── */
+  .error-banner {
+    margin: 0 var(--sp-8) var(--sp-5);
+    background: var(--red-50); border: 1px solid var(--red-100);
+    border-left: 3px solid var(--red-500); border-radius: var(--radius-md);
+    padding: var(--sp-3) var(--sp-4); display: flex; align-items: center;
+    gap: var(--sp-3); box-shadow: var(--shadow-xs);
+  }
+  .error-banner-icon {
+    width: 28px; height: 28px; border-radius: var(--radius-sm);
+    background: var(--red-100); color: var(--red-600);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .error-banner-icon svg { width: 14px; height: 14px; }
+  .error-banner-text { flex: 1; }
+  .error-banner-title { font-size: var(--text-sm); font-weight: 600; color: var(--red-600); line-height: var(--leading-tight); }
+  .error-banner-sub { font-size: var(--text-xs); color: var(--red-600); opacity: .75; margin-top: 2px; }
+  .error-banner-action {
+    font-size: var(--text-sm); font-weight: 600; color: var(--red-600);
+    cursor: pointer; white-space: nowrap;
+    text-decoration: underline; text-underline-offset: 2px;
+  }
+  .error-banner-dismiss {
+    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+    color: var(--red-300); cursor: pointer; border-radius: var(--radius-sm); flex-shrink: 0;
+  }
+  .error-banner-dismiss:hover { color: var(--red-500); background: var(--red-100); }
+  .error-banner-dismiss svg { width: 12px; height: 12px; }
 </style>
 </head>
 <body>
@@ -351,7 +380,25 @@
         <p>Mensagens em massa via WhatsApp</p>
       </div>
     </div>
-    <!-- error banner goes here -->
+  <!-- error banner -->
+  <div class="error-banner" id="errorBanner">
+    <div class="error-banner-icon">
+      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="8" cy="8" r="7"/>
+        <path d="M8 5v3M8 10.5h.01"/>
+      </svg>
+    </div>
+    <div class="error-banner-text">
+      <div class="error-banner-title">7 disparos com erro de entrega</div>
+      <div class="error-banner-sub">Alguns contatos não receberam as mensagens. Verifique os números ou o template utilizado.</div>
+    </div>
+    <span class="error-banner-action" onclick="switchTab('erro')">Ver disparos com erro</span>
+    <div class="error-banner-dismiss" onclick="this.closest('.error-banner').style.display='none'">
+      <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M1 1l10 10M11 1L1 11"/>
+      </svg>
+    </div>
+  </div>
     <!-- summary card goes here -->
     <!-- table section goes here -->
   </main>
