@@ -1219,6 +1219,10 @@ function renderStep2() {
     </div>`;
   }).join('');
 
+  const totalContacts = isIndiv ? indivCount : isSeg ? segCount : (wizardData.xlsContactCount || 0);
+  const CONTACT_LIMIT = 150;
+  const overLimit = totalContacts > CONTACT_LIMIT;
+
   const tipoF = wizardData.contactFilterTipo || '';
   const interacaoValor = wizardData.contactFilterInteracaoValor || '';
   const interacaoUnidade = wizardData.contactFilterInteracaoUnidade || 'dias';
@@ -1360,6 +1364,11 @@ function renderStep2() {
         </div>
       </div>
     </div>
+    ${overLimit ? `
+    <div class="warning-box" style="margin:0">
+      ${SVG.warning}
+      <p>Sua seleção tem <strong>${totalContacts} contatos</strong>, mas seu plano atual permite até <strong>150 contatos por disparo</strong>. Somente os primeiros 150 serão enviados.</p>
+    </div>` : ''}
     <div class="form-card" style="gap:var(--sp-3)">${panelHtml}</div>`;
 }
 
@@ -1474,7 +1483,7 @@ function openWizard(mode = 'create', id = null) {
       selectedTemplate: null,
       contactSearch: '',
       contactFilterTipo: '', contactFilterInteracaoValor: '', contactFilterInteracaoUnidade: 'dias',
-      xlsFileName: '',
+      xlsFileName: '', xlsContactCount: 0,
     };
   } else {
     wizardData = {
@@ -1486,7 +1495,7 @@ function openWizard(mode = 'create', id = null) {
       selectedTemplate: null,
       contactSearch: '',
       contactFilterTipo: '', contactFilterInteracaoValor: '', contactFilterInteracaoUnidade: 'dias',
-      xlsFileName: '',
+      xlsFileName: '', xlsContactCount: 0,
     };
   }
   renderWizardView();
@@ -1607,13 +1616,13 @@ function handleXlsDrop(e) {
   e.preventDefault();
   document.getElementById('xlsDropzone')?.classList.remove('drag-over');
   const file = e.dataTransfer?.files?.[0];
-  if (file) { wizardData.xlsFileName = file.name; renderWizardView(); }
+  if (file) { wizardData.xlsFileName = file.name; wizardData.xlsContactCount = 234; renderWizardView(); }
 }
 function handleXlsFile(files) {
   const file = files?.[0];
-  if (file) { wizardData.xlsFileName = file.name; renderWizardView(); }
+  if (file) { wizardData.xlsFileName = file.name; wizardData.xlsContactCount = 234; renderWizardView(); }
 }
-function clearXlsFile() { wizardData.xlsFileName = ''; renderWizardView(); }
+function clearXlsFile() { wizardData.xlsFileName = ''; wizardData.xlsContactCount = 0; renderWizardView(); }
 function clearContacts() { wizardData.selectedContacts.clear(); renderWizardView(); }
 function clearSegments() { wizardData.selectedSegments.clear(); renderWizardView(); }
 function selectTemplate(i) { wizardData.selectedTemplate = i; renderWizardView(); }
