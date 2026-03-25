@@ -665,6 +665,34 @@ select { cursor: pointer; appearance: none; background-image: url("data:image/sv
 .wa-bubble { background: var(--white); border-radius: 0 12px 12px 12px; padding: var(--sp-3) var(--sp-4); font-size: var(--text-sm); color: var(--gray-800); line-height: 1.6; box-shadow: 0 1px 2px rgba(0,0,0,.06); display: inline-block; max-width: 88%; }
 .wa-time { font-size: 10px; color: #888; margin-top: 4px; text-align: right; }
 
+/* Step 4 — Plan Usage Card */
+.plan-header-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: var(--sp-4); }
+.plan-header-label { font-size: var(--text-sm); font-weight: 600; color: var(--gray-700); }
+.plan-header-total { font-size: var(--text-sm); font-weight: 700; color: var(--gray-900); font-variant-numeric: tabular-nums; }
+.plan-bar-wrap { height: 32px; border-radius: var(--radius-sm); background: var(--gray-100); overflow: hidden; display: flex; }
+.plan-bar-seg { height: 100%; display: flex; align-items: center; justify-content: center; transition: width .5s cubic-bezier(.4,0,.2,1); flex-shrink: 0; }
+.plan-bar-seg.existing { background: var(--gray-300); }
+.plan-bar-seg.new-disp { background: var(--purple-500); }
+.plan-bar-seg.new-disp.warn { background: var(--amber-400); }
+.plan-bar-seg-label { font-size: 11px; font-weight: 700; color: var(--white); white-space: nowrap; padding: 0 6px; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+.plan-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-4); margin-top: var(--sp-5); }
+.plan-stat { display: flex; flex-direction: column; gap: 2px; }
+.plan-stat-dot { width: 8px; height: 8px; border-radius: 50%; margin-bottom: var(--sp-1); }
+.plan-stat-dot.gray { background: var(--gray-300); }
+.plan-stat-dot.purple { background: var(--purple-500); }
+.plan-stat-dot.amber { background: var(--amber-400); }
+.plan-stat-dot.light { background: var(--gray-100); border: 1.5px solid var(--gray-300); }
+.plan-stat-num { font-size: 22px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--gray-800); }
+.plan-stat-num.purple { color: var(--purple-600); }
+.plan-stat-num.amber { color: var(--amber-600); }
+.plan-stat-num.muted { color: var(--gray-400); }
+.plan-stat-desc { font-size: var(--text-xs); color: var(--gray-500); }
+.plan-divider { height: 1px; background: var(--gray-100); margin: var(--sp-4) 0; }
+.plan-summary-row { display: flex; align-items: center; justify-content: space-between; }
+.plan-summary-txt { font-size: var(--text-xs); color: var(--gray-500); }
+.plan-summary-pct { font-size: var(--text-sm); font-weight: 700; color: var(--gray-800); font-variant-numeric: tabular-nums; }
+.plan-summary-pct.warn { color: var(--amber-600); }
+
 /* ── Filter Dropdown ── */
 .filter-btn { position: relative; }
 .filter-dropdown {
@@ -1421,21 +1449,86 @@ function renderStep3() {
 
 function renderStep4() {
   const tpl = wizardData.selectedTemplate !== null ? MOCK_TEMPLATES[wizardData.selectedTemplate] : null;
-  const isIndiv = wizardData.contactMethod === 'individual';
+  const method = wizardData.contactMethod || 'individual';
+  const isIndiv = method === 'individual';
+  const isSeg = method === 'segment';
+  const isXls = method === 'xls';
+
   const names = isIndiv
     ? [...wizardData.selectedContacts].map(i => MOCK_CONTACTS[i].nome)
-    : [...wizardData.selectedSegments].map(i => MOCK_SEGMENTS[i].nome);
-  const total = isIndiv
-    ? wizardData.selectedContacts.size
-    : [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0);
-  const chips = names.slice(0, 5).map(n => `<span class="chip">${n}</span>`).join('');
-  const moreChip = total > 5 ? `<span class="chip more">+${total - 5} mais</span>` : '';
+    : isSeg ? [...wizardData.selectedSegments].map(i => MOCK_SEGMENTS[i].nome)
+    : [];
+  const total = isIndiv ? wizardData.selectedContacts.size
+    : isSeg ? [...wizardData.selectedSegments].reduce((a, i) => a + MOCK_SEGMENTS[i].contatos, 0)
+    : (wizardData.xlsContactCount || 0);
+
+  const chips = isXls
+    ? (wizardData.xlsFileName ? `<span class="chip">${wizardData.xlsFileName}</span>` : '')
+    : names.slice(0, 5).map(n => `<span class="chip">${n}</span>`).join('');
+  const moreChip = !isXls && total > 5 ? `<span class="chip more">+${total - 5} mais</span>` : '';
   const methodLabel = isIndiv
     ? `${total} contato${total !== 1 ? 's' : ''}`
-    : `${total} via ${wizardData.selectedSegments.size} segmento${wizardData.selectedSegments.size !== 1 ? 's' : ''}`;
+    : isSeg ? `${total} via ${wizardData.selectedSegments.size} segmento${wizardData.selectedSegments.size !== 1 ? 's' : ''}`
+    : `${total} importados via .xls`;
   const tplBadge = tpl
     ? (tpl.aprovado ? `<span class="badge approved">${SVG.checkCircle} Aprovado pelo Meta</span>` : `<span class="badge pending">Aguardando aprovação</span>`)
     : '';
+
+  // ── Plan usage card ──
+  const PLAN_LIMIT = 1000;
+  const PREV_USED = 722;
+  const effectiveNew = Math.min(total, 150);
+  const afterTotal = Math.min(PREV_USED + effectiveNew, PLAN_LIMIT);
+  const remaining = PLAN_LIMIT - afterTotal;
+  const overPlan = PREV_USED + effectiveNew > PLAN_LIMIT;
+  const prevPct = (PREV_USED / PLAN_LIMIT) * 100;
+  const newPct = (effectiveNew / PLAN_LIMIT) * 100;
+  const afterPct = (afterTotal / PLAN_LIMIT * 100).toFixed(1);
+  const showExistingLabel = prevPct >= 8;
+  const showNewLabel = newPct >= 5;
+
+  const planCard = `
+    <div class="preview-card">
+      <div class="preview-card-header">
+        <span>Plano</span>
+        <span style="font-variant-numeric:tabular-nums;font-weight:700;color:var(--gray-700)">${afterTotal.toLocaleString('pt-BR')} / ${PLAN_LIMIT.toLocaleString('pt-BR')}</span>
+      </div>
+      <div class="preview-card-body">
+        <div class="plan-header-row">
+          <span class="plan-header-label">Uso de Atendimentos</span>
+        </div>
+        <div class="plan-bar-wrap">
+          <div class="plan-bar-seg existing" style="width:${prevPct}%">
+            ${showExistingLabel ? `<span class="plan-bar-seg-label">722</span>` : ''}
+          </div>
+          <div class="plan-bar-seg new-disp${overPlan ? ' warn' : ''}" style="width:${newPct}%;${effectiveNew === 0 ? 'display:none' : ''}">
+            ${showNewLabel ? `<span class="plan-bar-seg-label">+${effectiveNew}</span>` : ''}
+          </div>
+        </div>
+        <div class="plan-stats-row">
+          <div class="plan-stat">
+            <div class="plan-stat-dot gray"></div>
+            <div class="plan-stat-num">722</div>
+            <div class="plan-stat-desc">já utilizados</div>
+          </div>
+          <div class="plan-stat">
+            <div class="plan-stat-dot ${overPlan ? 'amber' : 'purple'}"></div>
+            <div class="plan-stat-num ${effectiveNew > 0 ? (overPlan ? 'amber' : 'purple') : 'muted'}">+${effectiveNew}</div>
+            <div class="plan-stat-desc">neste disparo</div>
+          </div>
+          <div class="plan-stat">
+            <div class="plan-stat-dot light"></div>
+            <div class="plan-stat-num muted">${remaining}</div>
+            <div class="plan-stat-desc">restantes após</div>
+          </div>
+        </div>
+        <div class="plan-divider"></div>
+        <div class="plan-summary-row">
+          <span class="plan-summary-txt">Total após o disparo: <strong>${afterTotal.toLocaleString('pt-BR')}</strong> de ${PLAN_LIMIT.toLocaleString('pt-BR')} atendimentos</span>
+          <span class="plan-summary-pct${overPlan ? ' warn' : ''}">${afterPct}%</span>
+        </div>
+      </div>
+    </div>`;
 
   return `
     <div class="step-heading">
@@ -1472,6 +1565,7 @@ function renderStep4() {
           ${tpl ? `<div class="wa-preview"><div class="wa-bubble">${highlightParams(tpl.corpo)}<div class="wa-time">09:00 ✓✓</div></div></div>` : '<p style="color:var(--gray-400);font-size:var(--text-sm)">Nenhum template selecionado</p>'}
         </div>
       </div>
+      ${planCard}
     </div>`;
 }
 
