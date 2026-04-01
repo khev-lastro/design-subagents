@@ -95,6 +95,68 @@ White bg, gray-200 top border. Selection count (xs, gray-400) + divider + primar
 
 ---
 
+## Financeiro Patterns (2026-04-01)
+
+### Overdue Banner
+- Same structure as error-banner from disparos: red-50 bg, red-100 border, 3px red-500 left accent
+- Include total amount owed in title (not just count): "Você tem 2 boletos atrasados — R$ 18.000,00 em aberto"
+- Banner action links to active boletos tab
+
+### Boleto List Item
+- Flex row: 36px icon (tinted bg) + info (ref name + meta with status badge) + amount (tabular-nums) + action buttons
+- Overdue items: red-50 bg + 3px red-500 left border + red amount color + "X dias" overdue pill badge
+- Copy button: icon-btn with "Copiado!" toast feedback (fixed bottom center, gray-900 bg)
+- Historic items: grayed amount (gray-500), download icon instead of copy
+
+### Boleto Summary Strip
+- Sits inside boleto card between tabs and list (not floating separately)
+- gray-25 bg, 3 metrics separated by 1px gray-200 vertical dividers
+- Metrics: "Em aberto (atrasados)" in red, "Próximo vencimento" date, "Total a vencer"
+- Hidden when historic tab is active
+
+### Boleto States
+- Disponível: blue-50/blue-600 (available to pay)
+- Atrasado: red-50/red-600 (overdue)
+- Pago: green-50/green-600 (paid)
+- Renegociado: purple-50/purple-600 (renegotiated)
+- Cancelado: gray-100/gray-500 (cancelled)
+- Processando: amber-50/amber-600 (processing)
+
+### Renegotiation Modal
+- 560px max-width modal (expanded from standard 400px)
+- Custom div checkboxes (not input[type=checkbox]) to avoid double-toggle bug
+- Live summary calculation: count, original, discount (green-600), total (purple-600)
+- Confirm button: btn-success
+
+### Plan Usage Progress
+- 8px track, 999px radius, three threshold states:
+  - Normal (<85%): purple-600 fill
+  - Warning (85-99%): amber-500 fill + amber usage-warning
+  - Exceeded (100%+): red-500 fill + "103%" label (absolute positioned above fill end) + danger usage-warning with AM name + upsell link
+- Sparkline trend: amber-600 when exceeded context (not green — growth is a warning here)
+
+### Usage Cards (Feature Breakdown)
+- 3-column grid (not 5 — prevents cramped names)
+- Card: icon+name header row, large value, percentage, 4px bar
+- Bar fills use semantic class names (.purple, .amber, .green, .blue) not inline colors
+
+### Billing Account with Nested REAs
+- Expandable toggle: "Ver REAs vinculadas" with chevron rotation
+- REA items: name, plan tier, monthly cost — hover gray-50
+- Cost breakdown below divider: line items + total row (purple-600)
+
+### Plans Page
+- Wizard-style navigation from Financeiro (mainPage hidden, plansPage shown)
+- Breadcrumb: "Financeiro > Alterar plano"
+- 4-column card grid, current plan: purple-300 border + ring + "Atual" badge + disabled CTA
+- Anual/Mensal toggle (pill style from design system)
+
+### Sidebar Badge (Financeiro)
+- When overdue boletos exist: red-500 bg, white text, 18px pill badge on nav item
+- Shows count of overdue boletos
+
+---
+
 ## Component Library — prd-design-components (Extracted 2026-03-24)
 
 Stack: React + TypeScript + Tailwind CSS v4 (`@theme`), shadcn/ui, CVA, Radix UI, Lucide icons.
