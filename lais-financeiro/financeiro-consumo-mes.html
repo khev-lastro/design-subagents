@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consumo Mês a Mês — Chart Options</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple-50:#F4F0FF;--purple-100:#E6DBFE;--purple-200:#CEBAFC;--purple-300:#B18DFB;--purple-400:#9664FA;--purple-600:#6845AD;--purple-700:#593D96;--purple-800:#49317A;
+    --gray-25:#fcfcfd;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;
+    --green-600:#16a34a;--pink-400:#f472b6;
+    --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-600:#d97706;--amber-700:#b45309;
+    --white:#fff;
+    --shadow-xs:0 1px 2px rgba(0,0,0,0.04);
+    --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;
+    --radius-sm:6px;--radius-md:8px;--radius-lg:12px;
+    --text-xs:11px;--text-sm:13px;--text-base:14px;--text-lg:16px;--text-2xl:24px;
+    --leading-tight:1.25;--leading-normal:1.5;
+    --tracking-tight:-0.01em;--tracking-wide:0.02em;
+  }
+  body { font-family:'Red Hat Text',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:var(--text-base); line-height:var(--leading-normal); color:var(--gray-800); background:var(--gray-50); -webkit-font-smoothing:antialiased; padding:40px; }
+  .comparison { display:flex; flex-direction:column; gap:56px; max-width:820px; margin:0 auto; }
+  .option-label { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--purple-600); margin-bottom:var(--sp-3); display:flex; align-items:center; gap:var(--sp-2); }
+  .option-label .num { width:20px; height:20px; border-radius:50%; background:var(--purple-600); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .option-desc { font-size:var(--text-sm); color:var(--gray-500); margin-bottom:var(--sp-4); line-height:var(--leading-normal); }
+
+  .card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); box-shadow:var(--shadow-xs); }
+  .card-body { padding:var(--sp-5); }
+
+  /* ── View toggle ── */
+  .view-toggle { display:inline-flex; background:var(--gray-100); border-radius:var(--radius-sm); padding:2px; gap:1px; }
+  .view-toggle-btn { padding:var(--sp-1) var(--sp-3); border-radius:4px; font-size:var(--text-xs); font-weight:500; color:var(--gray-500); cursor:pointer; border:none; background:none; font-family:inherit; min-height:24px; transition:all .15s ease; }
+  .view-toggle-btn:hover { color:var(--gray-700); }
+  .view-toggle-btn.active { background:var(--white); color:var(--gray-800); font-weight:600; box-shadow:var(--shadow-xs); }
+
+  .usage-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-5); gap:var(--sp-3); }
+  .usage-header-right { display:flex; align-items:baseline; gap:var(--sp-2); flex-shrink:0; }
+  .usage-count { font-size:var(--text-xs); font-weight:600; font-variant-numeric:tabular-nums; color:var(--gray-500); }
+
+  /* ── Bar Chart ── */
+  .chart-wrap { position:relative; padding-left:44px; }
+  .chart-area { position:relative; height:200px; display:flex; align-items:flex-end; gap:8px; border-bottom:1px solid var(--gray-200); }
+
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:stretch; height:100%; justify-content:flex-end; position:relative; z-index:2; }
+  .bar { border-radius:4px 4px 0 0; width:100%; transition:all .15s ease; position:relative; cursor:default; min-height:2px; }
+  .bar.past { background:var(--purple-200); }
+  .bar.past:hover { background:var(--purple-300); }
+  .bar.current { background:var(--purple-800); box-shadow:0 -2px 8px rgba(73,49,122,.25); }
+  .bar.current:hover { background:var(--purple-700); }
+  .bar.over-limit { background:var(--amber-600); }
+  .bar.over-limit:hover { background:var(--amber-700); }
+
+  /* Tooltip */
+  .bar-tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--gray-900); color:var(--white); font-size:var(--text-xs); font-weight:600; padding:4px 10px; border-radius:var(--radius-sm); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .12s ease; z-index:20; font-variant-numeric:tabular-nums; }
+  .bar-tip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:var(--gray-900); }
+  .bar:hover .bar-tip, .bar-stacked:hover .bar-tip { opacity:1; }
+
+  /* Y-axis labels */
+  .y-axis { position:absolute; left:0; top:0; bottom:0; width:40px; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:1px; }
+  .y-label { font-size:9px; font-weight:500; color:var(--gray-400); text-align:right; font-variant-numeric:tabular-nums; line-height:1; }
+
+  /* Month axis */
+  .month-axis { display:flex; gap:8px; padding-top:var(--sp-2); padding-left:44px; }
+  .month-axis span { flex:1; text-align:center; font-size:var(--text-xs); color:var(--gray-400); font-weight:500; }
+  .month-axis span.current { color:var(--purple-700); font-weight:700; }
+
+  /* Reference lines */
+  .ref-line { position:absolute; left:0; right:0; z-index:5; pointer-events:none; }
+  .ref-line.limit { border-top:1.5px solid var(--gray-300); }
+  .ref-line.avg { border-top:1.5px dashed var(--purple-300); }
+  .ref-line-tag { position:absolute; font-size:9px; font-weight:600; padding:1px 6px; border-radius:3px; white-space:nowrap; transform:translateY(-50%); }
+  .ref-line.limit .ref-line-tag { right:-44px; color:var(--gray-500); background:var(--white); border:1px solid var(--gray-200); }
+  .ref-line.avg .ref-line-tag { right:-44px; color:var(--purple-700); background:var(--purple-50); }
+
+  /* Chart summary row below axis */
+  .chart-summary { display:flex; gap:var(--sp-6); padding-top:var(--sp-4); padding-left:44px; }
+  .chart-stat { display:flex; flex-direction:column; gap:1px; }
+  .chart-stat-label { font-size:var(--text-xs); color:var(--gray-400); font-weight:500; }
+  .chart-stat-value { font-size:var(--text-sm); font-weight:700; color:var(--gray-800); font-variant-numeric:tabular-nums; }
+  .chart-stat-value.purple { color:var(--purple-600); }
+  .chart-stat-value.amber { color:var(--amber-600); }
+
+  /* ── Option B: Stacked bars ── */
+  .bar-stacked { border-radius:4px 4px 0 0; width:100%; display:flex; flex-direction:column-reverse; position:relative; cursor:default; min-height:2px; }
+  .bar-stacked:hover { opacity:.85; }
+  .bar-seg { width:100%; }
+  .bar-seg:last-child { border-radius:4px 4px 0 0; }
+  .bar-seg.purple { background:var(--purple-400); }
+  .bar-seg.green { background:var(--green-600); }
+  .bar-seg.pink { background:var(--pink-400); }
+
+  .chart-legend { display:flex; gap:var(--sp-5); padding-top:var(--sp-3); padding-left:44px; border-top:1px solid var(--gray-100); margin-top:var(--sp-4); }
+  .chart-legend-item { display:flex; align-items:center; gap:var(--sp-2); font-size:var(--text-xs); color:var(--gray-600); }
+  .chart-legend-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+
+  /* ── Option C: Trend line ── */
+  .trend-svg { position:absolute; left:0; right:0; top:0; bottom:0; z-index:3; pointer-events:none; overflow:visible; }
+  .trend-line { fill:none; stroke:var(--purple-600); stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; opacity:.4; }
+  .trend-dot { fill:var(--white); stroke:var(--purple-600); stroke-width:1.5; opacity:.6; }
+</style>
+</head>
+<body>
+
+<div class="comparison">
+  <div>
+    <h1 style="font-family:'Red Hat Display'; font-size:var(--text-2xl); font-weight:700; color:var(--gray-900); margin-bottom:4px;">Consumo Mês a Mês</h1>
+    <p style="font-size:var(--text-sm); color:var(--gray-500); margin-bottom:8px;">Three chart approaches. Same 12-month data, different expressions.</p>
+  </div>
+
+  <!-- ═══ OPTION A ═══ -->
+  <div>
+    <div class="option-label"><span class="num">A</span> Barras simples + linhas de referência</div>
+    <div class="option-desc">Barras verticais limpas. Roxo claro para meses passados, roxo escuro para o mês atual, âmbar para meses acima do limite. Linha tracejada de média + linha sólida de limite. Hover para valores exatos.</div>
+    <div class="card"><div class="card-body">
+      <div class="usage-header">
+        <div class="view-toggle"><button class="view-toggle-btn">Este mês</button><button class="view-toggle-btn active">Últimos 12 meses</button></div>
+        <div class="usage-header-right"><span class="usage-count">Visualizando de Abr 2025 a Mar 2026</span></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="y-axis"><span class="y-label">4.000</span><span class="y-label">3.000</span><span class="y-label">2.000</span><span class="y-label">1.000</span><span class="y-label">0</span></div>
+        <div class="chart-area" id="chartA"></div>
+      </div>
+      <div class="month-axis" id="axisA"></div>
+      <div class="chart-summary">
+        <div class="chart-stat"><span class="chart-stat-label">Média mensal</span><span class="chart-stat-value">3.537</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Mês atual</span><span class="chart-stat-value purple">4.120</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Limite do plano</span><span class="chart-stat-value">4.000</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Meses acima do limite</span><span class="chart-stat-value amber">2</span></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ═══ OPTION B ═══ -->
+  <div>
+    <div class="option-label"><span class="num">B</span> Barras empilhadas por funcionalidade</div>
+    <div class="option-desc">Cada barra mostra a composição por feature (Atendimento, Remarketing, Anúncios). Mesmas linhas de referência. Mais denso — revela mudanças na composição ao longo do tempo.</div>
+    <div class="card"><div class="card-body">
+      <div class="usage-header">
+        <div class="view-toggle"><button class="view-toggle-btn">Este mês</button><button class="view-toggle-btn active">Últimos 12 meses</button></div>
+        <div class="usage-header-right"><span class="usage-count">Visualizando de Abr 2025 a Mar 2026</span></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="y-axis"><span class="y-label">4.000</span><span class="y-label">3.000</span><span class="y-label">2.000</span><span class="y-label">1.000</span><span class="y-label">0</span></div>
+        <div class="chart-area" id="chartB"></div>
+      </div>
+      <div class="month-axis" id="axisB"></div>
+      <div class="chart-legend">
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--purple-400)"></div>Atendimento da Lais</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--green-600)"></div>Remarketing</div>
+        <div class="chart-legend-item"><div class="chart-legend-dot" style="background:var(--pink-400)"></div>Anúncios Proprietários</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- ═══ OPTION C ═══ -->
+  <div>
+    <div class="option-label"><span class="num">C</span> Barras + linha de tendência</div>
+    <div class="option-desc">Mesmas barras da opção A, com uma linha SVG conectando os topos. Torna a trajetória de crescimento visível — mostra aceleração e desaceleração entre meses.</div>
+    <div class="card"><div class="card-body">
+      <div class="usage-header">
+        <div class="view-toggle"><button class="view-toggle-btn">Este mês</button><button class="view-toggle-btn active">Últimos 12 meses</button></div>
+        <div class="usage-header-right"><span class="usage-count">Visualizando de Abr 2025 a Mar 2026</span></div>
+      </div>
+      <div class="chart-wrap">
+        <div class="y-axis"><span class="y-label">4.000</span><span class="y-label">3.000</span><span class="y-label">2.000</span><span class="y-label">1.000</span><span class="y-label">0</span></div>
+        <div class="chart-area" id="chartC"></div>
+      </div>
+      <div class="month-axis" id="axisC"></div>
+      <div class="chart-summary">
+        <div class="chart-stat"><span class="chart-stat-label">Média mensal</span><span class="chart-stat-value">3.537</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Mês atual</span><span class="chart-stat-value purple">4.120</span></div>
+        <div class="chart-stat"><span class="chart-stat-label">Limite do plano</span><span class="chart-stat-value">4.000</span></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<script>
+const DATA = [
+  {m:'Abr',v:2800},{m:'Mai',v:3100},{m:'Jun',v:3400},{m:'Jul',v:3200},
+  {m:'Ago',v:3600},{m:'Set',v:3800},{m:'Out',v:3500},{m:'Nov',v:3900},
+  {m:'Dez',v:3300},{m:'Jan',v:3700},{m:'Fev',v:4000},{m:'Mar',v:4120}
+];
+const LIMIT = 4000;
+const CHART_MAX = 4500; // headroom above limit for overflow bars
+const CHART_H = 200;
+const AVG = Math.round(DATA.reduce((s,d)=>s+d.v,0)/DATA.length);
+
+function barH(val) { return Math.max(2, val / CHART_MAX * CHART_H); }
+function lineY(val) { return CHART_H - (val / CHART_MAX * CHART_H); }
+
+function addRefLines(container) {
+  // Limit line
+  const limitLine = document.createElement('div');
+  limitLine.className = 'ref-line limit';
+  limitLine.style.top = lineY(LIMIT) + 'px';
+  limitLine.innerHTML = '<span class="ref-line-tag">Limite 4.000</span>';
+  container.appendChild(limitLine);
+  // Average line
+  const avgLine = document.createElement('div');
+  avgLine.className = 'ref-line avg';
+  avgLine.style.top = lineY(AVG) + 'px';
+  avgLine.innerHTML = '<span class="ref-line-tag">Média ' + AVG.toLocaleString('pt-BR') + '</span>';
+  container.appendChild(avgLine);
+}
+
+function buildAxis(containerId) {
+  const axis = document.getElementById(containerId);
+  DATA.forEach((d,i) => {
+    const s = document.createElement('span');
+    s.textContent = d.m;
+    if (i === DATA.length-1) s.className = 'current';
+    axis.appendChild(s);
+  });
+}
+
+// ── Option A: Simple bars ──
+(function(){
+  const chart = document.getElementById('chartA');
+  addRefLines(chart);
+  DATA.forEach((d,i) => {
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    const bar = document.createElement('div');
+    const isCurrent = i === DATA.length-1;
+    const isOver = d.v > LIMIT;
+    bar.className = 'bar ' + (isCurrent ? (isOver ? 'over-limit' : 'current') : (isOver ? 'over-limit' : 'past'));
+    bar.style.height = barH(d.v) + 'px';
+    bar.innerHTML = '<span class="bar-tip">' + d.m + '/2025 · ' + d.v.toLocaleString('pt-BR') + ' atend.</span>';
+    col.appendChild(bar);
+    chart.appendChild(col);
+  });
+  buildAxis('axisA');
+})();
+
+// ── Option B: Stacked bars ──
+(function(){
+  const chart = document.getElementById('chartB');
+  addRefLines(chart);
+  const RATIOS = [
+    [.55,.27,.18],[.58,.25,.17],[.60,.24,.16],[.57,.26,.17],
+    [.61,.23,.16],[.62,.22,.16],[.59,.25,.16],[.63,.22,.15],
+    [.58,.26,.16],[.61,.24,.15],[.60,.25,.15],[.606,.258,.136]
+  ];
+  DATA.forEach((d,i) => {
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    const bar = document.createElement('div');
+    bar.className = 'bar-stacked';
+    bar.style.height = barH(d.v) + 'px';
+    const r = RATIOS[i];
+    bar.innerHTML =
+      '<div class="bar-seg pink" style="height:'+Math.round(r[2]*100)+'%"></div>' +
+      '<div class="bar-seg green" style="height:'+Math.round(r[1]*100)+'%"></div>' +
+      '<div class="bar-seg purple" style="height:'+Math.round(r[0]*100)+'%"></div>' +
+      '<span class="bar-tip">' + d.m + ' · ' + d.v.toLocaleString('pt-BR') + ' atend.</span>';
+    col.appendChild(bar);
+    chart.appendChild(col);
+  });
+  buildAxis('axisB');
+})();
+
+// ── Option C: Simple bars + trend line ──
+(function(){
+  const chart = document.getElementById('chartC');
+  addRefLines(chart);
+  DATA.forEach((d,i) => {
+    const col = document.createElement('div');
+    col.className = 'bar-col';
+    const bar = document.createElement('div');
+    const isCurrent = i === DATA.length-1;
+    const isOver = d.v > LIMIT;
+    bar.className = 'bar ' + (isCurrent ? (isOver ? 'over-limit' : 'current') : (isOver ? 'over-limit' : 'past'));
+    bar.style.height = barH(d.v) + 'px';
+    bar.innerHTML = '<span class="bar-tip">' + d.m + ' · ' + d.v.toLocaleString('pt-BR') + ' atend.</span>';
+    col.appendChild(bar);
+    chart.appendChild(col);
+  });
+  buildAxis('axisC');
+
+  // Draw SVG trend line after bars are laid out
+  requestAnimationFrame(() => {
+    const chartRect = chart.getBoundingClientRect();
+    const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('class','trend-svg');
+    svg.setAttribute('viewBox','0 0 '+chartRect.width+' '+CHART_H);
+    svg.style.width = chartRect.width+'px';
+    svg.style.height = CHART_H+'px';
+    svg.style.position = 'absolute';
+    svg.style.left = '0';
+    svg.style.bottom = '0';
+
+    const cols = chart.querySelectorAll('.bar-col');
+    const pts = [];
+    cols.forEach((col,i) => {
+      const r = col.getBoundingClientRect();
+      const x = r.left - chartRect.left + r.width/2;
+      const y = CHART_H - barH(DATA[i].v);
+      pts.push({x,y});
+    });
+
+    const polyline = document.createElementNS('http://www.w3.org/2000/svg','polyline');
+    polyline.setAttribute('class','trend-line');
+    polyline.setAttribute('points', pts.map(p=>p.x+','+p.y).join(' '));
+    svg.appendChild(polyline);
+
+    pts.forEach(p => {
+      const dot = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      dot.setAttribute('class','trend-dot');
+      dot.setAttribute('cx',p.x); dot.setAttribute('cy',p.y); dot.setAttribute('r','3');
+      svg.appendChild(dot);
+    });
+
+    chart.appendChild(svg);
+  });
+})();
+</script>
+</body>
+</html>

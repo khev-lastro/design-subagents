@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financeiro — Top Card IH Comparison</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple-50:#F4F0FF;--purple-100:#E6DBFE;--purple-200:#CEBAFC;--purple-400:#9664FA;--purple-600:#6845AD;--purple-700:#593D96;
+    --gray-25:#fcfcfd;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;
+    --green-600:#16a34a;
+    --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-500:#f59e0b;--amber-600:#d97706;--amber-700:#b45309;
+    --pink-400:#f472b6;
+    --white:#ffffff;
+    --shadow-xs:0 1px 2px rgba(0,0,0,0.04);
+    --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;
+    --radius-sm:6px;--radius-md:8px;--radius-lg:12px;
+    --text-xs:11px;--text-sm:13px;--text-base:14px;--text-lg:16px;--text-2xl:24px;
+    --leading-tight:1.25;--leading-normal:1.5;
+    --tracking-tight:-0.01em;--tracking-wide:0.02em;
+  }
+  body { font-family:'Red Hat Text',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:var(--text-base); line-height:var(--leading-normal); color:var(--gray-800); background:var(--gray-50); -webkit-font-smoothing:antialiased; padding:40px; }
+  .comparison { display:flex; flex-direction:column; gap:56px; max-width:820px; margin:0 auto; }
+  .option-label { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-xs); font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--purple-600); margin-bottom:var(--sp-3); display:flex; align-items:center; gap:var(--sp-2); }
+  .option-label .num { width:20px; height:20px; border-radius:50%; background:var(--purple-600); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:10px; }
+  .option-desc { font-size:var(--text-sm); color:var(--gray-500); margin-bottom:var(--sp-4); line-height:var(--leading-normal); }
+
+  /* ── Card ── */
+  .card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); box-shadow:var(--shadow-xs); overflow:hidden; }
+  .card-body { padding:var(--sp-5); }
+
+  /* ── InlineTabs (matching boleto card pattern) ── */
+  .inline-tabs { display:flex; border-bottom:1px solid var(--gray-200); background:var(--white); padding:0 var(--sp-2); }
+  .inline-tab { padding:var(--sp-3) var(--sp-4); font-size:var(--text-sm); font-weight:500; color:var(--gray-500); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:all .15s ease; white-space:nowrap; user-select:none; }
+  .inline-tab:hover { color:var(--gray-700); }
+  .inline-tab.active { color:var(--purple-700); border-bottom-color:var(--purple-600); font-weight:600; }
+  .inline-tabs-right { margin-left:auto; display:flex; align-items:center; padding-right:var(--sp-3); }
+
+  .btn-text { background:none; border:none; color:var(--purple-600); font-weight:600; font-size:var(--text-sm); padding:0; cursor:pointer; font-family:inherit; }
+  .btn-text:hover { color:var(--purple-700); text-decoration:underline; text-underline-offset:2px; }
+
+  .plan-detail-label { font-size:var(--text-xs); color:var(--gray-400); }
+  .plan-detail-value { font-size:var(--text-sm); font-weight:600; color:var(--gray-700); margin-top:1px; }
+
+  .usage-section { margin-top:var(--sp-4); padding-top:var(--sp-4); border-top:1px solid var(--gray-100); }
+  .usage-section:first-child { margin-top:0; padding-top:0; border-top:none; }
+  .usage-header { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:var(--sp-2); gap:var(--sp-3); }
+  .usage-label { font-size:var(--text-xs); font-weight:600; color:var(--gray-600); }
+  .usage-header-right { display:flex; align-items:baseline; gap:var(--sp-2); flex-shrink:0; }
+  .usage-count { font-size:var(--text-xs); font-weight:600; font-variant-numeric:tabular-nums; color:var(--gray-800); }
+  .usage-pct-badge { font-size:var(--text-xs); font-weight:700; font-variant-numeric:tabular-nums; padding:1px 6px; border-radius:999px; background:var(--amber-50); color:var(--amber-600); border:1px solid var(--amber-100); }
+  .usage-warning { margin-top:var(--sp-4); padding:var(--sp-3); border-radius:var(--radius-sm); font-size:var(--text-xs); line-height:var(--leading-normal); display:flex; align-items:flex-start; gap:var(--sp-2); background:var(--amber-50); color:var(--amber-700); border:1px solid var(--amber-100); }
+  .usage-warning svg { width:14px; height:14px; flex-shrink:0; margin-top:1px; }
+  .usage-warning a { color:inherit; font-weight:600; text-decoration:underline; text-underline-offset:2px; }
+
+  .stacked-bar-track { width:100%; height:22px; border-radius:999px; background:var(--gray-100); display:flex; overflow:visible; gap:1px; }
+  .stacked-bar-segment { height:100%; position:relative; cursor:default; display:flex; align-items:center; justify-content:center; overflow:visible; }
+  .stacked-bar-segment:first-child { border-radius:999px 0 0 999px; }
+  .stacked-bar-segment:last-child { border-radius:0 999px 999px 0; }
+  .stacked-bar-segment.purple { background:var(--purple-400); }
+  .stacked-bar-segment.green { background:var(--green-600); }
+  .stacked-bar-segment.pink { background:var(--pink-400); }
+  .stacked-bar-segment:hover { opacity:.85; }
+  .stacked-bar-pct { font-size:9px; font-weight:700; color:var(--white); letter-spacing:.02em; white-space:nowrap; pointer-events:none; text-shadow:0 1px 2px rgba(0,0,0,.2); }
+  .stacked-bar-tooltip { position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%); background:var(--gray-900); color:var(--white); font-size:var(--text-xs); font-weight:600; padding:3px 8px; border-radius:4px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .12s ease; z-index:10; }
+  .stacked-bar-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:var(--gray-900); }
+  .stacked-bar-segment:hover .stacked-bar-tooltip { opacity:1; }
+
+  .stacked-legend { display:grid; grid-template-columns:repeat(3, 1fr); gap:var(--sp-1) 96px; margin-top:var(--sp-4); padding-top:var(--sp-4); border-top:1px solid var(--gray-100); }
+  .stacked-legend-item { display:flex; align-items:center; gap:var(--sp-2); font-size:var(--text-xs); color:var(--gray-600); position:relative; }
+  .stacked-legend-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+  .stacked-legend-dot.purple { background:var(--purple-400); }
+  .stacked-legend-dot.green { background:var(--green-600); }
+  .stacked-legend-dot.pink { background:var(--pink-400); }
+  .stacked-legend-name { flex:1; min-width:0; }
+  .stacked-legend-value { font-weight:600; color:var(--gray-800); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .stacked-legend-pct { color:var(--gray-400); margin-left:var(--sp-1); }
+  .stacked-legend-item::after { content:''; position:absolute; right:-51px; top:50%; transform:translateY(-50%); width:4px; height:4px; border-radius:50%; background:var(--gray-300); }
+  .stacked-legend-item:last-child::after { display:none; }
+  .stacked-legend-item:nth-child(3n)::after { display:none; }
+
+  /* ── Option A: plan identity inline with tabs ── */
+  .tab-plan-identity { display:flex; align-items:center; gap:var(--sp-3); padding:0 var(--sp-4); font-size:var(--text-sm); margin-left:var(--sp-2); border-left:1px solid var(--gray-200); }
+  .tab-plan-name { font-family:'Red Hat Display',-apple-system,sans-serif; font-weight:700; color:var(--gray-900); }
+  .tab-plan-sep { width:3px; height:3px; border-radius:50%; background:var(--gray-300); }
+  .tab-plan-price { font-weight:600; color:var(--purple-600); font-variant-numeric:tabular-nums; }
+
+  /* ── Option B: summary strip ── */
+  .plan-strip { display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-3) var(--sp-5); border-bottom:1px solid var(--gray-200); background:var(--gray-25); font-size:var(--text-sm); color:var(--gray-700); }
+  .plan-strip-name { font-family:'Red Hat Display',-apple-system,sans-serif; font-weight:700; color:var(--gray-900); }
+  .plan-strip-price { font-weight:600; color:var(--purple-600); font-variant-numeric:tabular-nums; }
+  .plan-strip-sep { width:3px; height:3px; border-radius:50%; background:var(--gray-300); flex-shrink:0; }
+  .plan-strip-meta { font-size:var(--text-xs); color:var(--gray-500); }
+
+  /* ── Option C: badge + collapsible ── */
+  .plan-badge { font-size:var(--text-xs); font-weight:700; color:var(--gray-700); background:var(--gray-100); padding:2px 8px; border-radius:999px; margin-left:var(--sp-2); }
+  .plan-toggle { display:flex; align-items:center; gap:var(--sp-2); cursor:pointer; font-size:var(--text-xs); font-weight:600; color:var(--purple-600); margin-top:var(--sp-3); border-top:1px solid var(--gray-100); padding-top:var(--sp-3); }
+  .plan-toggle:hover { color:var(--purple-700); }
+  .plan-toggle svg { width:12px; height:12px; transition:transform .15s ease; }
+  .plan-toggle.open svg { transform:rotate(90deg); }
+  .plan-details-collapse { display:none; padding-top:var(--sp-3); }
+  .plan-details-collapse.visible { display:block; }
+</style>
+</head>
+<body>
+
+<div class="comparison">
+  <div>
+    <h1 style="font-family:'Red Hat Display'; font-size:var(--text-2xl); font-weight:700; color:var(--gray-900); margin-bottom:4px;">Top Card — IH Comparison</h1>
+    <p style="font-size:var(--text-sm); color:var(--gray-500); margin-bottom:8px;">Three options using InlineTabs (underline style) matching the boleto card below.</p>
+  </div>
+
+  <!-- ═══ OPTION A: Tabs + Plan Identity Inline ═══ -->
+  <div>
+    <div class="option-label"><span class="num">A</span> Tabs + Identity Inline</div>
+    <div class="option-desc">Plan name and price sit inline with the tabs, separated by a vertical divider. Body is purely usage. Contract details (tipo, vigência) live in the Conta tab.</div>
+
+    <div class="card">
+      <div class="inline-tabs">
+        <div class="inline-tab active">Plano atual</div>
+        <div class="inline-tab">Conta de cobrança</div>
+        <div class="tab-plan-identity">
+          <span class="tab-plan-name">Enterprise (4k)</span>
+          <span class="tab-plan-sep"></span>
+          <span class="tab-plan-price">R$ 9.000,00/mês</span>
+        </div>
+        <div class="inline-tabs-right"><button class="btn-text">Alterar plano</button></div>
+      </div>
+      <div class="card-body">
+        <div class="usage-section">
+          <div class="usage-header">
+            <span class="usage-label">Consumo total do plano (no mês)</span>
+            <div class="usage-header-right"><span class="usage-count">4.120 / 4.000</span><span class="usage-pct-badge">103%</span></div>
+          </div>
+          <div class="stacked-bar-track">
+            <div class="stacked-bar-segment purple" style="width:60.6%"><span class="stacked-bar-pct">61%</span><span class="stacked-bar-tooltip">Atendimento da Lais · 2.423</span></div>
+            <div class="stacked-bar-segment green" style="width:25.8%"><span class="stacked-bar-pct">26%</span><span class="stacked-bar-tooltip">Remarketing · 1.030</span></div>
+            <div class="stacked-bar-segment pink" style="width:16.7%"><span class="stacked-bar-pct">17%</span><span class="stacked-bar-tooltip">Anúncios Proprietários · 667</span></div>
+          </div>
+          <div class="stacked-legend">
+            <div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div>
+            <div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div>
+            <div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>
+          </div>
+          <div class="usage-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Limite excedido (103%).</strong> <a href="#">Solicite atendimentos adicionais</a> ou <a href="#">fale com Paulo Mendes</a>.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ OPTION B: Tabs + Summary Strip ═══ -->
+  <div>
+    <div class="option-label"><span class="num">B</span> Tabs + Summary Strip</div>
+    <div class="option-desc">InlineTabs on top. Below that, a compact gray strip with all plan identity in one line. Body is purely usage. Mirrors the boleto summary strip.</div>
+
+    <div class="card">
+      <div class="inline-tabs">
+        <div class="inline-tab active">Plano atual</div>
+        <div class="inline-tab">Conta de cobrança</div>
+        <div class="inline-tabs-right"><button class="btn-text">Alterar plano</button></div>
+      </div>
+      <div class="plan-strip">
+        <span class="plan-strip-name">Enterprise (4k)</span>
+        <span class="plan-strip-sep"></span>
+        <span class="plan-strip-price">R$ 9.000,00/mês</span>
+        <span class="plan-strip-sep"></span>
+        <span class="plan-strip-meta">Anual</span>
+        <span class="plan-strip-sep"></span>
+        <span class="plan-strip-meta">4.000 atend./mês</span>
+        <span class="plan-strip-sep"></span>
+        <span class="plan-strip-meta">09 mai 2025 → 09 mai 2026</span>
+      </div>
+      <div class="card-body">
+        <div class="usage-section">
+          <div class="usage-header">
+            <span class="usage-label">Consumo total do plano (no mês)</span>
+            <div class="usage-header-right"><span class="usage-count">4.120 / 4.000</span><span class="usage-pct-badge">103%</span></div>
+          </div>
+          <div class="stacked-bar-track">
+            <div class="stacked-bar-segment purple" style="width:60.6%"><span class="stacked-bar-pct">61%</span><span class="stacked-bar-tooltip">Atendimento da Lais · 2.423</span></div>
+            <div class="stacked-bar-segment green" style="width:25.8%"><span class="stacked-bar-pct">26%</span><span class="stacked-bar-tooltip">Remarketing · 1.030</span></div>
+            <div class="stacked-bar-segment pink" style="width:16.7%"><span class="stacked-bar-pct">17%</span><span class="stacked-bar-tooltip">Anúncios Proprietários · 667</span></div>
+          </div>
+          <div class="stacked-legend">
+            <div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div>
+            <div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div>
+            <div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>
+          </div>
+          <div class="usage-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Limite excedido (103%).</strong> <a href="#">Solicite atendimentos adicionais</a> ou <a href="#">fale com Paulo Mendes</a>.</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ OPTION C: Tabs + Badge + Progressive Disclosure ═══ -->
+  <div>
+    <div class="option-label"><span class="num">C</span> Tabs + Badge + Progressive Disclosure</div>
+    <div class="option-desc">InlineTabs with a small "Enterprise (4k)" badge. Body is purely usage. Price, type, vigência hidden in collapsible "Detalhes do plano" at the bottom.</div>
+
+    <div class="card">
+      <div class="inline-tabs">
+        <div class="inline-tab active">Plano atual</div>
+        <div class="inline-tab">Conta de cobrança</div>
+        <span class="plan-badge">Enterprise (4k)</span>
+        <div class="inline-tabs-right"><button class="btn-text">Alterar plano</button></div>
+      </div>
+      <div class="card-body">
+        <div class="usage-section">
+          <div class="usage-header">
+            <span class="usage-label">Consumo total do plano (no mês)</span>
+            <div class="usage-header-right"><span class="usage-count">4.120 / 4.000</span><span class="usage-pct-badge">103%</span></div>
+          </div>
+          <div class="stacked-bar-track">
+            <div class="stacked-bar-segment purple" style="width:60.6%"><span class="stacked-bar-pct">61%</span><span class="stacked-bar-tooltip">Atendimento da Lais · 2.423</span></div>
+            <div class="stacked-bar-segment green" style="width:25.8%"><span class="stacked-bar-pct">26%</span><span class="stacked-bar-tooltip">Remarketing · 1.030</span></div>
+            <div class="stacked-bar-segment pink" style="width:16.7%"><span class="stacked-bar-pct">17%</span><span class="stacked-bar-tooltip">Anúncios Proprietários · 667</span></div>
+          </div>
+          <div class="stacked-legend">
+            <div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div>
+            <div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div>
+            <div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>
+          </div>
+          <div class="usage-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Limite excedido (103%).</strong> <a href="#">Solicite atendimentos adicionais</a> ou <a href="#">fale com Paulo Mendes</a>.</div></div>
+          <div class="plan-toggle" onclick="this.classList.toggle('open'); this.nextElementSibling.classList.toggle('visible')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            Detalhes do plano
+          </div>
+          <div class="plan-details-collapse">
+            <div style="display:flex; gap:var(--sp-8);">
+              <div><div class="plan-detail-label">Valor</div><div class="plan-detail-value" style="color:var(--purple-600)">R$ 9.000,00/mês</div></div>
+              <div><div class="plan-detail-label">Atend./mês</div><div class="plan-detail-value">4.000</div></div>
+              <div><div class="plan-detail-label">Tipo</div><div class="plan-detail-value">Anual</div></div>
+              <div><div class="plan-detail-label">Vigência</div><div class="plan-detail-value">09 mai 2025 → 09 mai 2026</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
