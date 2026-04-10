@@ -43,6 +43,7 @@
   .nav-item { display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-2) var(--sp-3); border-radius:var(--radius-md); color:var(--gray-500); text-decoration:none; font-size:var(--text-sm); font-weight:500; transition:color .15s ease, background .15s ease; cursor:pointer; position:relative; }
   .nav-item:hover { color:var(--gray-700); background:var(--gray-50); }
   .nav-item.active { color:var(--purple-700); background:var(--purple-50); font-weight:600; border:1px solid var(--purple-100); }
+  .nav-skeleton { display:block; height:12px; border-radius:6px; background:var(--gray-100); margin:var(--sp-2) var(--sp-3); }
   .nav-item svg { width:18px; height:18px; flex-shrink:0; opacity:.7; }
   .nav-item.active svg { opacity:1; }
   .nav-badge { margin-left:auto; min-width:18px; height:18px; border-radius:999px; padding:0 5px; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; background:var(--red-500); color:var(--white); }
@@ -516,15 +517,15 @@
     </div>
     <nav class="sidebar-nav">
       <div class="nav-label">Principal</div>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Início</a>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Conversas</a>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Leads</a>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Relatórios</a>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Disparos</a>
+      <div class="nav-skeleton" style="width:55%"></div>
+      <div class="nav-skeleton" style="width:70%"></div>
+      <div class="nav-skeleton" style="width:40%"></div>
+      <div class="nav-skeleton" style="width:65%"></div>
+      <div class="nav-skeleton" style="width:50%"></div>
       <div class="nav-label">Configurações</div>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Minha Lais</a>
+      <div class="nav-skeleton" style="width:60%"></div>
       <a class="nav-item active" href="#" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Financeiro <span class="nav-badge">2</span></a>
-      <a class="nav-item" href="#"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>Acessos</a>
+      <div class="nav-skeleton" style="width:48%"></div>
     </nav>
     <div class="sidebar-footer"><div class="user-profile"><div class="user-avatar">BF</div><div><div class="user-name">Brenno Ferreira</div><div class="user-role">Gestor</div></div></div></div>
   </aside>
