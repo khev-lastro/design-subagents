@@ -546,6 +546,7 @@
               <div class="inline-tab active" role="tab" tabindex="0" aria-selected="true" data-ptab="plano" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Plano atual</div>
               <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-ptab="consumo" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Consumo</div>
               <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-ptab="conta" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Conta de cobrança</div>
+              <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-ptab="gerente" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Seu gerente de contas</div>
             </div>
 
             <!-- Plano Tab -->
@@ -661,6 +662,23 @@
                 </div>
               </div>
             </div>
+
+            <!-- Gerente Tab -->
+            <div class="card-body ptab-content" id="ptab-gerente" role="tabpanel" aria-labelledby="ptab-gerente-tab" style="display:none">
+              <div style="display:flex;align-items:center;gap:var(--sp-4)">
+                <div class="am-avatar">PM</div>
+                <div style="flex:1;min-width:0">
+                  <div class="am-name">Paulo Mendes</div>
+                  <div class="am-role">Account Manager — Lastro</div>
+                </div>
+                <div style="text-align:right">
+                  <a class="am-contact" href="https://wa.me/5511999887766" target="_blank" rel="noopener" style="margin-top:0">+55 11 99988-7766</a>
+                  <a class="am-contact" href="mailto:paulo.mendes@lastro.dev" style="margin-top:var(--sp-1)">paulo.mendes@lastro.dev</a>
+                </div>
+              </div>
+              <div class="divider"></div>
+              <div style="font-size:var(--text-xs);color:var(--gray-500);line-height:var(--leading-normal)">Seu gerente de contas pode ajudar com mudanças de plano, negociação de condições especiais, ativação de add-ons como Assentos Premium ou Lais Adicional, e dúvidas sobre consumo excedente ou cobranças.</div>
+            </div>
           </div>
 
           <!-- Consumo card removed — now a tab inside Plano e Conta -->
@@ -723,25 +741,7 @@
             </div>
           </div>
 
-          <!-- ═══ 3. Account Manager ═══ -->
-          <div class="card">
-            <div class="card-header"><div class="card-title">Seu gerente de contas</div></div>
-            <div class="card-body">
-              <div style="display:flex;align-items:center;gap:var(--sp-4)">
-                <div class="am-avatar">PM</div>
-                <div style="flex:1;min-width:0">
-                  <div class="am-name">Paulo Mendes</div>
-                  <div class="am-role">Account Manager — Lastro</div>
-                </div>
-                <div style="text-align:right">
-                  <a class="am-contact" href="https://wa.me/5511999887766" target="_blank" rel="noopener" style="margin-top:0">+55 11 99988-7766</a>
-                  <a class="am-contact" href="mailto:paulo.mendes@lastro.dev" style="margin-top:var(--sp-1)">paulo.mendes@lastro.dev</a>
-                </div>
-              </div>
-              <div class="divider"></div>
-              <div style="font-size:var(--text-xs);color:var(--gray-500);line-height:var(--leading-normal)">Seu gerente de contas pode ajudar com mudanças de plano, negociação de condições especiais, ativação de add-ons como Assentos Premium ou Lais Adicional, e dúvidas sobre consumo excedente ou cobranças.</div>
-            </div>
-          </div>
+          <!-- AM card removed — now a tab inside Plano e Conta -->
 
         </div>
       </div>
