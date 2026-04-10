@@ -1,13 +1,13 @@
 ---
 name: polish
-description: "Performs a final quality pass fixing alignment, spacing, consistency, and micro-detail issues before shipping. Use when the user mentions polish, finishing touches, pre-launch review, something looks off, or wants to go from good to great."
-argument-hint: "[target]"
+description: Performs a final quality pass fixing alignment, spacing, consistency, and micro-detail issues before shipping. Use when the user mentions polish, finishing touches, pre-launch review, something looks off, or wants to go from good to great.
 user-invocable: true
+argument-hint: "[target]"
 ---
 
 ## MANDATORY PREPARATION
 
-Invoke {{command_prefix}}impeccable — it contains design principles, anti-patterns, and the **Context Gathering Protocol**. Follow the protocol before proceeding — if no design context exists yet, you MUST run {{command_prefix}}impeccable teach first. Additionally gather: quality bar (MVP vs flagship).
+Invoke /impeccable — it contains design principles, anti-patterns, and the **Context Gathering Protocol**. Follow the protocol before proceeding — if no design context exists yet, you MUST run /impeccable teach first. Additionally gather: quality bar (MVP vs flagship).
 
 ---
 
@@ -200,4 +200,3 @@ Before marking as done:
 - **Check all states**: Don't just test happy path
 
 Remember: You have impeccable attention to detail and exquisite taste. Polish until it feels effortless, looks intentional, and works flawlessly. Sweat the details - they matter.
-

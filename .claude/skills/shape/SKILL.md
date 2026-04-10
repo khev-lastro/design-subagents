@@ -1,13 +1,13 @@
 ---
 name: shape
-description: "Plan the UX and UI for a feature before writing code. Runs a structured discovery interview, then produces a design brief that guides implementation. Use during the planning phase to establish design direction, constraints, and strategy before any code is written."
-argument-hint: "[feature to shape]"
+description: Plan the UX and UI for a feature before writing code. Runs a structured discovery interview, then produces a design brief that guides implementation. Use during the planning phase to establish design direction, constraints, and strategy before any code is written.
 user-invocable: true
+argument-hint: "[feature to shape]"
 ---
 
 ## MANDATORY PREPARATION
 
-Invoke {{command_prefix}}impeccable, which contains design principles, anti-patterns, and the **Context Gathering Protocol**. Follow the protocol before proceeding. If no design context exists yet, you MUST run {{command_prefix}}impeccable teach first.
+Invoke /impeccable, which contains design principles, anti-patterns, and the **Context Gathering Protocol**. Follow the protocol before proceeding. If no design context exists yet, you MUST run /impeccable teach first.
 
 ---
 
@@ -15,7 +15,7 @@ Shape the UX and UI for a feature before any code is written. This skill produce
 
 **Scope**: Design planning only. This skill does NOT write code. It produces the thinking that makes code good.
 
-**Output**: A design brief that can be handed off to {{command_prefix}}impeccable craft, {{command_prefix}}impeccable, or any other implementation skill.
+**Output**: A design brief that can be handed off to /impeccable craft, /impeccable, or any other implementation skill.
 
 ## Philosophy
 
@@ -25,7 +25,7 @@ Most AI-generated UIs fail not because of bad code, but because of skipped think
 
 **Do NOT write any code or make any design decisions during this phase.** Your only job is to understand the feature deeply enough to make excellent design decisions later.
 
-Ask these questions in conversation, adapting based on answers. Don't dump them all at once; have a natural dialogue. {{ask_instruction}}
+Ask these questions in conversation, adapting based on answers. Don't dump them all at once; have a natural dialogue. ask the user directly to clarify what you cannot infer.
 
 ### Purpose & Context
 - What is this feature for? What problem does it solve?
@@ -90,6 +90,6 @@ Anything unresolved that the implementer should resolve during build.
 
 ---
 
-{{ask_instruction}} Get explicit confirmation of the brief before finishing. If the user disagrees with any part, revisit the relevant discovery questions.
+ask the user directly to clarify what you cannot infer. Get explicit confirmation of the brief before finishing. If the user disagrees with any part, revisit the relevant discovery questions.
 
-Once confirmed, the brief is complete. The user can now hand it to {{command_prefix}}impeccable craft to build the feature, or use it to guide any other implementation approach.
+Once confirmed, the brief is complete. The user can now hand it to /impeccable craft to build the feature, or use it to guide any other implementation approach.

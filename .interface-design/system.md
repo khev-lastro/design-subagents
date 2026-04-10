@@ -3,29 +3,212 @@
 ## Direction
 Brazilian PropTech CRM for real estate agents (corretores). The AI assistant "Lais" surfaces contextual insights. Feels like a knowledgeable colleague tapping your shoulder — not an alarm system.
 
-## Palette
-- **Brand:** `#49317A` (primary) / `#6845AD` (primary-600) / `#9664FA` (primary-400 / ring)
-- **Surfaces:** White `#FFFFFF` (card), `#F8F8FA` (canvas/background)
-- **Borders:** `#D1D1D9` (standard), `#E5E5EB` (soft/sidebar)
-- **Neutral scale:** 900=`#1A1A2E` 700=`#4A4A5A` 600=`#6B6B7B` 400=`#B0B0BC` 200=`#E5E5EB` 100=`#F0F0F4` 50=`#F8F8FA`
-- **Text:** neutral-800 `#2D2D3F` (primary), neutral-600 `#6B6B7B` (muted)
-- **Semantic:** success=`#16A34A`, info=`#2563EB`, warning=`#F59E0B`, danger=`#EF4444`
-- **Semantic tints (badge/banner):** each semantic color has 50/100/700 stops
+**Source of truth:** Figma WAR ROOM file. When Figma values conflict with older notes, Figma wins.
 
-## Depth Strategy
-Borders-first. Shadows only on floating elements (cards, popovers, toast). shadow-xs for inline containers, shadow-lg for floating.
-
-## Spacing
-4px base grid. Scale: 4, 8, 12, 16, 20, 24, 32, 40, 48.
+---
 
 ## Typography
-- **Body:** Red Hat Text, -apple-system, sans-serif. Base 14px / 0.875rem.
-- **Headings:** Red Hat Display, -apple-system, sans-serif. Use `.font-heading`, tracking -0.01em.
-- Scale: 11/13/14/16/18/20/24px. Hierarchy via weight (400/500/600/700) + tracking, not size alone.
-- Tabular nums for data. Font smoothing: antialiased.
+
+Two-family system:
+- **Display:** Red Hat Display — page titles, large headings, code/data display
+- **Body:** Red Hat Text — all UI text, labels, nav, table content
+
+```
+Scale:
+  10px — micro labels
+  12px — table headers, captions, badge text, nav section labels
+  14px — body, table rows, subtitles
+  16px — nav items, section headers
+  18px — subsection titles
+  32px — page title (Display, weight 700)
+
+Weights: 400 (body) / 500 (labels, nav) / 600 (subheadings) / 700 (display, data values)
+Letter spacing: -1 (display/32px) / -0.4 (headings/18px+) / 0 (body)
+Line heights: 1.4 (body) / 1.4 (display)
+Tabular nums: font-variant-numeric: tabular-nums on all data/numbers
+```
+
+---
+
+## Palette
+
+### Primary
+```
+Purple-500: #9664fa   — badge accent tint, hover bg
+Purple-600: #6845ad   — primary CTA, active nav, progress bars
+Purple-800: #49317a   — hover on primary, deep accent
+```
+
+### Neutrals
+```
+Gray-50:  #fafafa   — page background canvas
+Gray-100: #f5f5f5   — inset bg, code block background, recessed surfaces
+Gray-300: #e5e5e5   — borders, dividers, card outlines
+Gray-800: #646464   — secondary text, table headers, meta labels
+Gray-900: #323232   — primary body text, nav items
+Black:    #1a1a1a   — high-contrast text (titles in some contexts)
+White:    #ffffff   — card surfaces, sidebar, modals
+```
+
+### Semantic
+```
+Green-600: #0a8558   — Ativo status, success states
+Green-800: #075539   — success hover, deep green
+```
+
+### Special surfaces
+```
+Lavender-tint: #eae0fe   — role badge background (Membro/Editor/Administrador)
+```
+
+> **Note:** Notification catalog (lais-notifications/) uses `#7C3AED`. App shell uses `#6845ad`. These are distinct — don't cross-apply.
+
+---
+
+## Spacing
+
+4px base grid.
+
+```
+2px  — micro (tight icon pairs)
+4px  — base unit
+6px  — compact spacing
+8px  — xs gaps, icon-to-label
+12px — table cell padding, compact card internals
+18px — card internal gap
+24px — card padding (standard)
+32px — section separation
+```
+
+---
 
 ## Radius
-6px (inputs/buttons), 8px (cards/nav), 12px (containers), 16px (modals).
+
+```
+999px — pills: badges, status chips, NOVO tag, progress bar
+8–12px — cards, containers (inferred ~8px from visual)
+8px   — buttons (not full pill — slight radius only)
+6–8px — inputs, code blocks
+```
+
+---
+
+## Depth Strategy
+
+Borders-first.
+
+| Context | Treatment |
+|---|---|
+| Page canvas | `background: #fafafa` |
+| Cards / panels | `background: white; border: 1px solid #e5e5e5` |
+| Recessed / inset blocks | `background: #f5f5f5; border: 1px solid #e5e5e5` |
+| Sidebar | `background: white; border-right: 1px solid #e5e5e5` |
+| Floating (popovers, modals) | `box-shadow: shadow-lg` |
+
+No decorative shadows on inline elements.
+
+---
+
+## Component Patterns
+
+### Button Primary
+```
+height: 40px
+padding: 0 20px
+background: #6845ad
+color: white
+border: none
+border-radius: 8px
+font: Red Hat Text, 14px, weight 500
+icon-left: "+" at 16px when used as add action
+
+hover: background: #49317a
+```
+
+### Badge / Role Pill (Membro, Editor, Administrador)
+```
+background: #eae0fe
+color: #6845ad
+height: ~24px
+padding: 0 10px
+border-radius: 999px
+font: 12px / 500 / Red Hat Text
+```
+
+### Status Pill (Ativo)
+```
+border: 1px solid #0a8558
+background: white
+color: #0a8558
+leading dot: 6px circle, #0a8558
+height: ~24px
+padding: 0 10px
+border-radius: 999px
+font: 12px / 500 / Red Hat Text
+```
+
+### NOVO Badge
+```
+background: #6845ad
+color: white
+height: ~18px
+padding: 0 6px
+border-radius: 999px
+font: 10px / 600 / Red Hat Text
+letter-spacing: 0.05em uppercase
+```
+
+### Code Display Block
+```
+background: #f5f5f5
+border: 1px solid #e5e5e5
+border-radius: 8px
+padding: 16px 20px
+width: ~180px
+
+Value: Red Hat Display, 28px, weight 700, tracking -1
+Label: Red Hat Text, 12px, weight 400, color #646464
+```
+
+### Seat Usage Bar
+```
+Label: "X de Y assentos utilizados" — 12px / 400 / #646464
+Progress bar: height 4px, radius 999px, fill #6845ad
+Available chip: Gray-100 bg, icon + text, 12px
+```
+
+---
+
+## Table Patterns
+
+```
+Container: white bg, border: 1px solid #e5e5e5, radius: 8–12px
+Header row: 12px / 500–600 / #646464, padding: 12px 16px
+Body rows: 14px / 400 / #323232, height: ~48px
+Row separator: 1px solid #e5e5e5
+Row hover: (infer purple-tint: rgba(104, 69, 173, 0.04))
+Row action: kebab ⋮ icon, ghost button, right-aligned
+Dropdown cells (Assento): inline select trigger, 14px, chevron icon
+```
+
+---
+
+## Navigation Sidebar
+
+```
+Width: ~195px
+Background: white
+Border-right: 1px solid #e5e5e5
+
+Logo: "Lais" wordmark + spinner icon, top-left
+Workspace: bold name + sub-workspace + chevron
+Nav sections: 12px / 600 / #646464 uppercase label, no icon
+Nav items: icon (20px) + label (16px / 500 / #323232), padding: 8px 12px, radius: 6px
+  Active: color #6845ad, bg: rgba(104,69,173,0.08)
+  Hover: bg: #f5f5f5
+```
+
+---
 
 ## Smart Suggestion Patterns
 
@@ -38,199 +221,49 @@ Borders-first. Shadows only on floating elements (cards, popovers, toast). shado
 - All suggestions attributed: "Sugestão da Lais" with sparkle icon
 
 ### 1. Insight Banner
-Inline between header and table. Horizontal, slim. Icon (28px rounded square) + text + action link + dismiss. Border-left 3px accent. Background white, border gray-200, shadow-xs.
+Inline between header and table. Horizontal, slim. Icon (28px rounded square) + text + action link + dismiss. Border-left 3px accent. Background white, border #e5e5e5, shadow-xs.
 
 ### 2. Row Nudge
-3px left border on td:first-child. Pill badge below lead name ("Esperando há 3h"). Hover badge → popover (280px) with: source label, contextual text with bold stats, stat strip (gray-50 bg, large numbers), single CTA button. Arrow pointing down.
+3px left border on td:first-child. Pill badge below lead name ("Esperando há 3h"). Hover badge → popover (280px) with: source label, contextual text with bold stats, stat strip (#f5f5f5 bg, large numbers), single CTA button. Arrow pointing down.
 
 ### 3. Suggestion Card
-380px, fixed bottom-right in `.suggestion-tray`. Top 3px accent bar. Inner padding 20px. Header: 36px icon (rounded-md, tinted bg) + source label + title + desc + close. Data strip: gray-50 bg, large tabular numbers + labels + optional 4px progress bar. Footer: ghost dismiss + primary action. Stack with column-reverse + 12px gap.
+380px, fixed bottom-right in `.suggestion-tray`. Top 3px accent bar. Inner padding 20px. Header: 36px icon (rounded-md, tinted bg) + source label + title + desc + close. Data strip: #f5f5f5 bg, large tabular numbers + labels + optional 4px progress bar. Footer: ghost dismiss + primary action. Stack with column-reverse + 12px gap.
 
 ### 4. Feature Spotlight
 Pulsing 8px blue dot (absolute, top-right of target element). Click → popover (280px) with blue-left accent border. Source label + title + description + action buttons. 2s pulse animation.
 
 ### Shared Patterns
-- Dismiss: 24px ghost button, gray-300 → gray-500 on hover
-- Actions: text links (font-weight 600, purple-600) or buttons (btn-sm)
+- Dismiss: 24px ghost button, #e5e5e5 → #646464 on hover
+- Actions: text links (font-weight 600, #6845ad) or buttons (btn-sm)
 - Animations: bannerIn (0.25s ease, translateY -4px), cardIn (0.3s cubic-bezier, translateY 16px + scale 0.97), spotlightPulse (2s infinite)
-- Popovers: white bg, gray-200 border, shadow-lg, 8px rotated arrow, 0.15s fade+translate
-
-### Table Patterns
-- Container: white bg, gray-200 border, radius-lg, shadow-xs
-- Header: gray-50 bg, sticky, uppercase 11px/600 gray-400
-- Rows: hover → purple-50. Borders: gray-100 between rows
-- Status dots: 6px colored circles (green/amber/blue)
-- CRM badges: pill (999px radius), tinted bg + dark text
-- Row actions: opacity 0 → 1 on hover, 32px ghost buttons → purple-100 on hover
-
-### Bottom Bar
-White bg, gray-200 top border. Selection count (xs, gray-400) + divider + primary buttons + outline button + ghost button. Hierarchy via fill weight.
+- Popovers: white bg, #e5e5e5 border, shadow-lg, 8px rotated arrow, 0.15s fade+translate
 
 ---
 
-## Disparos — New Patterns (2026-03-24)
+## Bottom Action Bar
 
-### Wizard Pattern
-- Full-page takeover: sidebar stays visible, `#mainArea` innerHTML replaced with wizard
-- Sticky header: back link (left) + title (center) + step indicator (right)
-- Step dots: 24px circle, done=purple-600 filled, active=purple-600 outline, pending=gray-300
-- Step connectors: 32px line, gray-200 pending → purple-300 done
-- Sticky footer: step counter (left) + ghost Voltar + primary/success Avançar/Confirm (right)
-- Max content width: 720px centered in `.wizard-body`
-- Confirm button: green-600 on final step, primary on intermediate steps
-
-### Summary Card (Two-Group)
-- Single card (white, gray-200 border, radius-lg, shadow-xs), two groups side-by-side
-- Groups separated by a 1px gray-200 vertical divider (via border-left on second group)
-- Group label: text-xs, 600, gray-400, uppercase, .05em tracking
-- Metric value: text-xl, 700, tabular-nums, gray-900 (default), green-600 or purple-600 for accented metrics
-- No dividers between metrics within the same group (flex row with gap)
-
-### Confirmation Dialog (Modal)
-- Overlay: rgba(0,0,0,.35), fixed inset, centered flex, z-index 1000
-- Modal: white, radius-xl (16px), shadow-lg, max-width 400px, padding sp-6
-- Entry animation: fadeIn overlay (.15s) + slideUp modal (.2s cubic-bezier(.16,1,.3,1), translateY 8px→0)
-- Clicking outside overlay closes modal
-- Actions row: justify flex-end, gap sp-2 — ghost "keep/cancel action" left + btn-danger "confirm" right
+White bg, `border-top: 1px solid #e5e5e5`. Selection count (12px, #646464) + divider + button hierarchy (filled → outline → ghost).
 
 ---
 
-## Financeiro Patterns (2026-04-01)
+## Animations
 
-### Overdue Banner
-- Same structure as error-banner from disparos: red-50 bg, red-100 border, 3px red-500 left accent
-- Include total amount owed in title (not just count): "Você tem 2 boletos atrasados — R$ 18.000,00 em aberto"
-- Banner action links to active boletos tab
+```css
+@keyframes bannerIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* duration: 0.25s ease */
 
-### Boleto List Item
-- Flex row: 36px icon (tinted bg) + info (ref name + meta with status badge) + amount (tabular-nums) + action buttons
-- Overdue items: red-50 bg + 3px red-500 left border + red amount color + "X dias" overdue pill badge
-- Copy button: icon-btn with "Copiado!" toast feedback (fixed bottom center, gray-900 bg)
-- Historic items: grayed amount (gray-500), download icon instead of copy
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* duration: 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) */
 
-### Boleto Summary Strip
-- Sits inside boleto card between tabs and list (not floating separately)
-- gray-25 bg, 3 metrics separated by 1px gray-200 vertical dividers
-- Metrics: "Em aberto (atrasados)" in red, "Próximo vencimento" date, "Total a vencer"
-- Hidden when historic tab is active
-
-### Boleto States
-- Disponível: blue-50/blue-600 (available to pay)
-- Atrasado: red-50/red-600 (overdue)
-- Pago: green-50/green-600 (paid)
-- Renegociado: purple-50/purple-600 (renegotiated)
-- Cancelado: gray-100/gray-500 (cancelled)
-- Processando: amber-50/amber-600 (processing)
-
-### Renegotiation Modal
-- 560px max-width modal (expanded from standard 400px)
-- Custom div checkboxes (not input[type=checkbox]) to avoid double-toggle bug
-- Live summary calculation: count, original, discount (green-600), total (purple-600)
-- Confirm button: btn-success
-
-### Plan Usage Progress
-- 8px track, 999px radius, three threshold states:
-  - Normal (<85%): purple-600 fill
-  - Warning (85-99%): amber-500 fill + amber usage-warning
-  - Exceeded (100%+): red-500 fill + "103%" label (absolute positioned above fill end) + danger usage-warning with AM name + upsell link
-- Sparkline trend: amber-600 when exceeded context (not green — growth is a warning here)
-
-### Usage Cards (Feature Breakdown)
-- 3-column grid (not 5 — prevents cramped names)
-- Card: icon+name header row, large value, percentage, 4px bar
-- Bar fills use semantic class names (.purple, .amber, .green, .blue) not inline colors
-
-### Billing Account with Nested REAs
-- Expandable toggle: "Ver REAs vinculadas" with chevron rotation
-- REA items: name, plan tier, monthly cost — hover gray-50
-- Cost breakdown below divider: line items + total row (purple-600)
-
-### Plans Page
-- Wizard-style navigation from Financeiro (mainPage hidden, plansPage shown)
-- Breadcrumb: "Financeiro > Alterar plano"
-- 4-column card grid, current plan: purple-300 border + ring + "Atual" badge + disabled CTA
-- Anual/Mensal toggle (pill style from design system)
-
-### Sidebar Badge (Financeiro)
-- When overdue boletos exist: red-500 bg, white text, 18px pill badge on nav item
-- Shows count of overdue boletos
-
----
-
-## Component Library — prd-design-components (Extracted 2026-03-24)
-
-Stack: React + TypeScript + Tailwind CSS v4 (`@theme`), shadcn/ui, CVA, Radix UI, Lucide icons.
-
-### Button
-- Base: `rounded-md text-sm font-medium gap-1.5 disabled:opacity-45`
-- Sizes: default `h-10 px-4`, sm `h-8 px-3`, lg `h-11 px-6`, icon `size-9 rounded-full`, icon-square `size-9 rounded-xl`
-- Variants: default (primary bg white text), destructive (danger bg), outline (border+bg-white), secondary (white bg neutral text), ghost (transparent hover:bg-accent), link (underline)
-
-### Card
-- `rounded-lg border border-neutral-200 bg-card shadow-sm hover:border-neutral-300 hover:shadow-md`
-- CardHeader: `p-6 gap-3` — CardContent: `p-6 pt-0`
-- CardTitle: `text-lg font-heading font-semibold`
-
-### Input / Select trigger
-- `h-10 rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm`
-- Hover: `border-neutral-300`; Focus: `border-primary ring-2 ring-ring/15`
-- Disabled: `bg-neutral-50 opacity-50`; Invalid: `border-danger-500 ring-danger-500/15`
-
-### Badge
-- Base: `rounded-full px-2.5 py-0.5 text-xs font-medium`
-- 9 variants: default (primary), secondary, destructive, outline, success, warning, danger, info, neutral
-- Semantic tints: `bg-{color}-100 text-{color}-700`
-
-### InlineTabs (underline style)
-- List: `inline-flex items-center gap-6 border-b border-neutral-200`
-- Trigger: `pb-2.5 pt-1 text-sm font-medium text-muted-foreground`
-- Active: `text-primary` + `::after` 2px `bg-primary rounded-full` bottom underline
-- Use for page-level navigation tabs (like disparos filter tabs)
-
-### Tabs (pill style)
-- List: `h-9 bg-muted rounded-md p-1`; Trigger: `px-3 py-1 text-sm font-medium`
-- Active: `bg-card shadow-xs rounded-xs`
-- Use for contained tab switchers
-
-### Dialog / Modal
-- Overlay: `bg-black/40 backdrop-blur-[2px]`
-- Content: `max-w-lg rounded-lg border border-neutral-200 bg-card p-6 shadow-xl`
-- Title: `text-lg font-heading font-semibold`; Description: `text-sm text-muted-foreground`
-- Close button: `size-7 rounded-full text-neutral-400 hover:bg-neutral-100`
-
-### Banner (4 variants)
-- Base: `rounded-lg px-5 py-4` with icon slot + title (font-heading semibold) + description + action + close
-- `gradient`: `bg-gradient-to-r from-[#2E1F4D] to-[#49317A] text-white`
-- `info/success/warning`: `bg-{color}-50 text-{color}-700 border border-current/20`
-- Close: `size-7 rounded-full` — gradient: `text-white/70 hover:bg-white/10`; semantic: `hover:bg-black/5`
-
-### Sidebar
-- `w-[240px] min-h-screen bg-white border-r border-neutral-200`
-- Active nav item: `text-primary font-medium bg-primary-50` + `absolute left-0 w-1 bg-primary rounded-r-full` accent bar
-- Section labels: `text-[11px] font-medium text-neutral-400 uppercase tracking-wider`
-- Nav items: `px-5 py-2.5 text-sm text-neutral-600`; icons: `w-5 h-5`
-
-### ActionBar (bulk selection)
-- `fixed bottom-0 inset-x-0 border-t border-neutral-200 bg-white px-6 py-3 shadow-lg`
-- Only renders when `selectedCount > 0`
-- Layout: clear-X + "N items selected" (left) + action buttons (ml-auto right)
-
-### StepProgress
-- Horizontal segments: `h-1 flex-1 rounded-full` — active: `bg-primary`, inactive: `bg-neutral-200`
-
-### Table
-- TableHead: `h-10 px-4 text-left font-medium text-muted-foreground`
-- TableCell: `p-4 align-middle`
-- TableRow: `border-b border-neutral-100 hover:bg-muted/50`
-
-### Shadows
+@keyframes spotlightPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(104,69,173,0.4); }
+  50%       { box-shadow: 0 0 0 6px rgba(104,69,173,0); }
+}
+/* duration: 2s infinite */
 ```
-xs: 0 1px 2px rgba(0,0,0,0.03)
-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02)
-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04)
-lg: 0 8px 24px rgba(0,0,0,0.08), 0 2px 6px rgba(0,0,0,0.04)
-xl: 0 16px 48px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.05)
-```
-
-### Radius Scale
-sm=4px, md=6px, lg=8px, xl=12px, 2xl=16px, full=9999px

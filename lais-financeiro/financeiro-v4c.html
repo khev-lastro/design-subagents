@@ -542,8 +542,9 @@
           <!-- SHADCN: Use <Card> with <CardHeader><CardTitle> + <Tabs> (shadcn InlineTabs / underline variant) -->
           <div class="card">
             <div class="card-header"><div class="card-title">Plano e Conta</div><button class="btn btn-text ptab-action" id="ptabAction" onclick="showPlansPage()">Alterar plano</button></div>
-            <div class="inline-tabs" role="tablist" aria-label="Plano e conta">
+            <div class="inline-tabs" role="tablist" aria-label="Plano, consumo e conta">
               <div class="inline-tab active" role="tab" tabindex="0" aria-selected="true" data-ptab="plano" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Plano atual</div>
+              <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-ptab="consumo" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Consumo</div>
               <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-ptab="conta" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Conta de cobrança</div>
             </div>
 
@@ -557,6 +558,58 @@
                 </div>
                 <div><div class="plan-detail-label">Tipo</div><div class="plan-detail-value">Anual</div></div>
                 <div><div class="plan-detail-label">Vigência</div><div class="plan-detail-value">09 mai 2025 → 09 mai 2026</div></div>
+              </div>
+            </div>
+
+            <!-- Consumo Tab -->
+            <div class="card-body ptab-content" id="ptab-consumo" role="tabpanel" aria-labelledby="ptab-consumo-tab" style="display:none">
+              <div style="display:flex;align-items:center;gap:var(--sp-3);margin-bottom:var(--sp-4);flex-wrap:wrap">
+                <div id="usageHeaderLeft" style="display:flex;align-items:center;gap:var(--sp-2)">
+                  <span class="usage-count">4.120 / 4.000</span>
+                  <span class="usage-pct-badge exceeded">103%</span>
+                </div>
+                <select class="period-select" id="consumoViewSelect" onchange="switchConsumoView(this.value)">
+                  <option value="feature" selected>Por funcionalidade</option>
+                  <option value="rea">Por REA</option>
+                </select>
+                <select class="period-select" id="periodSelect" onchange="switchPeriod(this.value)">
+                  <option value="mes" selected>Este mês</option>
+                  <option value="12m">Últimos 12 meses</option>
+                </select>
+              </div>
+              <div class="usage-section" style="margin-top:0;padding-top:0;border-top:none">
+                <!-- View: Este mês (stacked bar) -->
+                <div class="period-view" id="viewMes">
+                  <div class="stacked-bar-track">
+                    <div class="stacked-bar-segment purple" style="width:60.6%"><span class="stacked-bar-pct">61%</span><span class="stacked-bar-tooltip">Atendimento da Lais · 2.423 (60,6%)</span></div>
+                    <div class="stacked-bar-segment green" style="width:25.8%"><span class="stacked-bar-pct">26%</span><span class="stacked-bar-tooltip">Remarketing · 1.030 (25,8%)</span></div>
+                    <div class="stacked-bar-segment pink" style="width:16.7%"><span class="stacked-bar-pct">17%</span><span class="stacked-bar-tooltip">Anúncios Proprietários · 667 (16,7%)</span></div>
+                  </div>
+                  <div class="stacked-legend">
+                    <div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div>
+                    <div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div>
+                    <div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>
+                  </div>
+                </div>
+                <!-- View: Últimos 12 meses (monthly bars) -->
+                <div class="period-view" id="view12m" style="display:none">
+                  <div class="chart-wrap">
+                    <div class="y-axis"><span class="y-label">4.000</span><span class="y-label">3.000</span><span class="y-label">2.000</span><span class="y-label">1.000</span><span class="y-label">0</span></div>
+                    <div class="chart-area" id="monthlyChart"></div>
+                  </div>
+                  <div class="weekly-axis">
+                    <div class="weekly-axis-months" id="yearlyAxisMonths"></div>
+                    <div class="weekly-axis-weeks" id="monthlyAxis"></div>
+                  </div>
+                  <div class="chart-summary">
+                    <div class="chart-stat"><span class="chart-stat-label">Média mensal</span><span class="chart-stat-value">2.523</span></div>
+                    <div class="chart-stat"><span class="chart-stat-label">Mês atual</span><span class="chart-stat-value purple">4.120</span></div>
+                    <div class="chart-stat"><span class="chart-stat-label">Limite do plano</span><span class="chart-stat-value">4.000</span></div>
+                    <div class="chart-stat"><span class="chart-stat-label">Meses acima do limite</span><span class="chart-stat-value amber">1</span></div>
+                  </div>
+                </div>
+                <!-- Warning at bottom when exceeded -->
+                <div class="usage-warning warn" style="margin-top:var(--sp-4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Consumo acima do limite (103%).</strong> Atendimentos excedentes geram cobrança adicional na próxima fatura.</div></div>
               </div>
             </div>
 
@@ -610,66 +663,7 @@
             </div>
           </div>
 
-          <!-- ═══ 1b. Consumo ═══ -->
-          <div class="card">
-            <div class="card-header">
-              <div class="card-title">Consumo</div>
-              <div style="display:flex;align-items:center;gap:var(--sp-3)">
-                <div id="usageHeaderLeft" style="display:flex;align-items:center;gap:var(--sp-2)">
-                  <span class="usage-count">4.120 / 4.000</span>
-                  <span class="usage-pct-badge exceeded">103%</span>
-                </div>
-                <select class="period-select" id="consumoViewSelect" onchange="switchConsumoView(this.value)">
-                  <option value="feature" selected>Por funcionalidade</option>
-                  <option value="rea">Por REA</option>
-                </select>
-                <select class="period-select" id="periodSelect" onchange="switchPeriod(this.value)">
-                  <option value="mes" selected>Este mês</option>
-                  <option value="12m">Últimos 12 meses</option>
-                </select>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="usage-section" style="margin-top:0;padding-top:0;border-top:none">
-
-                <!-- View: Este mês (stacked bar) -->
-                <div class="period-view" id="viewMes">
-                  <div class="stacked-bar-track">
-                    <div class="stacked-bar-segment purple" style="width:60.6%"><span class="stacked-bar-pct">61%</span><span class="stacked-bar-tooltip">Atendimento da Lais · 2.423 (60,6%)</span></div>
-                    <div class="stacked-bar-segment green" style="width:25.8%"><span class="stacked-bar-pct">26%</span><span class="stacked-bar-tooltip">Remarketing · 1.030 (25,8%)</span></div>
-                    <div class="stacked-bar-segment pink" style="width:16.7%"><span class="stacked-bar-pct">17%</span><span class="stacked-bar-tooltip">Anúncios Proprietários · 667 (16,7%)</span></div>
-                  </div>
-                  <div class="stacked-legend">
-                    <div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div>
-                    <div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div>
-                    <div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>
-                  </div>
-                </div>
-
-                <!-- View: Últimos 3 meses (weekly bars) -->
-                <!-- View: Últimos 12 meses (monthly bars) -->
-                <div class="period-view" id="view12m" style="display:none">
-                  <div class="chart-wrap">
-                    <div class="y-axis"><span class="y-label">4.000</span><span class="y-label">3.000</span><span class="y-label">2.000</span><span class="y-label">1.000</span><span class="y-label">0</span></div>
-                    <div class="chart-area" id="monthlyChart"></div>
-                  </div>
-                  <div class="weekly-axis">
-                    <div class="weekly-axis-months" id="yearlyAxisMonths"></div>
-                    <div class="weekly-axis-weeks" id="monthlyAxis"></div>
-                  </div>
-                  <div class="chart-summary">
-                    <div class="chart-stat"><span class="chart-stat-label">Média mensal</span><span class="chart-stat-value">2.523</span></div>
-                    <div class="chart-stat"><span class="chart-stat-label">Mês atual</span><span class="chart-stat-value purple">4.120</span></div>
-                    <div class="chart-stat"><span class="chart-stat-label">Limite do plano</span><span class="chart-stat-value">4.000</span></div>
-                    <div class="chart-stat"><span class="chart-stat-label">Meses acima do limite</span><span class="chart-stat-value amber">1</span></div>
-                  </div>
-                </div>
-
-                <!-- Warning at bottom when exceeded -->
-                <div class="usage-warning warn" style="margin-top:var(--sp-4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Consumo acima do limite (103%).</strong> Atendimentos excedentes geram cobrança adicional na próxima fatura.</div></div>
-              </div>
-            </div>
-          </div>
+          <!-- Consumo card removed — now a tab inside Plano e Conta -->
 
           <!-- ═══ 2. Boletos Ativos / Histórico ═══ -->
           <div class="card">

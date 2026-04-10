@@ -1,8 +1,8 @@
 ---
 name: impeccable
-description: "Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics. Use when the user asks to build web components, pages, artifacts, posters, or applications, or when any design skill requires project context. Call with 'craft' to run the full shape-then-build flow, or 'teach' for design context setup."
-argument-hint: "[craft|teach]"
+description: Create distinctive, production-grade frontend interfaces with high design quality. Generates creative, polished code that avoids generic AI aesthetics. Use when the user asks to build web components, pages, artifacts, posters, or applications, or when any design skill requires project context. Call with 'craft' to run the full shape-then-build flow, or 'teach' for design context setup.
 user-invocable: true
+argument-hint: "[craft|teach]"
 license: Apache 2.0. Based on Anthropic's frontend-design skill. See NOTICE.md for attribution.
 ---
 
@@ -24,7 +24,7 @@ Individual skills may require additional context. Check the skill's preparation 
 **Gathering order:**
 1. **Check current instructions (instant)**: If your loaded instructions already contain a **Design Context** section, proceed immediately.
 2. **Check .impeccable.md (fast)**: If not in instructions, read `.impeccable.md` from the project root. If it exists and contains the required context, proceed.
-3. **Run impeccable teach (REQUIRED)**: If neither source has context, you MUST run {{command_prefix}}impeccable teach NOW before doing anything else. Do NOT skip this step. Do NOT attempt to infer context from the codebase instead.
+3. **Run impeccable teach (REQUIRED)**: If neither source has context, you MUST run /impeccable teach NOW before doing anything else. Do NOT skip this step. Do NOT attempt to infer context from the codebase instead.
 
 ---
 
@@ -264,19 +264,19 @@ Match implementation complexity to the aesthetic vision. Maximalist designs need
 
 Interpret creatively and make unexpected choices that feel genuinely designed for the context. No design should be the same. Vary between light and dark themes, different fonts, different aesthetics. NEVER converge on common choices across generations.
 
-Remember: {{model}} is capable of extraordinary creative work. Don't hold back. Show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
+Remember: the model is capable of extraordinary creative work. Don't hold back. Show what can truly be created when thinking outside the box and committing fully to a distinctive vision.
 
 ---
 
 ## Craft Mode
 
-If this skill is invoked with the argument "craft" (e.g., `{{command_prefix}}impeccable craft [feature description]`), follow the [craft flow](reference/craft.md). Pass any additional arguments as the feature description.
+If this skill is invoked with the argument "craft" (e.g., `/impeccable craft [feature description]`), follow the [craft flow](reference/craft.md). Pass any additional arguments as the feature description.
 
 ---
 
 ## Teach Mode
 
-If this skill is invoked with the argument "teach" (e.g., `{{command_prefix}}impeccable teach`), skip all design work above and instead run the teach flow below. This is a one-time setup that gathers design context for the project.
+If this skill is invoked with the argument "teach" (e.g., `/impeccable teach`), skip all design work above and instead run the teach flow below. This is a one-time setup that gathers design context for the project.
 
 ### Step 1: Explore the Codebase
 
@@ -293,7 +293,7 @@ Note what you've learned and what remains unclear.
 
 ### Step 2: Ask UX-Focused Questions
 
-{{ask_instruction}} Focus only on what you couldn't infer from the codebase:
+ask the user directly to clarify what you cannot infer. Focus only on what you couldn't infer from the codebase:
 
 #### Users & Purpose
 - Who uses this? What's their context when using it?
@@ -338,6 +338,6 @@ Synthesize your findings and the user's answers into a `## Design Context` secti
 
 Write this section to `.impeccable.md` in the project root. If the file already exists, update the Design Context section in place.
 
-Then {{ask_instruction}} whether they'd also like the Design Context appended to {{config_file}}. If yes, append or update the section there as well.
+Then ask the user directly to clarify what you cannot infer. whether they'd also like the Design Context appended to .github/copilot-instructions.md. If yes, append or update the section there as well.
 
 Confirm completion and summarize the key design principles that will now guide all future work.

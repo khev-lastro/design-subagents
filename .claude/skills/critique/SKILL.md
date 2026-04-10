@@ -1,17 +1,15 @@
 ---
 name: critique
-description: "Evaluate design from a UX perspective, assessing visual hierarchy, information architecture, emotional resonance, cognitive load, and overall quality with quantitative scoring, persona-based testing, automated anti-pattern detection, and actionable feedback. Use when the user asks to review, critique, evaluate, or give feedback on a design or component."
-argument-hint: "[area (feature, page, component...)]"
+description: Evaluate design from a UX perspective, assessing visual hierarchy, information architecture, emotional resonance, cognitive load, and overall quality with quantitative scoring, persona-based testing, automated anti-pattern detection, and actionable feedback. Use when the user asks to review, critique, evaluate, or give feedback on a design or component.
 user-invocable: true
-allowed-tools:
-  - Bash(npx impeccable *)
+argument-hint: "[area (feature, page, component...)]"
 ---
 
 ## STEPS
 
 ### Step 1: Preparation
 
-Invoke {{command_prefix}}impeccable, which contains design principles, anti-patterns, and the **Context Gathering Protocol**. Follow the protocol before proceeding. If no design context exists yet, you MUST run {{command_prefix}}impeccable teach first. Additionally gather: what the interface is trying to accomplish.
+Invoke /impeccable, which contains design principles, anti-patterns, and the **Context Gathering Protocol**. Follow the protocol before proceeding. If no design context exists yet, you MUST run /impeccable teach first. Additionally gather: what the interface is trying to accomplish.
 
 ### Step 2: Gather Assessments
 
@@ -145,12 +143,12 @@ For each issue, tag with **P0-P3 severity** (consult [heuristics-scoring](refere
 - **[P?] What**: Name the problem clearly
 - **Why it matters**: How this hurts users or undermines goals
 - **Fix**: What to do about it (be concrete)
-- **Suggested command**: Which command could address this (from: {{available_commands}})
+- **Suggested command**: Which command could address this (from: /animate, /quieter, /shape, /optimize, /adapt, /clarify, /distill, /delight, /onboard, /normalize, /audit, /harden, /polish, /extract, /bolder, /arrange, /typeset, /critique, /colorize, /overdrive)
 
 #### Persona Red Flags
 > *Consult [personas](reference/personas.md)*
 
-Auto-select 2-3 personas most relevant to this interface type (use the selection table in the reference). If `{{config_file}}` contains a `## Design Context` section from `impeccable teach`, also generate 1-2 project-specific personas from the audience/brand info.
+Auto-select 2-3 personas most relevant to this interface type (use the selection table in the reference). If `.github/copilot-instructions.md` contains a `## Design Context` section from `impeccable teach`, also generate 1-2 project-specific personas from the audience/brand info.
 
 For each selected persona, walk through the primary user action and list specific red flags found:
 
@@ -179,7 +177,7 @@ Provocative questions that might unlock better solutions:
 
 ### Step 4: Ask the User
 
-**After presenting findings**, use targeted questions based on what was actually found. {{ask_instruction}} These answers will shape the action plan.
+**After presenting findings**, use targeted questions based on what was actually found. ask the user directly to clarify what you cannot infer. These answers will shape the action plan.
 
 Ask questions along these lines (adapt to the specific findings; do NOT ask generic questions):
 
@@ -205,22 +203,22 @@ Ask questions along these lines (adapt to the specific findings; do NOT ask gene
 
 List recommended commands in priority order, based on the user's answers:
 
-1. **`{{command_prefix}}command-name`**: Brief description of what to fix (specific context from critique findings)
-2. **`{{command_prefix}}command-name`**: Brief description (specific context)
+1. **`/command-name`**: Brief description of what to fix (specific context from critique findings)
+2. **`/command-name`**: Brief description (specific context)
 ...
 
 **Rules for recommendations**:
-- Only recommend commands from: {{available_commands}}
+- Only recommend commands from: /animate, /quieter, /shape, /optimize, /adapt, /clarify, /distill, /delight, /onboard, /normalize, /audit, /harden, /polish, /extract, /bolder, /arrange, /typeset, /critique, /colorize, /overdrive
 - Order by the user's stated priorities first, then by impact
 - Each item's description should carry enough context that the command knows what to focus on
 - Map each Priority Issue to the appropriate command
 - Skip commands that would address zero issues
 - If the user chose a limited scope, only include items within that scope
 - If the user marked areas as off-limits, exclude commands that would touch those areas
-- End with `{{command_prefix}}polish` as the final step if any fixes were recommended
+- End with `/polish` as the final step if any fixes were recommended
 
 After presenting the summary, tell the user:
 
 > You can ask me to run these one at a time, all at once, or in any order you prefer.
 >
-> Re-run `{{command_prefix}}critique` after fixes to see your score improve.
+> Re-run `/critique` after fixes to see your score improve.
