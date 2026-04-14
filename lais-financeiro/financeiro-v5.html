@@ -509,9 +509,9 @@
     <div class="sidebar-brand"><div class="sidebar-logo">L</div><div class="sidebar-brand-text"><h2>Lais da Zeio Imóveis</h2><div class="brand-sub">Zeio Imóveis</div></div></div>
     <div style="padding:0 var(--sp-3) var(--sp-3)">
       <select class="period-select" id="scenarioSelect" onchange="switchScenario(this.value)" style="width:100%;font-size:var(--text-xs);background-color:var(--purple-50);border-color:var(--purple-200);color:var(--purple-700)">
-        <option value="1">Cenário 1 — 33%, sem atrasados</option>
+        <option value="1" selected>Cenário 1 — 33%, sem atrasados</option>
         <option value="2">Cenário 2 — 84%, 1 atrasado</option>
-        <option value="3" selected>Cenário 3 — 103%, 2 atrasados</option>
+        <option value="3">Cenário 3 — 103%, 2 atrasados</option>
       </select>
     </div>
     <nav class="sidebar-nav">
@@ -1321,6 +1321,8 @@
     // Period select
     const periodSel = document.getElementById('periodSelect');
     if (periodSel) periodSel.value = 'mes';
+    // Default to scenario 1
+    switchScenario('1');
   })();
 </script>
 </body>
