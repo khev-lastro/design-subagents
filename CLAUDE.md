@@ -384,6 +384,33 @@ When a Figma design is provided:
 
 ---
 
+## Preview Links (htmlpreview.github.io)
+
+**When asked to generate a preview link** for a committed-and-pushed HTML prototype, wrap the file's GitHub URL with the [htmlpreview.github.io](https://github.com/htmlpreview/htmlpreview.github.com) proxy so it renders live in the browser (no clone, no local server).
+
+**Repo:** `khev-lastro/design-subagents` · **Default branch:** `main`
+
+**Format:**
+
+```
+https://htmlpreview.github.io/?https://github.com/khev-lastro/design-subagents/blob/main/<path-to-file>.html
+```
+
+**Example — Financeiro v6:**
+
+```
+https://htmlpreview.github.io/?https://github.com/khev-lastro/design-subagents/blob/main/lais-financeiro/financeiro-v6.html
+```
+
+**Rules:**
+
+1. The file must be **committed and pushed to `main`** first — htmlpreview reads from GitHub, not local state. If the user asks for a preview of uncommitted work, commit + push first (following the existing commit rules), then generate the link.
+2. Use the GitHub `blob` URL (not the raw URL) — htmlpreview accepts both, but `blob` is what the user sees when navigating on GitHub.
+3. Return the preview link as a plain URL in the response so it's one-click openable and shareable.
+4. These links render fully-styled HTML + inline CSS + inline `<script>` blocks. External scripts must be whitelisted by htmlpreview (Bootstrap, jQuery, etc. — see their docs). Our prototypes are self-contained, so this is rarely an issue.
+
+---
+
 ## File Structure
 
 ```
