@@ -1,0 +1,1537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financeiro — Lais da Imobiliária</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@600;700&family=Red+Hat+Text:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple-50:#F4F0FF;--purple-100:#E6DBFE;--purple-200:#CEBAFC;--purple-300:#B18DFB;--purple-400:#9664FA;--purple-500:#7E56C9;--purple-600:#6845AD;--purple-700:#593D96;--purple-800:#49317A;--purple-900:#2E1F4D;
+    --gray-25:#fcfcfd;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;--gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;--gray-800:#1f2937;--gray-900:#111827;
+    --green-50:#f0fdf4;--green-100:#dcfce7;--green-600:#16a34a;--green-700:#15803d;
+    --amber-50:#fffbeb;--amber-100:#fef3c7;--amber-500:#f59e0b;--amber-600:#d97706;--amber-700:#b45309;
+    --red-50:#fef2f2;--red-100:#fee2e2;--red-200:#fecaca;--red-500:#ef4444;--red-600:#dc2626;--red-700:#b91c1c;
+    --blue-50:#eff6ff;--blue-100:#dbeafe;--blue-500:#3b82f6;--blue-600:#2563eb;
+    --pink-50:#fdf2f8;--pink-100:#fce7f3;--pink-400:#f472b6;--pink-500:#ec4899;--pink-600:#db2777;--pink-700:#be185d;
+    --teal-50:#f0fdfa;--teal-100:#ccfbf1;--teal-400:#2dd4bf;--teal-500:#14b8a6;--teal-600:#0d9488;--teal-700:#0f766e;
+    --white:#ffffff;
+    --shadow-xs:0 1px 2px rgba(0,0,0,0.04);--shadow-sm:0 1px 3px rgba(0,0,0,0.06),0 1px 2px rgba(0,0,0,0.04);--shadow-md:0 4px 6px -1px rgba(0,0,0,0.06),0 2px 4px -2px rgba(0,0,0,0.04);--shadow-lg:0 10px 15px -3px rgba(0,0,0,0.06),0 4px 6px -4px rgba(0,0,0,0.04);--shadow-xl:0 20px 25px -5px rgba(0,0,0,0.06),0 8px 10px -6px rgba(0,0,0,0.04);
+    --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;--sp-10:40px;--sp-12:48px;
+    --radius-sm:6px;--radius-md:8px;--radius-lg:12px;--radius-xl:16px;
+    --text-xs:11px;--text-sm:13px;--text-base:14px;--text-lg:16px;--text-xl:20px;--text-2xl:24px;
+    --leading-tight:1.25;--leading-normal:1.5;
+    --tracking-tight:-0.01em;--tracking-normal:0;--tracking-wide:0.02em;
+  }
+  body { font-family:'Red Hat Text',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; font-size:var(--text-base); line-height:var(--leading-normal); color:var(--gray-800); background:var(--gray-50); -webkit-font-smoothing:antialiased; }
+  :focus-visible { outline:2px solid var(--purple-400); outline-offset:2px; }
+  :focus:not(:focus-visible) { outline:none; }
+  .app { display:flex; min-height:100vh; }
+
+  /* ── Sidebar ── */
+  .sidebar { width:240px; min-width:240px; background:var(--white); border-right:1px solid var(--gray-200); display:flex; flex-direction:column; padding:var(--sp-6) 0; position:sticky; top:0; height:100vh; }
+  .sidebar-brand { padding:0 var(--sp-5) var(--sp-6); border-bottom:1px solid var(--gray-200); margin-bottom:var(--sp-4); display:flex; align-items:center; gap:var(--sp-3); }
+  .sidebar-logo { width:28px; height:28px; border-radius:var(--radius-sm); background:var(--purple-600); color:var(--white); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+  .sidebar-brand-text h2 { font-size:var(--text-base); font-weight:600; color:var(--gray-900); letter-spacing:var(--tracking-tight); line-height:var(--leading-tight); }
+  .brand-sub { font-size:var(--text-xs); color:var(--gray-500); margin-top:1px; }
+  .sidebar-nav { flex:1; padding:0 var(--sp-3); display:flex; flex-direction:column; gap:var(--sp-1); overflow-y:auto; }
+  .nav-label { font-size:var(--text-xs); font-weight:600; color:var(--gray-500); letter-spacing:var(--tracking-wide); text-transform:uppercase; padding:var(--sp-3) var(--sp-3) var(--sp-1); margin-top:var(--sp-2); }
+  .nav-label:first-child { margin-top:0; }
+  .nav-item { display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-2) var(--sp-3); border-radius:var(--radius-md); color:var(--gray-500); text-decoration:none; font-size:var(--text-sm); font-weight:500; transition:color .15s ease, background .15s ease; cursor:pointer; position:relative; }
+  .nav-item:hover { color:var(--gray-700); background:var(--gray-50); }
+  .nav-item.active { color:var(--purple-700); background:var(--purple-50); font-weight:600; border:1px solid var(--purple-100); }
+  .nav-skeleton { display:block; height:12px; border-radius:6px; background:var(--gray-100); margin:var(--sp-2) var(--sp-3); }
+  .nav-item svg { width:18px; height:18px; flex-shrink:0; opacity:.7; }
+  .nav-item.active svg { opacity:1; }
+  .nav-badge { margin-left:auto; min-width:18px; height:18px; border-radius:999px; padding:0 5px; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; background:var(--red-500); color:var(--white); }
+  .sidebar-footer { padding:var(--sp-4) var(--sp-5) 0; border-top:1px solid var(--gray-200); margin-top:auto; }
+  .user-profile { display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-2) 0; cursor:pointer; border-radius:var(--radius-md); transition:background .15s ease; }
+  .user-profile:hover { background:var(--gray-50); }
+  .user-avatar { width:32px; height:32px; border-radius:50%; background:var(--purple-100); color:var(--purple-700); display:flex; align-items:center; justify-content:center; font-size:var(--text-sm); font-weight:600; flex-shrink:0; }
+  .user-name { font-size:var(--text-sm); font-weight:500; color:var(--gray-800); line-height:var(--leading-tight); }
+  .user-role { font-size:var(--text-xs); color:var(--gray-500); line-height:var(--leading-tight); }
+
+  /* ── Main ── */
+  .main { flex:1; min-width:0; display:flex; flex-direction:column; }
+  .main-page { display:flex; flex-direction:column; }
+  .main-page.hidden { display:none; }
+  .header { padding:var(--sp-6) var(--sp-8) var(--sp-4); display:flex; align-items:flex-start; justify-content:space-between; gap:var(--sp-4); }
+  .header-left h1 { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-2xl); font-weight:700; color:var(--gray-900); letter-spacing:-0.02em; line-height:var(--leading-tight); }
+  .header-left p { font-size:var(--text-sm); color:var(--gray-500); margin-top:var(--sp-1); }
+
+  /* ── Buttons ── */
+  .btn { display:inline-flex; align-items:center; gap:var(--sp-2); padding:var(--sp-2) var(--sp-4); border-radius:var(--radius-sm); font-size:var(--text-sm); font-weight:600; cursor:pointer; transition:background .15s ease, border-color .15s ease, color .15s ease; border:1px solid transparent; white-space:nowrap; line-height:var(--leading-tight); min-height:34px; font-family:inherit; }
+  .btn svg { width:14px; height:14px; flex-shrink:0; }
+  .btn-ghost { background:var(--white); border-color:var(--gray-200); color:var(--gray-600); font-weight:500; }
+  .btn-ghost:hover { background:var(--gray-50); border-color:var(--gray-300); color:var(--gray-700); }
+  .btn-primary { background:var(--purple-600); color:var(--white); border-color:var(--purple-600); }
+  .btn-primary:hover { background:var(--purple-700); border-color:var(--purple-700); }
+  .btn-success { background:var(--green-600); color:var(--white); border-color:var(--green-600); }
+  .btn-success:hover { background:var(--green-700); }
+  .btn-outline-red { background:var(--white); border-color:var(--red-200); color:var(--red-600); }
+  .btn-outline-red:hover { background:var(--red-50); border-color:var(--red-500); }
+  .btn-sm { min-height:32px; padding:var(--sp-1) var(--sp-3); font-size:var(--text-xs); }
+  .btn-text { background:none; border:none; color:var(--purple-600); font-weight:600; padding:0; min-height:auto; }
+  .btn-text:hover { color:var(--purple-700); text-decoration:underline; text-underline-offset:2px; }
+  .btn-text-danger { background:none; border:none; color:var(--red-600); font-weight:600; padding:0; min-height:auto; display:inline-flex; align-items:center; gap:6px; cursor:pointer; }
+  .btn-text-danger:hover { color:var(--red-700); text-decoration:underline; text-underline-offset:2px; }
+  .btn-text-danger svg { width:12px; height:12px; }
+
+  /* ── App Snackbar (full width, above sidebar+content) ── */
+  .app-wrapper { display:flex; flex-direction:column; min-height:100vh; }
+  .app-snackbar {
+    display:flex; align-items:center; justify-content:center; gap:var(--sp-3);
+    padding:var(--sp-2) var(--sp-5); background:var(--red-600);
+    color:var(--white); font-size:var(--text-sm); font-weight:500;
+    animation:snackIn .25s ease both; position:relative;
+  }
+  .app-snackbar svg { width:14px; height:14px; flex-shrink:0; }
+  .app-snackbar strong { font-weight:700; }
+  .app-snackbar-action {
+    font-weight:700; color:var(--white); cursor:pointer;
+    text-decoration:underline; text-underline-offset:2px; margin-left:var(--sp-1);
+  }
+  .app-snackbar-action:hover { opacity:.85; }
+  .app-snackbar-dismiss {
+    position:absolute; right:var(--sp-4); top:50%; transform:translateY(-50%);
+    width:20px; height:20px; display:flex; align-items:center; justify-content:center;
+    color:rgba(255,255,255,.7); cursor:pointer; border-radius:var(--radius-sm);
+    transition:color .15s ease; border:none; background:none; padding:0;
+  }
+  .app-snackbar-dismiss:hover { color:var(--white); }
+  .app-snackbar-dismiss svg { width:12px; height:12px; }
+  @keyframes snackIn { from { opacity:0; transform:translateY(-100%); } to { opacity:1; transform:translateY(0); } }
+  @keyframes successIn { from { opacity:0; transform:translateY(12px) scale(0.96); } to { opacity:1; transform:translateY(0) scale(1); } }
+  @keyframes checkDraw { from { stroke-dashoffset:24; } to { stroke-dashoffset:0; } }
+  .renego-success-icon svg { stroke-dasharray:24; stroke-dashoffset:24; animation:checkDraw .4s .2s cubic-bezier(.16,1,.3,1) forwards; }
+  .renego-success-enter { animation:successIn .3s cubic-bezier(.16,1,.3,1) both; }
+
+  /* ── V2 Layout: Main grid with right sidebar ── */
+  .page-grid {
+    display:flex; flex-direction:column;
+    gap:var(--sp-5); padding:0 var(--sp-8) var(--sp-8);
+  }
+  .page-left { display:flex; flex-direction:column; gap:var(--sp-5); }
+
+  /* ══ V2 — Summary strip ══ */
+  .summary-strip { display:grid; grid-template-columns:1.25fr 1fr; gap:var(--sp-3); margin-bottom:var(--sp-5); align-items:stretch; }
+  .summary-strip-right { display:flex; flex-direction:column; gap:var(--sp-3); }
+  .summary-cell { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); box-shadow:var(--shadow-xs); padding:var(--sp-5); display:flex; flex-direction:column; gap:var(--sp-2); min-width:0; }
+  .summary-cell.horizontal { flex-direction:row; align-items:center; justify-content:space-between; gap:var(--sp-4); padding:var(--sp-4) var(--sp-5); flex:1; }
+  .summary-cell.horizontal .summary-cell-main { display:flex; flex-direction:column; gap:4px; min-width:0; flex:1; }
+  .summary-cell.horizontal .summary-cell-aside { display:flex; flex-direction:column; align-items:flex-end; gap:2px; text-align:right; flex-shrink:0; }
+  .summary-cell.action-cell { cursor:pointer; transition:background .15s ease, border-color .15s ease; }
+  .summary-cell.action-cell:hover { background:var(--gray-25); border-color:var(--gray-300); }
+  .summary-label { font-size:10px; font-weight:700; color:var(--gray-500); text-transform:uppercase; letter-spacing:.06em; display:flex; align-items:center; gap:6px; }
+  .summary-label .pulse { width:6px; height:6px; border-radius:50%; background:var(--red-500); animation:pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform:scale(1); opacity:1; } 50% { transform:scale(1.5); opacity:.4; } }
+  .summary-value { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:22px; font-weight:700; color:var(--gray-900); letter-spacing:-0.02em; line-height:1.1; font-variant-numeric:tabular-nums; display:flex; align-items:baseline; gap:6px; }
+  .summary-value.danger { color:var(--red-600); }
+  .summary-value.amber { color:var(--amber-600); }
+  .summary-value-unit { font-size:13px; font-weight:500; color:var(--gray-500); letter-spacing:0; }
+  .summary-meta { font-size:var(--text-xs); color:var(--gray-500); line-height:1.4; }
+  .summary-meta strong { font-weight:600; color:var(--gray-700); }
+
+  .summary-consumo { display:flex; align-items:center; gap:var(--sp-4); }
+  .consumo-ring { position:relative; width:60px; height:60px; flex-shrink:0; }
+  .consumo-ring svg { width:60px; height:60px; transform:rotate(-90deg); }
+  .consumo-ring .ring-bg { fill:none; stroke:var(--gray-100); stroke-width:5; }
+  .consumo-ring .ring-fg { fill:none; stroke:var(--purple-600); stroke-width:5; stroke-linecap:round; transition:stroke-dashoffset .6s cubic-bezier(.16,1,.3,1), stroke .3s ease; }
+  .consumo-ring.exceeded .ring-fg { stroke:var(--amber-500); }
+  .consumo-ring-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Red Hat Display',sans-serif; font-size:13px; font-weight:700; color:var(--gray-800); font-variant-numeric:tabular-nums; }
+  .consumo-ring.exceeded .consumo-ring-pct { color:var(--amber-600); }
+  .summary-consumo-body { min-width:0; flex:1; }
+  .summary-consumo-body .summary-value { font-size:18px; margin-bottom:2px; }
+
+  .summary-cta { align-self:flex-start; display:inline-flex; align-items:center; gap:4px; font-size:var(--text-xs); font-weight:600; color:var(--purple-600); margin-top:var(--sp-1); cursor:pointer; text-decoration:none; border:none; background:none; padding:0; font-family:inherit; }
+  .summary-cta:hover { color:var(--purple-700); text-decoration:underline; text-underline-offset:2px; }
+  .summary-cta svg { width:10px; height:10px; }
+
+  /* ══ V2 — Tweaks panel ══ */
+  .tweaks-panel { position:fixed; bottom:var(--sp-4); right:var(--sp-4); width:280px; background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); box-shadow:var(--shadow-xl); z-index:900; display:none; overflow:hidden; font-family:'Red Hat Text',sans-serif; }
+  .tweaks-panel.open { display:block; animation:tweaksIn .2s cubic-bezier(.16,1,.3,1); }
+  @keyframes tweaksIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+  .tweaks-header { padding:var(--sp-3) var(--sp-4); border-bottom:1px solid var(--gray-100); display:flex; align-items:center; justify-content:space-between; background:var(--gray-25); }
+  .tweaks-title { font-size:var(--text-xs); font-weight:700; color:var(--gray-700); text-transform:uppercase; letter-spacing:.06em; }
+  .tweaks-body { padding:var(--sp-4); display:flex; flex-direction:column; gap:var(--sp-4); }
+  .tweak-group { display:flex; flex-direction:column; gap:var(--sp-2); }
+  .tweak-label { font-size:var(--text-xs); font-weight:600; color:var(--gray-500); }
+  .tweak-segmented { display:flex; background:var(--gray-100); border-radius:var(--radius-sm); padding:2px; }
+  .tweak-segmented-vertical { flex-direction:column; gap:2px; padding:2px; }
+  .sidebar-tweaks { padding:var(--sp-3) var(--sp-3) var(--sp-4); border-bottom:1px solid var(--gray-100); margin-bottom:var(--sp-2); display:flex; flex-direction:column; gap:var(--sp-3); }
+  .sidebar-tweaks-title { font-size:var(--text-xs); font-weight:700; color:var(--gray-500); text-transform:uppercase; letter-spacing:.06em; padding:0 var(--sp-2); }
+  .tweak-segmented button { flex:1; padding:6px 8px; border:none; background:none; font-size:11px; font-weight:600; color:var(--gray-500); border-radius:4px; cursor:pointer; transition:all .15s ease; font-family:inherit; }
+  .tweak-segmented button.active { background:var(--white); color:var(--gray-900); box-shadow:var(--shadow-xs); }
+  .tweak-segmented button:hover:not(.active) { color:var(--gray-700); }
+
+  /* Density variants */
+  body.density-compact .summary-cell { padding:var(--sp-3) var(--sp-4); }
+  body.density-compact .summary-value { font-size:18px; }
+  body.density-compact .card-body { padding:var(--sp-4); }
+  body.density-compact .page-grid { gap:var(--sp-3); }
+
+  /* Emphasis = hero */
+  body.emphasis-hero .summary-value { font-size:26px; }
+  body.emphasis-hero .summary-consumo-body .summary-value { font-size:22px; }
+  body.emphasis-hero .consumo-ring { width:72px; height:72px; }
+  body.emphasis-hero .consumo-ring svg { width:72px; height:72px; }
+  body.emphasis-hero .consumo-ring .ring-bg,
+  body.emphasis-hero .consumo-ring .ring-fg { stroke-width:6; }
+  body.emphasis-hero .summary-cell { padding:var(--sp-6) var(--sp-5); }
+
+  /* Hide-summary variant */
+  body.summary-hidden .summary-strip { display:none; }
+
+  /* ── Card ── */
+  .card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); box-shadow:var(--shadow-xs); }
+  .card-header { padding:var(--sp-4) var(--sp-5); border-bottom:none; display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); position:relative; }
+  .card-header::after { content:''; position:absolute; bottom:0; left:var(--sp-5); right:var(--sp-5); height:1px; background:var(--gray-100); }
+  .card-title { font-size:var(--text-base); font-weight:600; color:var(--gray-800); }
+  .card-body { padding:var(--sp-5); }
+
+  /* ── Pill Tabs (for Plano/Conta switcher) ── */
+  /* pill-tabs removed — replaced by inline-tabs on plan card */
+
+  /* ── Plan & Billing details ── */
+  .plan-name { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-lg); font-weight:700; color:var(--gray-900); letter-spacing:var(--tracking-tight); }
+  .plan-price { font-size:var(--text-base); font-weight:600; color:var(--purple-600); font-variant-numeric:tabular-nums; margin-top:var(--sp-1); }
+  .plan-price-period { font-size:var(--text-xs); font-weight:400; color:var(--gray-500); }
+  .plan-annual-total { font-size:var(--text-xs); color:var(--gray-500); margin-top:2px; font-variant-numeric:tabular-nums; }
+  .plan-detail-label { font-size:var(--text-xs); color:var(--gray-500); }
+  .plan-detail-value { font-size:var(--text-sm); font-weight:600; color:var(--gray-700); margin-top:1px; }
+  .usage-section + .usage-section.sub { margin-top:var(--sp-3); padding-top:var(--sp-3); border-top:none; }
+
+  .usage-section { margin-top:var(--sp-4); padding-top:var(--sp-4); border-top:1px solid var(--gray-100); }
+  .usage-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:var(--sp-5); gap:var(--sp-3); }
+  .usage-label { font-size:var(--text-xs); font-weight:600; color:var(--gray-600); }
+  .usage-header-right { display:flex; align-items:baseline; gap:var(--sp-2); flex-shrink:0; }
+  .usage-count { font-size:var(--text-xs); font-weight:600; font-variant-numeric:tabular-nums; color:var(--gray-800); }
+  .usage-pct-badge { font-size:var(--text-xs); font-weight:700; font-variant-numeric:tabular-nums; padding:1px 6px; border-radius:999px; }
+  .usage-pct-badge.normal { background:var(--purple-50); color:var(--purple-600); }
+  .usage-pct-badge.warning { background:var(--amber-50); color:var(--amber-600); border:1px solid var(--amber-100); }
+  .usage-pct-badge.exceeded { background:var(--amber-50); color:var(--amber-600); border:1px solid var(--amber-100); }
+  .progress-track { width:100%; height:10px; border-radius:999px; background:var(--gray-100); overflow:hidden; position:relative; }
+  .progress-fill { height:100%; border-radius:999px; transition:width .6s cubic-bezier(.16,1,.3,1); }
+  .progress-fill.normal { background:var(--purple-600); }
+  .progress-fill.warning { background:var(--amber-500); }
+  .progress-fill.exceeded { background:var(--amber-500); }
+  .usage-warning { margin-top:var(--sp-3); padding:var(--sp-3); border-radius:var(--radius-sm); font-size:var(--text-xs); line-height:var(--leading-normal); display:flex; align-items:flex-start; gap:var(--sp-2); }
+  .usage-warning svg { width:14px; height:14px; flex-shrink:0; margin-top:1px; }
+  .usage-warning.warn { background:var(--amber-50); color:var(--amber-700); border:1px solid var(--amber-100); }
+  .usage-warning a { color:inherit; font-weight:600; text-decoration:underline; text-underline-offset:2px; }
+
+  /* ── Period Dropdown ── */
+  .period-select {
+    padding:var(--sp-2) var(--sp-3); padding-right:28px; border-radius:var(--radius-sm);
+    font-size:var(--text-xs); font-weight:600; color:var(--gray-700); cursor:pointer;
+    border:1px solid var(--gray-200); background:var(--white); font-family:inherit;
+    appearance:none; min-height:36px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-position:right 8px center;
+    transition:border-color .15s ease;
+  }
+  .period-select:hover { border-color:var(--gray-300); }
+  .period-select:focus { border-color:var(--purple-400); outline:none; box-shadow:0 0 0 3px rgba(150,100,250,.15); }
+
+  /* ── Bar Chart ── */
+  .chart-wrap { position:relative; padding-left:44px; }
+  .chart-area { position:relative; height:200px; display:flex; align-items:flex-end; gap:8px; border-bottom:1px solid var(--gray-200); padding:0 8px; }
+  .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; height:100%; justify-content:flex-end; position:relative; z-index:2; }
+  .bar { border-radius:4px 4px 0 0; width:80%; transition:background .15s ease; position:relative; cursor:default; min-height:2px; }
+  .bar.past { background:var(--purple-200); }
+  .bar.past:hover { background:var(--purple-300); }
+  .bar.current { background:var(--purple-800); box-shadow:0 -2px 8px rgba(73,49,122,.25); }
+  .bar.current:hover { background:var(--purple-700); }
+  .bar.over-limit { background:var(--amber-600); }
+  .bar.over-limit:hover { background:var(--amber-700); }
+  .bar-tip { position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%); background:var(--gray-900); color:var(--white); font-size:var(--text-xs); font-weight:600; padding:4px 10px; border-radius:var(--radius-sm); white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .12s ease; z-index:20; font-variant-numeric:tabular-nums; }
+  .bar-tip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:var(--gray-900); }
+  .bar:hover .bar-tip { opacity:1; }
+  .y-axis { position:absolute; left:0; top:0; bottom:0; width:40px; display:flex; flex-direction:column; justify-content:space-between; padding-bottom:1px; }
+  .y-label { font-size:var(--text-xs); font-weight:500; color:var(--gray-500); text-align:right; font-variant-numeric:tabular-nums; line-height:1; }
+  .month-axis { display:flex; gap:8px; padding-top:var(--sp-2); padding-left:52px; padding-right:8px; }
+  .month-axis span { flex:1; text-align:center; font-size:var(--text-xs); color:var(--gray-500); font-weight:500; }
+  .month-axis span.current { color:var(--purple-700); font-weight:700; }
+  /* Weekly axis: two-row — week numbers top, bracketed month names bottom */
+  /* Weekly axis: month name → bracket → week numbers (top to bottom) */
+  .weekly-axis { padding-left:52px; padding-right:8px; padding-top:var(--sp-2); }
+  .weekly-axis-months { display:flex; gap:8px; }
+  .weekly-month-group { flex:4; display:flex; flex-direction:column; align-items:center; }
+  .weekly-month-name { font-size:var(--text-xs); font-weight:600; color:var(--gray-600); margin-bottom:2px; }
+  .weekly-month-bracket { width:calc(100% - 16px); height:6px; position:relative; }
+  .weekly-month-bracket::before { content:''; position:absolute; top:0; left:0; right:0; height:6px; border-top:1px solid var(--gray-300); border-left:1px solid var(--gray-300); border-right:1px solid var(--gray-300); }
+  .weekly-month-group.current .weekly-month-name { color:var(--purple-700); }
+  .weekly-axis-weeks { display:flex; gap:8px; margin-top:var(--sp-1); }
+  .weekly-axis-weeks span { flex:1; text-align:center; font-size:var(--text-xs); font-weight:500; color:var(--gray-500); }
+  .weekly-axis-weeks span.current { color:var(--purple-600); font-weight:700; }
+  /* Year brackets reuse month-group styles with variable flex */
+  .weekly-month-group[data-span] { flex:var(--span); }
+  .ref-line { position:absolute; left:0; right:0; z-index:5; pointer-events:none; }
+  .ref-line.limit { border-top:1.5px solid var(--gray-300); }
+  .ref-line.avg { border-top:1.5px dashed var(--purple-300); }
+  .ref-line-tag { position:absolute; font-size:var(--text-xs); font-weight:600; padding:2px 8px; border-radius:4px; white-space:nowrap; transform:translate(-50%,-50%); opacity:0; transition:opacity .15s ease; pointer-events:none; z-index:10; }
+  .ref-line.limit .ref-line-tag { color:var(--gray-500); background:var(--white); border:1px solid var(--gray-200); }
+  .ref-line.avg .ref-line-tag { color:var(--purple-700); background:var(--purple-50); }
+  .ref-line { pointer-events:auto; padding:6px 0; margin:-6px 0; cursor:default; }
+  .ref-line:hover .ref-line-tag { opacity:1; }
+  .chart-summary { display:flex; gap:var(--sp-6); padding-top:var(--sp-4); padding-left:44px; }
+  .chart-stat { display:flex; flex-direction:column; gap:1px; }
+  .chart-stat-label { font-size:var(--text-xs); color:var(--gray-500); font-weight:500; }
+  .chart-stat-value { font-size:var(--text-sm); font-weight:700; color:var(--gray-800); font-variant-numeric:tabular-nums; }
+  .chart-stat-value.purple { color:var(--purple-600); }
+  .chart-stat-value.amber { color:var(--amber-600); }
+
+  .billing-label { font-size:var(--text-xs); font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:.04em; margin-bottom:var(--sp-3); }
+  .billing-row { display:flex; justify-content:space-between; align-items:center; padding:var(--sp-2) 0; }
+  .billing-row-label { font-size:var(--text-sm); color:var(--gray-500); }
+  .billing-row-value { font-size:var(--text-sm); font-weight:600; color:var(--gray-800); font-variant-numeric:tabular-nums; }
+  .rea-list { margin-top:var(--sp-3); }
+  .rea-toggle { display:flex; align-items:center; gap:var(--sp-2); padding:var(--sp-2) 0; cursor:pointer; font-size:var(--text-xs); font-weight:600; color:var(--purple-600); transition:color .15s ease; }
+  .rea-toggle:hover { color:var(--purple-700); }
+  .rea-toggle svg { width:12px; height:12px; transition:transform .15s ease; }
+  .rea-toggle.open svg { transform:rotate(90deg); }
+  .rea-items { padding-top:var(--sp-2); display:none; }
+  .rea-items.visible { display:block; }
+  .rea-items[style*="flex-direction"].visible { display:flex; }
+  .rea-item { display:flex; align-items:center; justify-content:space-between; padding:var(--sp-2) var(--sp-3); border-radius:var(--radius-sm); margin:0 calc(var(--sp-3)*-1); transition:background .1s ease; }
+  .rea-item:hover { background:var(--gray-50); }
+  .rea-item-name { font-size:var(--text-xs); font-weight:500; color:var(--gray-700); }
+  .rea-item-plan { font-size:var(--text-xs); color:var(--gray-400); }
+  .rea-item-cost { font-size:var(--text-xs); font-weight:600; color:var(--gray-600); font-variant-numeric:tabular-nums; }
+  .divider { height:1px; background:var(--gray-200); margin:var(--sp-4) 0; }
+  .cost-row { display:flex; justify-content:space-between; align-items:center; padding:var(--sp-2) 0; }
+  .cost-row-label { font-size:var(--text-sm); color:var(--gray-600); }
+  .cost-row-value { font-size:var(--text-sm); font-weight:600; color:var(--gray-800); font-variant-numeric:tabular-nums; }
+  .cost-row.total { border-top:1px solid var(--gray-200); padding-top:var(--sp-3); margin-top:var(--sp-2); }
+  .cost-row.total .cost-row-label { font-weight:600; color:var(--gray-800); }
+  .cost-row.total .cost-row-value { font-size:var(--text-base); color:var(--purple-600); }
+
+  /* ── InlineTabs (boletos) ── */
+  .inline-tabs { display:flex; border-bottom:1px solid var(--gray-200); background:var(--white); border-radius:var(--radius-lg) var(--radius-lg) 0 0; padding:0 var(--sp-2); }
+  .inline-tab { padding:var(--sp-3) var(--sp-4); font-size:var(--text-sm); font-weight:500; color:var(--gray-500); cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px; transition:color .15s ease, border-color .15s ease; white-space:nowrap; user-select:none; }
+  .inline-tab:hover { color:var(--gray-700); }
+  .inline-tab.active { color:var(--purple-700); border-bottom-color:var(--purple-600); font-weight:600; }
+  .tab-count { display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; border-radius:999px; padding:0 5px; font-size:10px; font-weight:600; margin-left:5px; background:var(--gray-100); color:var(--gray-500); }
+  .inline-tab.active .tab-count { background:var(--purple-100); color:var(--purple-700); }
+  .tab-count.danger { background:var(--red-100); color:var(--red-600); }
+
+  /* ── Boleto Summary ── */
+  .boleto-summary { display:flex; align-items:center; gap:var(--sp-4); padding:var(--sp-4) var(--sp-5); border-bottom:1px solid var(--gray-200); background:var(--gray-25); }
+  .boleto-summary-metric { display:flex; flex-direction:column; flex:1; }
+  .boleto-summary-label { font-size:var(--text-xs); font-weight:500; color:var(--gray-500); }
+  .boleto-summary-value { font-size:var(--text-lg); font-weight:700; color:var(--gray-900); font-variant-numeric:tabular-nums; line-height:var(--leading-tight); margin-top:2px; }
+  .boleto-summary-value.danger { color:var(--red-600); }
+  .boleto-summary-sep { width:1px; height:32px; background:var(--gray-200); flex-shrink:0; }
+
+  /* ── Boleto List ── */
+  .boleto-list { display:flex; flex-direction:column; }
+  .boleto-item { display:grid; grid-template-columns:18px 140px 1fr 120px 80px; gap:var(--sp-3); align-items:center; padding:var(--sp-3) var(--sp-5); border-bottom:1px solid var(--gray-100); transition:background .1s ease; }
+  .boleto-item:last-child { border-bottom:none; }
+  .boleto-item:hover { background:var(--gray-25); }
+  .boleto-item.overdue { background:var(--red-50); box-shadow:inset 0 -1px 0 var(--red-100); }
+  .boleto-item.overdue:hover { background:var(--red-100); }
+  /* Status indicator icons (Carbon-inspired, 18px inline) */
+  .boleto-status-icon { width:18px; height:18px; flex-shrink:0; }
+  .boleto-status-icon.atrasado { color:var(--red-600); }
+  .boleto-status-icon.disponivel { color:var(--blue-600); }
+  .boleto-status-icon.pago { color:var(--green-600); }
+  .boleto-status-icon.renegociado { color:var(--purple-600); }
+  .boleto-status-icon.segunda-via { color:var(--blue-600); }
+  .boleto-status-icon.substituido { color:var(--gray-400); }
+  .boleto-info { display:contents; }
+  .boleto-ref { font-size:var(--text-sm); font-weight:600; color:var(--gray-900); line-height:var(--leading-tight); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .boleto-meta { font-size:var(--text-xs); color:var(--gray-500); display:flex; gap:var(--sp-2); align-items:center; flex-wrap:nowrap; white-space:nowrap; }
+  .boleto-meta-sep { color:var(--gray-300); }
+  /* Combined status label (replaces separate badge + days) */
+  .boleto-status-label { display:inline-flex; align-items:center; gap:4px; font-size:var(--text-xs); font-weight:600; white-space:nowrap; }
+  .boleto-status-label.atrasado { color:var(--red-600); }
+  .boleto-status-label.disponivel { color:var(--blue-600); }
+  .boleto-status-label.pago { color:var(--green-600); }
+  .boleto-status-label.renegociado { color:var(--purple-600); }
+  .boleto-status-label.segunda-via { color:var(--blue-600); }
+  .boleto-status-label.substituido { color:var(--gray-400); }
+  /* Substituido: muted row */
+  .boleto-item.substituido { opacity:0.55; }
+  .boleto-item.substituido > .boleto-info .boleto-ref, .boleto-item.substituido .boleto-ref { text-decoration:line-through; color:var(--gray-500); }
+  .boleto-item.substituido .boleto-amount { color:var(--gray-400); }
+  .boleto-amount { font-size:var(--text-sm); font-weight:700; color:var(--gray-900); font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
+  .boleto-amount.overdue { color:var(--red-600); }
+  /* status-badge/dot removed — replaced by .boleto-status-label */
+  .boleto-actions { display:flex; gap:var(--sp-2); align-items:center; justify-content:flex-end; }
+  .icon-btn { width:36px; height:36px; border-radius:var(--radius-sm); display:flex; align-items:center; justify-content:center; color:var(--gray-400); cursor:pointer; border:1px solid transparent; transition:background .15s ease, color .15s ease, border-color .15s ease; background:none; }
+  .icon-btn:hover { background:var(--gray-100); color:var(--gray-600); border-color:var(--gray-200); }
+  .icon-btn.copied { color:var(--green-600); background:var(--green-50); border-color:var(--green-100); }
+  .icon-btn svg { width:14px; height:14px; }
+  .copy-toast { position:fixed; bottom:var(--sp-6); left:50%; transform:translateX(-50%) translateY(8px); background:var(--gray-900); color:var(--white); font-size:var(--text-xs); font-weight:600; padding:var(--sp-2) var(--sp-4); border-radius:var(--radius-sm); box-shadow:var(--shadow-lg); opacity:0; pointer-events:none; transition:opacity .2s cubic-bezier(.16,1,.3,1), transform .2s cubic-bezier(.16,1,.3,1); z-index:500; display:flex; align-items:center; gap:var(--sp-2); }
+  .copy-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+  .copy-toast svg { width:12px; height:12px; }
+  .boleto-cta-area { padding:var(--sp-4) var(--sp-5); border-top:1px solid var(--gray-200); display:flex; align-items:center; justify-content:space-between; background:var(--gray-25); }
+  .boleto-cta-text { font-size:var(--text-xs); color:var(--gray-500); line-height:var(--leading-normal); }
+  .boleto-cta-text strong { color:var(--red-600); font-weight:600; }
+
+  /* ── Year Accordion (historic boletos) ── */
+  .year-accordion { border-top:1px solid var(--gray-200); }
+  .year-accordion-header {
+    display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-3) var(--sp-5);
+    cursor:pointer; transition:background .1s ease; user-select:none;
+    background:var(--gray-50); border-bottom:1px solid var(--gray-200);
+  }
+  .year-accordion-header:hover { background:var(--gray-100); }
+  .year-accordion-chevron { width:14px; height:14px; color:var(--gray-400); transition:transform .15s ease; flex-shrink:0; }
+  .year-accordion-header.open .year-accordion-chevron { transform:rotate(90deg); }
+  .year-accordion-label { font-size:var(--text-sm); font-weight:600; color:var(--gray-700); }
+  .year-accordion-count { font-size:var(--text-xs); font-weight:500; color:var(--gray-500); }
+  .year-accordion-body { display:none; }
+  .year-accordion-header.open + .year-accordion-body { display:block; }
+
+  /* ── Stacked Usage Bar ── */
+
+  .stacked-bar-track {
+    width:100%; height:22px; border-radius:999px; background:var(--gray-100);
+    display:flex; overflow:hidden; gap:1px;
+  }
+  .stacked-bar-segment {
+    height:100%; transition:width .6s cubic-bezier(.16,1,.3,1);
+    position:relative; cursor:default;
+    display:flex; align-items:center; justify-content:center;
+    overflow:hidden;
+  }
+  .stacked-bar-segment:first-child { border-radius:999px 0 0 999px; }
+  .stacked-bar-segment:last-child { border-radius:0 999px 999px 0; }
+  .stacked-bar-segment.purple { background:var(--purple-400); }
+  .stacked-bar-segment.purple-300 { background:var(--purple-300); }
+  .stacked-bar-segment.purple-500 { background:var(--purple-500); }
+  .stacked-bar-segment.pink { background:var(--pink-400); }
+  .stacked-bar-segment.green { background:var(--green-600); }
+  .stacked-bar-segment.blue { background:var(--blue-500); }
+  .stacked-bar-segment.teal { background:var(--teal-500); }
+  .stacked-bar-segment:hover { opacity:.85; }
+  /* Inline label — visible when segment is wide enough */
+  .stacked-bar-pct {
+    font-size:10px; font-weight:700; color:var(--white);
+    letter-spacing:.02em; white-space:nowrap; pointer-events:none;
+    text-shadow:0 1px 2px rgba(0,0,0,.2);
+  }
+  /* Hover tooltip — shows for ALL segments, critical for narrow ones */
+  .stacked-bar-tooltip {
+    position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%);
+    background:var(--gray-900); color:var(--white);
+    font-size:var(--text-xs); font-weight:600; padding:3px 8px;
+    border-radius:4px; white-space:nowrap; pointer-events:none;
+    opacity:0; transition:opacity .12s ease;
+    z-index:10; font-variant-numeric:tabular-nums;
+  }
+  .stacked-bar-tooltip::after {
+    content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:4px solid transparent; border-top-color:var(--gray-900);
+  }
+  .stacked-bar-segment:hover .stacked-bar-tooltip { opacity:1; }
+  /* Allow tooltip to overflow the track */
+  .stacked-bar-track { overflow:visible; }
+  .stacked-bar-segment { overflow:visible; }
+
+  .stacked-legend {
+    display:flex; flex-wrap:wrap; gap:var(--sp-2) var(--sp-10);
+    margin-top:var(--sp-4);
+  }
+  .stacked-legend-item {
+    display:flex; align-items:center; gap:var(--sp-2);
+    font-size:var(--text-xs); color:var(--gray-600);
+  }
+  .stacked-legend-dot { width:8px; height:8px; border-radius:2px; flex-shrink:0; }
+  .stacked-legend-dot.purple { background:var(--purple-400); }
+  .stacked-legend-dot.purple-300 { background:var(--purple-300); }
+  .stacked-legend-dot.purple-500 { background:var(--purple-500); }
+  .stacked-legend-dot.pink { background:var(--pink-400); }
+  .stacked-legend-dot.green { background:var(--green-600); }
+  .stacked-legend-dot.blue { background:var(--blue-500); }
+  .stacked-legend-dot.teal { background:var(--teal-500); }
+  .stacked-legend-name { flex:1; min-width:0; }
+  .stacked-legend-value { font-weight:600; color:var(--gray-800); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .stacked-legend-pct { color:var(--gray-400); margin-left:var(--sp-1); }
+  /* REA tab switcher */
+  .rea-tab { background:var(--white); border-color:var(--gray-200); color:var(--gray-500); font-weight:500; }
+  .rea-tab:hover { background:var(--gray-50); border-color:var(--gray-300); color:var(--gray-700); }
+  .rea-tab.active { background:var(--purple-50); border-color:var(--purple-200); color:var(--purple-700); font-weight:600; }
+
+  /* Legend items — simple flex layout, no separators */
+
+  /* ── Operations flow (wrap grid for REAs list) ── */
+  .billing-label-count { display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; margin-left:6px; background:var(--gray-100); color:var(--gray-600); border-radius:9px; font-size:10px; font-weight:700; vertical-align:1px; }
+  .op-flow { display:flex; flex-wrap:wrap; gap:1.25rem; margin-top:var(--sp-2); }
+  .op-chip { display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:var(--gray-25); border:1px solid var(--gray-100); border-radius:var(--radius-sm); transition:background .15s ease, border-color .15s ease; }
+  .op-chip:hover { background:var(--gray-50); border-color:var(--gray-200); }
+  .op-chip-dot { width:6px; height:6px; border-radius:50%; background:var(--purple-500); flex-shrink:0; }
+  .op-chip-name { font-size:var(--text-sm); font-weight:500; color:var(--gray-700); white-space:nowrap; }
+
+    /* ── Cobranças + Add-ons 2-col ── */
+  .cobrancas-addons-grid { display:grid; grid-template-columns:1.6fr 1fr; gap:var(--sp-5); align-items:start; }
+  @media (max-width: 1100px) { .cobrancas-addons-grid { grid-template-columns:1fr; } }
+
+  .addon-cards-body { display:flex; flex-direction:column; gap:var(--sp-3); padding:var(--sp-5); }
+  .card-body.addon-cards-body { padding:var(--sp-5); }
+  .addon-card { display:flex; align-items:flex-start; gap:var(--sp-3); padding:var(--sp-4); background:var(--gray-25); border:1px solid var(--gray-100); border-radius:var(--radius-md); transition:background .15s ease, border-color .15s ease; }
+  .addon-card:hover { background:var(--gray-50); border-color:var(--gray-200); }
+  .addon-card-icon { width:36px; height:36px; border-radius:var(--radius-sm); background:var(--purple-50); color:var(--purple-600); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .addon-card-icon svg { width:18px; height:18px; }
+  .addon-card-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:3px; }
+  .addon-card-head { display:flex; align-items:center; justify-content:space-between; gap:var(--sp-3); }
+  .addon-card-name { font-size:var(--text-sm); font-weight:600; color:var(--gray-800); line-height:var(--leading-tight); }
+  .addon-card-status { display:inline-flex; align-items:center; gap:5px; font-size:var(--text-xs); font-weight:600; color:var(--green-600); flex-shrink:0; }
+  .addon-card-status .dot { width:6px; height:6px; border-radius:50%; background:var(--green-600); }
+  .addon-card-detail { font-size:var(--text-xs); color:var(--gray-500); line-height:1.4; }
+  /* ── Empty states ── */
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; padding:var(--sp-8) var(--sp-5); text-align:center; color:var(--gray-500); gap:var(--sp-2); min-height:160px; }
+  .empty-state-icon { width:40px; height:40px; border-radius:50%; background:var(--gray-50); color:var(--gray-400); display:flex; align-items:center; justify-content:center; margin-bottom:var(--sp-2); }
+  .empty-state-icon svg { width:20px; height:20px; }
+  .empty-state-title { font-size:var(--text-sm); font-weight:600; color:var(--gray-700); }
+  .empty-state-desc { font-size:var(--text-xs); color:var(--gray-500); line-height:var(--leading-normal); max-width:280px; }
+  /* Let cards in the cobrancas-addons-grid stretch so their empty states vertically center */
+  .cobrancas-addons-grid > .card { display:flex; flex-direction:column; }
+  .cobrancas-addons-grid > .card > .card-body { flex:1; display:flex; flex-direction:column; }
+  .cobrancas-addons-grid > .card .tab-content { flex:1; display:flex; flex-direction:column; }
+  .cobrancas-addons-grid > .card .tab-content[style*="display:none"], .cobrancas-addons-grid > .card .tab-content[style*="display: none"] { display:none !important; }
+  .cobrancas-addons-grid > .card .boleto-list:has(.empty-state) { flex:1; display:flex; }
+  .cobrancas-addons-grid > .card .empty-state { flex:1; min-height:0; }
+
+    /* ── Right Column Cards ── */
+  .page-right { display:flex; flex-direction:column; gap:var(--sp-4); }
+  .addon-item { display:flex; align-items:center; justify-content:space-between; padding:var(--sp-3) 0; border-bottom:1px solid var(--gray-100); }
+  .addon-item:last-child { border-bottom:none; }
+  .addon-name { font-size:var(--text-sm); font-weight:500; color:var(--gray-700); }
+  .addon-status { display:inline-flex; align-items:center; gap:4px; font-size:var(--text-xs); font-weight:600; color:var(--green-600); }
+  .addon-status .dot { width:6px; height:6px; border-radius:50%; background:var(--green-600); }
+  .addon-cost { font-size:var(--text-xs); color:var(--gray-400); font-variant-numeric:tabular-nums; margin-top:2px; }
+  .am-card-inner { display:flex; align-items:flex-start; gap:var(--sp-4); }
+  .am-avatar { width:40px; height:40px; border-radius:50%; background:var(--purple-100); color:var(--purple-700); display:flex; align-items:center; justify-content:center; font-size:var(--text-sm); font-weight:700; flex-shrink:0; }
+  .am-info { flex:1; }
+  .am-name { font-size:var(--text-sm); font-weight:600; color:var(--gray-800); }
+  .am-role { font-size:var(--text-xs); color:var(--gray-500); }
+  .am-contact { display:block; font-size:var(--text-xs); color:var(--purple-600); margin-top:var(--sp-2); font-weight:500; cursor:pointer; text-decoration:none; }
+  .am-contact:hover { text-decoration:underline; text-underline-offset:2px; }
+
+  /* ── Modal ── */
+  .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.35); display:flex; align-items:center; justify-content:center; z-index:1000; opacity:0; pointer-events:none; transition:opacity .15s ease; }
+  .modal-overlay.open { opacity:1; pointer-events:auto; }
+  .modal { background:var(--white); border-radius:var(--radius-xl); max-width:560px; width:90%; box-shadow:var(--shadow-xl); transform:translateY(8px); transition:transform .2s cubic-bezier(.16,1,.3,1); max-height:85vh; display:flex; flex-direction:column; }
+  .modal-overlay.open .modal { transform:translateY(0); }
+  .modal-header { padding:var(--sp-5) var(--sp-6); border-bottom:1px solid var(--gray-200); display:flex; align-items:center; justify-content:space-between; }
+  .modal-title { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-lg); font-weight:700; color:var(--gray-900); }
+  .modal-close { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--gray-400); cursor:pointer; border:none; background:none; transition:background .15s ease, color .15s ease; }
+  .modal-close:hover { background:var(--gray-100); color:var(--gray-600); }
+  .modal-close svg { width:14px; height:14px; }
+  .modal-body { padding:var(--sp-5) var(--sp-6); overflow-y:auto; flex:1; }
+  .modal-footer { padding:var(--sp-4) var(--sp-6); border-top:1px solid var(--gray-200); display:flex; align-items:center; justify-content:flex-end; gap:var(--sp-3); }
+  .renego-item { display:flex; align-items:center; gap:var(--sp-3); padding:var(--sp-3); border:1px solid var(--gray-200); border-radius:var(--radius-md); margin-bottom:var(--sp-2); cursor:pointer; transition:border-color .15s ease, background .15s ease; }
+  .renego-item:hover { border-color:var(--purple-200); background:var(--purple-50); }
+  .renego-item.selected { border-color:var(--purple-400); background:var(--purple-50); }
+  .renego-check { width:16px; height:16px; border:1.5px solid var(--gray-300); border-radius:4px; background:var(--white); flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:background .15s ease, border-color .15s ease; }
+  .renego-item.selected .renego-check { background:var(--purple-600); border-color:var(--purple-600); }
+  .renego-check svg { width:10px; height:10px; color:var(--white); opacity:0; }
+  .renego-item.selected .renego-check svg { opacity:1; }
+  .renego-info { flex:1; }
+  .renego-ref { font-size:var(--text-sm); font-weight:600; color:var(--gray-800); }
+  .renego-detail { font-size:var(--text-xs); color:var(--gray-500); margin-top:1px; }
+  .renego-amount { font-size:var(--text-sm); font-weight:700; color:var(--gray-900); font-variant-numeric:tabular-nums; }
+  .renego-summary { background:var(--gray-50); border:1px solid var(--gray-200); border-radius:var(--radius-md); padding:var(--sp-4); margin-top:var(--sp-4); }
+  .renego-summary-row { display:flex; justify-content:space-between; align-items:center; padding:var(--sp-1) 0; font-size:var(--text-sm); }
+  .renego-summary-row .label { color:var(--gray-500); }
+  .renego-summary-row .value { font-weight:600; color:var(--gray-800); font-variant-numeric:tabular-nums; }
+  .renego-summary-row.discount .value { color:var(--green-600); }
+  .renego-summary-row.total { border-top:1px solid var(--gray-200); padding-top:var(--sp-3); margin-top:var(--sp-2); }
+  .renego-summary-row.total .label { font-weight:600; color:var(--gray-800); }
+  .renego-summary-row.total .value { font-size:var(--text-base); color:var(--purple-600); font-weight:700; }
+
+  /* ── Plans Page ── */
+  .plans-page { display:none; flex-direction:column; min-height:100vh; }
+  .plans-page.active { display:flex; }
+  .plans-header { padding:var(--sp-5) var(--sp-8); border-bottom:1px solid var(--gray-200); display:flex; align-items:center; gap:var(--sp-4); background:var(--white); position:sticky; top:0; z-index:10; }
+  .plans-back { display:flex; align-items:center; gap:var(--sp-2); font-size:var(--text-sm); font-weight:500; color:var(--gray-500); cursor:pointer; transition:color .15s ease; }
+  .plans-back:hover { color:var(--gray-700); }
+  .plans-back svg { width:16px; height:16px; }
+  .plans-breadcrumb { font-size:var(--text-xs); color:var(--gray-400); display:flex; align-items:center; gap:var(--sp-2); }
+  .plans-breadcrumb span { color:var(--gray-700); font-weight:600; }
+  .plans-body { flex:1; padding:var(--sp-8); max-width:960px; margin:0 auto; width:100%; }
+  .plans-title { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-2xl); font-weight:700; color:var(--gray-900); letter-spacing:-0.02em; margin-bottom:var(--sp-1); }
+  .plans-subtitle { font-size:var(--text-sm); color:var(--gray-500); margin-bottom:var(--sp-6); }
+  .plans-toggle { display:inline-flex; background:var(--gray-100); border-radius:var(--radius-sm); padding:3px; margin-bottom:var(--sp-6); }
+  .plans-toggle-btn { padding:var(--sp-2) var(--sp-4); border-radius:4px; font-size:var(--text-sm); font-weight:500; color:var(--gray-500); cursor:pointer; border:none; background:none; transition:background .15s ease, color .15s ease, box-shadow .15s ease; font-family:inherit; }
+  .plans-toggle-btn.active { background:var(--white); color:var(--gray-800); font-weight:600; box-shadow:var(--shadow-xs); }
+  .plans-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--sp-4); }
+  .plan-card { background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-xs); display:flex; flex-direction:column; transition:border-color .15s ease, box-shadow .15s ease; }
+  .plan-card:hover { border-color:var(--gray-300); }
+  .plan-card.current { border-color:var(--purple-300); box-shadow:0 0 0 1px var(--purple-200); background:var(--purple-50); position:relative; }
+  .plan-card-accent { height:4px; background:transparent; }
+  .plan-card.current .plan-card-accent { background:linear-gradient(90deg, var(--purple-500), var(--purple-700)); height:4px; }
+  .plan-card-body { padding:var(--sp-5); flex:1; display:flex; flex-direction:column; }
+  .plan-card-name { font-family:'Red Hat Display',-apple-system,sans-serif; font-size:var(--text-base); font-weight:700; color:var(--gray-900); display:flex; align-items:center; gap:var(--sp-2); }
+  .plan-current-badge { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; background:var(--purple-100); color:var(--purple-700); padding:2px 6px; border-radius:999px; }
+  .plan-card-price { font-size:var(--text-xl); font-weight:700; color:var(--purple-600); font-variant-numeric:tabular-nums; margin-top:var(--sp-2); }
+  .plan-card-period { font-size:var(--text-xs); font-weight:400; color:var(--gray-500); }
+  .plan-card-features { margin-top:var(--sp-4); flex:1; }
+  .plan-feature { display:flex; align-items:baseline; gap:var(--sp-2); padding:var(--sp-1) 0; font-size:var(--text-xs); color:var(--gray-600); }
+  .plan-feature-label { color:var(--gray-500); }
+  .plan-feature-value { font-weight:600; color:var(--gray-700); margin-left:auto; font-variant-numeric:tabular-nums; text-align:right; white-space:nowrap; }
+  .plan-card-cta { padding:var(--sp-4) var(--sp-5); border-top:1px solid var(--gray-100); }
+  .plan-card-cta .btn { width:100%; justify-content:center; }
+  .plan-card.current .plan-card-cta .btn { background:var(--purple-100); color:var(--purple-600); border-color:var(--purple-200); cursor:default; pointer-events:none; font-weight:600; }
+
+  /* ── Hamburger button (hidden on desktop) ── */
+  .hamburger { display:none; width:40px; height:40px; border:none; background:none; cursor:pointer; padding:8px; color:var(--gray-600); border-radius:var(--radius-sm); transition:background .15s ease; }
+  .hamburger:hover { background:var(--gray-100); }
+  .hamburger svg { width:24px; height:24px; }
+  .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.3); z-index:40; }
+
+  @media (max-width:1280px) { .plans-grid { grid-template-columns:repeat(2,1fr); } }
+  /* 1100px breakpoint removed — page is now single-column */
+  @media (max-width:768px) {
+    .hamburger { display:flex; align-items:center; justify-content:center; }
+    .sidebar { position:fixed; left:-260px; top:0; z-index:50; transition:left .25s cubic-bezier(.16,1,.3,1); box-shadow:none; }
+    .sidebar.open { left:0; box-shadow:var(--shadow-xl); }
+    .sidebar-overlay.open { display:block; }
+    .header { padding:var(--sp-4); flex-wrap:wrap; }
+    .page-grid { padding:0 var(--sp-4) var(--sp-4); }
+    .plans-body { padding:var(--sp-4); }
+    .plans-grid { grid-template-columns:1fr; }
+    .boleto-item { flex-wrap:wrap; gap:var(--sp-2); }
+    .inline-tab { padding:var(--sp-3) var(--sp-3); font-size:var(--text-xs); }
+  }
+  @media (prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important; } }
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+  <!-- SHADCN: App-level snackbar = custom component above <SidebarProvider>. Not a toast — it's persistent until dismissed. Use a conditional render based on overdue boleto count from API. -->
+  <!-- App-level snackbar -->
+  <div class="app-snackbar" id="appSnackbar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span><strong>Você tem 2 boletos atrasados.</strong> A Lais continua atendendo seus leads, mas a regularização é necessária para manter o serviço ativo.</span>
+    <a href="#" class="app-snackbar-action" onclick="event.preventDefault();document.querySelector('.inline-tab[data-tab=&quot;ativos&quot;]').click()">Ver boletos</a>
+    <button class="app-snackbar-dismiss" onclick="this.closest('.app-snackbar').style.display='none'" aria-label="Fechar aviso"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand"><div class="sidebar-logo">L</div><div class="sidebar-brand-text"><h2>Lais da Zeio Imóveis</h2><div class="brand-sub">Zeio Imóveis</div></div></div>
+    <div class="sidebar-tweaks">
+      <div class="sidebar-tweaks-title">Tweaks</div>
+      <div class="tweak-group">
+        <div class="tweak-label">Cenário</div>
+        <div class="tweak-segmented tweak-segmented-vertical" id="tweakScenario">
+          <button data-scenario="0">Nova conta</button>
+          <button data-scenario="1">Healthy</button>
+          <button data-scenario="2">1 atrasado</button>
+          <button data-scenario="3">2 atrasados</button>
+        </div>
+      </div>
+      <div class="tweak-group">
+        <div class="tweak-label">Density</div>
+        <div class="tweak-segmented" id="tweakDensity">
+          <button data-density="comfortable">Comfortable</button>
+          <button data-density="compact">Compact</button>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Principal</div>
+      <div class="nav-skeleton" style="width:55%"></div>
+      <div class="nav-skeleton" style="width:70%"></div>
+      <div class="nav-skeleton" style="width:40%"></div>
+      <div class="nav-skeleton" style="width:65%"></div>
+      <div class="nav-skeleton" style="width:50%"></div>
+      <div class="nav-label">Configurações</div>
+      <div class="nav-skeleton" style="width:60%"></div>
+      <a class="nav-item active" href="#" aria-current="page"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Financeiro <span class="nav-badge">2</span></a>
+      <div class="nav-skeleton" style="width:48%"></div>
+    </nav>
+    <div class="sidebar-footer"><div class="user-profile"><div class="user-avatar">BF</div><div><div class="user-name">Brenno Ferreira</div><div class="user-role">Gestor</div></div></div></div>
+  </aside>
+
+  <div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('open');this.classList.remove('open')"></div>
+  <div class="main">
+    <div class="main-page" id="mainPage">
+      <div class="header"><button class="hamburger" onclick="document.querySelector('.sidebar').classList.toggle('open');document.querySelector('.sidebar-overlay').classList.toggle('open')" aria-label="Abrir menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><div class="header-left"><h1>Financeiro</h1><p>Plano, consumo e cobranças da sua REA</p></div></div>
+
+
+      <!-- V2 Grid: Left main column + Right sidebar -->
+      <div class="page-grid">
+        <div class="page-left">
+
+          <!-- ═══ 1. Plano Atual / Conta de Cobrança ═══ -->
+          <!-- SHADCN: Use <Card> with <CardHeader><CardTitle> + <Tabs> (shadcn InlineTabs / underline variant) -->
+          <div class="card">
+            <div class="card-header"><div class="card-title">Plano e Conta</div><button class="btn btn-text ptab-action" id="ptabAction" onclick="openAlterarPlanoModal()">Alterar plano</button></div>
+            <div class="inline-tabs" role="tablist" aria-label="Plano e conta">
+              <div class="inline-tab active" role="tab" tabindex="0" aria-selected="true" data-ptab="plano" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Plano atual</div>
+              <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-ptab="conta" onclick="switchPillTab(this)" onkeydown="tabKeyNav(event,this)">Conta de cobrança</div>
+            </div>
+
+            <!-- Plano Tab -->
+            <div class="card-body ptab-content" id="ptab-plano" role="tabpanel" aria-labelledby="ptab-plano-tab">
+              <div style="display:flex; justify-content:space-between; align-items:center; gap:var(--sp-6);">
+                <div>
+                  <div class="plan-name">Enterprise (4k)</div>
+                  <div class="plan-price">4.000 <span class="plan-price-period">atendimentos / mês</span></div>
+                  <div class="plan-annual-total">48.000 atendimentos no contrato anual</div>
+                </div>
+                <div><div class="plan-detail-label">Tipo</div><div class="plan-detail-value">Anual</div></div>
+                <div>
+                  <div class="plan-detail-label">Consumo deste mês</div>
+                  <div class="summary-consumo" style="margin-top:6px">
+                    <div class="consumo-ring" id="planoRing">
+                      <svg viewBox="0 0 60 60" aria-hidden="true">
+                        <circle class="ring-bg" cx="30" cy="30" r="26"/>
+                        <circle class="ring-fg" id="planoRingFg" cx="30" cy="30" r="26" stroke-dasharray="163.36" stroke-dashoffset="109.45"/>
+                      </svg>
+                      <div class="consumo-ring-pct" id="planoRingPct">33%</div>
+                    </div>
+                    <div class="summary-consumo-body">
+                      <div class="summary-value" id="planoConsumoValue">1.320 <span class="summary-value-unit">/ 4.000</span></div>
+                      <div class="summary-meta" id="planoConsumoMeta"><strong>2.680</strong> restantes</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="planoVigencia"><div class="plan-detail-label">Vigência</div><div class="plan-detail-value">Maio 2025 → Abril 2026</div><div class="plan-annual-total" id="planoVigenciaRemaining">2 meses restantes</div></div>
+                <div aria-hidden="true" style="width:var(--sp-6);"></div>
+              </div>
+              <!-- Warning duplicated from Consumo tab (only visible when exceeded) -->
+              <div class="usage-warning warn" id="planoUsageWarning" style="margin-top:var(--sp-4)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg><div><strong>Consumo acima do limite (103%).</strong> Atendimentos excedentes geram cobrança adicional na próxima fatura.</div></div>
+            </div>
+
+            <!-- Conta Tab -->
+            <div class="card-body ptab-content" id="ptab-conta" role="tabpanel" aria-labelledby="ptab-conta-tab" style="display:none">
+              <!-- Section 1: 3-column header -->
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp-5);align-items:start">
+                <div>
+                  <div style="font-size:var(--text-sm);font-weight:600;color:var(--gray-900)">Zeio Imóveis Ltda</div>
+                  <div style="font-size:var(--text-xs);color:var(--gray-500);margin-top:2px">CNPJ 12.345.678/0001-90</div>
+                </div>
+                <div>
+                  <div class="plan-detail-label">Contato financeiro</div>
+                  <div style="display:flex;align-items:center;gap:var(--sp-2);margin-top:2px" id="contatoFinanceiroDisplay">
+                    <span style="font-size:var(--text-sm);font-weight:500;color:var(--gray-700)" id="contatoFinanceiroEmail">emaildarea@yahoo.com.br</span>
+                    <button class="btn btn-text" style="font-size:var(--text-xs);padding:0" onclick="startEditContato()">Editar</button>
+                  </div>
+                  <div style="display:none;margin-top:2px" id="contatoFinanceiroEdit">
+                    <div style="display:flex;align-items:center;gap:var(--sp-2)">
+                      <input type="email" id="contatoFinanceiroInput" value="emaildarea@yahoo.com.br" style="flex:1;padding:var(--sp-1) var(--sp-2);border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:var(--text-sm);font-family:inherit;color:var(--gray-800);max-width:220px" onfocus="this.style.borderColor='var(--purple-400)';this.style.boxShadow='0 0 0 3px rgba(150,100,250,.15)'" onblur="this.style.borderColor='var(--gray-200)';this.style.boxShadow='none'">
+                      <button class="btn btn-primary btn-sm" style="min-height:28px" onclick="confirmEditContato()">Salvar</button>
+                      <button class="btn btn-ghost btn-sm" style="min-height:28px" onclick="cancelEditContato()">Cancelar</button>
+                    </div>
+                    <div style="font-size:var(--text-xs);color:var(--amber-600);margin-top:var(--sp-2);line-height:var(--leading-normal)">Ao alterar, boletos e comunicações financeiras serão enviados para o novo e-mail.</div>
+                  </div>
+                </div>
+                <div>
+                  <div style="font-size:var(--text-xs);color:var(--gray-500);text-align:right">Valor da próxima fatura</div>
+                  <div style="font-size:var(--text-lg);font-weight:700;color:var(--purple-600);font-variant-numeric:tabular-nums;margin-top:1px;text-align:right">R$ 20.584,00</div>
+                  <div class="rea-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="custoBreakdown" onclick="this.classList.toggle('open');document.getElementById('custoBreakdown').classList.toggle('visible');this.setAttribute('aria-expanded',this.classList.contains('open'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="margin-top:var(--sp-2);justify-content:flex-end"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>Composição do custo</div>
+                  <div class="rea-items" id="custoBreakdown" style="margin-top:var(--sp-2);font-size:var(--text-xs);font-variant-numeric:tabular-nums;line-height:var(--leading-normal);flex-direction:column;gap:var(--sp-1);max-width:320px;margin-left:auto">
+                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Plano 4.000 créditos</span><span style="color:var(--gray-700);font-weight:500">R$ 20.400,00</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--green-600);font-weight:500">Desconto 4%</span><span style="color:var(--green-600);font-weight:500">−R$ 816,00</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Lais Adicional</span><span style="color:var(--green-600);font-weight:500">Isento</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Assentos Premium (5 assentos)</span><span style="color:var(--green-600);font-weight:500">Isento</span></div>
+                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Assentos adicionais (2 assentos)</span><span style="color:var(--gray-700);font-weight:500">R$ 1.000,00</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Operações nesta conta (full-width) -->
+              <div style="margin-top:var(--sp-4);padding-top:var(--sp-4);border-top:1px solid var(--gray-100)">
+                <div class="billing-label">Operações nesta conta <span class="billing-label-count" id="opCountBadge">3</span></div>
+                <div id="reaListConta" class="op-flow">
+                  <div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Matriz</span></div>
+                  <div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Filial Centro</span></div>
+                  <div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Filial Sul</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Consumo card removed — now a tab inside Plano e Conta -->
+
+          <!-- ═══ 2-col: Cobranças + Extensões ═══ -->
+          <div class="cobrancas-addons-grid">
+          <!-- ═══ 2. Boletos Ativos / Histórico ═══ -->
+          <div class="card" style="min-height:340px">
+            <div class="card-header"><div class="card-title">Cobranças</div></div>
+            <div class="inline-tabs" role="tablist" aria-label="Cobranças">
+              <div class="inline-tab active" role="tab" tabindex="0" aria-selected="true" data-tab="ativos" onclick="switchTab(this)" onkeydown="tabKeyNav(event,this)">Boletos a pagar <span class="tab-count danger">3</span></div>
+              <div class="inline-tab" role="tab" tabindex="-1" aria-selected="false" data-tab="historico" onclick="switchTab(this)" onkeydown="tabKeyNav(event,this)">Histórico <span class="tab-count">10</span></div>
+            </div>
+            <div class="tab-content" id="tab-ativos" role="tabpanel">
+              <div class="boleto-list">
+                <div class="boleto-item overdue"><svg class="boleto-status-icon atrasado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="boleto-info"><div class="boleto-ref">Fevereiro/2026</div><div class="boleto-meta"><span class="boleto-status-label atrasado">Atrasado · 49 dias</span> <span class="boleto-meta-sep">·</span> Venceu em 11/02/2026</div></div><div class="boleto-amount overdue">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,'23793.38128 60000.000003')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div>
+                <div class="boleto-item overdue"><svg class="boleto-status-icon atrasado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="boleto-info"><div class="boleto-ref">Março/2026</div><div class="boleto-meta"><span class="boleto-status-label atrasado">Atrasado · 21 dias</span> <span class="boleto-meta-sep">·</span> Venceu em 11/03/2026</div></div><div class="boleto-amount overdue">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,'23793.38128 60000.000004')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div>
+                <div class="boleto-item"><svg class="boleto-status-icon disponivel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg><div class="boleto-info"><div class="boleto-ref">Abril/2026</div><div class="boleto-meta" style='font-family:"Red Hat Display"; gap:16px;'>Vence em 11/04/2026 <span class="boleto-meta-sep">·</span> <span class="boleto-status-label disponivel">Disponível</span></div></div><div class="boleto-amount">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,'23793.38128 60000.000005')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div>
+              </div>
+            </div>
+            <div class="tab-content" id="tab-historico" role="tabpanel" style="display:none"><div id="historicoInner">
+              <!--
+                SHADCN MIGRATION NOTES:
+                - Year accordions: Use shadcn <Accordion type="multiple"> with <AccordionItem>
+                - Current year (2026): defaultValue={["2026"]} to force open on mount
+                - On tab switch to "historico": call accordion API to reset open state for current year
+                - Previous years: collapsed by default, user toggles manually
+                - Boleto list items: map from API data, group by year, current year first
+              -->
+              <!-- 2026 boletos (current year — accordion, open by default) -->
+              <div class="year-accordion">
+                <div class="year-accordion-header open" id="accordion2026" role="button" tabindex="0" aria-expanded="true" onclick="toggleAccordion(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAccordion(this)}">
+                  <svg class="year-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                  <span class="year-accordion-label">Boletos de 2026</span>
+                  <span class="year-accordion-count">1 boleto</span>
+                </div>
+                <div class="year-accordion-body">
+                  <div class="boleto-list">
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Janeiro/2026</div><div class="boleto-meta">Pago em 09/01/2026</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                  </div>
+                </div>
+              </div>
+              <!-- 2025 boletos (previous year — accordion, closed by default) -->
+              <div class="year-accordion">
+                <div class="year-accordion-header" role="button" tabindex="0" aria-expanded="false" onclick="toggleAccordion(this)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleAccordion(this)}">
+                  <svg class="year-accordion-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+                  <span class="year-accordion-label">Boletos de 2025</span>
+                  <span class="year-accordion-count">7 boletos</span>
+                </div>
+                <div class="year-accordion-body">
+                  <div class="boleto-list">
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Dezembro/2025</div><div class="boleto-meta">Pago em 10/12/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 41.168,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon renegociado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><div class="boleto-info"><div class="boleto-ref">Novembro/2025</div><div class="boleto-meta">Renegociado em 28/11/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">—</div><div class="boleto-actions"></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Setembro/2025</div><div class="boleto-meta">Pago em 10/09/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Agosto/2025</div><div class="boleto-meta">Pago em 11/08/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Julho/2025</div><div class="boleto-meta">Pago em 10/07/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Junho/2025</div><div class="boleto-meta">Pago em 11/06/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Maio/2025</div><div class="boleto-meta">Pago em 12/05/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 5.146,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                  </div>
+                </div>
+              </div>
+            </div></div>
+              <div class="boleto-cta-area" style="margin-top:auto; padding:16px 20px 15px; height: 32px"><div class="boleto-cta-text"><strong>2 faturas atrasadas</strong></div><button class="btn btn-text-danger btn-sm" onclick="openRenegoModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Falar sobre minha fatura</button></div>
+          </div>
+
+          <!-- ═══ Extensões card ═══ -->
+          <div class="card" style="min-height:340px">
+            <div class="card-header"><div class="card-title">Extensões</div></div>
+            <div class="card-body addon-cards-body" id="extensoesBody">
+              <div class="addon-card">
+                <div class="addon-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
+                </div>
+                <div class="addon-card-body">
+                  <div class="addon-card-head">
+                    <div class="addon-card-name">Lais Adicional</div>
+                    <div class="addon-card-status"><span class="dot"></span>Ativo</div>
+                  </div>
+                  <div class="addon-card-detail">1 assistente adicional</div>
+                </div>
+              </div>
+              <div class="addon-card">
+                <div class="addon-card-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div class="addon-card-body">
+                  <div class="addon-card-head">
+                    <div class="addon-card-name">Assentos Premium</div>
+                    <div class="addon-card-status"><span class="dot"></span>Ativo</div>
+                  </div>
+                  <div class="addon-card-detail">7 assentos · 5 inclusos + 2 adicionais</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+
+          <!-- AM card removed — now a tab inside Plano e Conta -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Plans Page -->
+    <div class="plans-page" id="plansPage">
+      <div class="plans-header"><div class="plans-back" onclick="hidePlansPage()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>Voltar</div><div class="plans-breadcrumb">Financeiro <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><polyline points="9 18 15 12 9 6"/></svg> <span>Alterar plano</span></div></div>
+      <div class="plans-body">
+        <div class="plans-title">Planos disponíveis</div>
+        <div class="plans-subtitle">Escolha o plano que mais se adequa ao seu negócio</div>
+        <div class="plans-toggle"><button class="plans-toggle-btn active">Anual</button><button class="plans-toggle-btn">Mensal</button></div>
+        <div class="plans-grid">
+          <div class="plan-card"><div class="plan-card-accent"></div><div class="plan-card-body"><div class="plan-card-name">Enterprise (0.5k)</div><div class="plan-card-price">R$ 9.348,30 <span class="plan-card-period">/ mês</span></div><div class="plan-card-features"><div class="plan-feature"><span class="plan-feature-label">Atendimentos</span><span class="plan-feature-value">500/mês</span></div><div class="plan-feature"><span class="plan-feature-label">Remarketing</span><span class="plan-feature-value">Incluso</span></div><div class="plan-feature"><span class="plan-feature-label">R$/atendimento</span><span class="plan-feature-value">R$ 18,70</span></div><div class="plan-feature"><span class="plan-feature-label">Suporte</span><span class="plan-feature-value">Standard</span></div></div></div><div class="plan-card-cta"><button class="btn btn-primary">Contratar plano</button></div></div>
+          <div class="plan-card"><div class="plan-card-accent"></div><div class="plan-card-body"><div class="plan-card-name">Enterprise (2k)</div><div class="plan-card-price">R$ 11.900,00 <span class="plan-card-period">/ mês</span></div><div class="plan-card-features"><div class="plan-feature"><span class="plan-feature-label">Atendimentos</span><span class="plan-feature-value">2.000/mês</span></div><div class="plan-feature"><span class="plan-feature-label">Remarketing</span><span class="plan-feature-value">Incluso</span></div><div class="plan-feature"><span class="plan-feature-label">R$/atendimento</span><span class="plan-feature-value">R$ 5,95</span></div><div class="plan-feature"><span class="plan-feature-label">Suporte</span><span class="plan-feature-value">Standard</span></div></div></div><div class="plan-card-cta"><button class="btn btn-primary">Contratar plano</button></div></div>
+          <div class="plan-card"><div class="plan-card-accent"></div><div class="plan-card-body"><div class="plan-card-name">Enterprise (3k)</div><div class="plan-card-price">R$ 16.830,00 <span class="plan-card-period">/ mês</span></div><div class="plan-card-features"><div class="plan-feature"><span class="plan-feature-label">Atendimentos</span><span class="plan-feature-value">3.000/mês</span></div><div class="plan-feature"><span class="plan-feature-label">Remarketing</span><span class="plan-feature-value">Incluso</span></div><div class="plan-feature"><span class="plan-feature-label">R$/atendimento</span><span class="plan-feature-value">R$ 5,61</span></div><div class="plan-feature"><span class="plan-feature-label">Suporte</span><span class="plan-feature-value">Priority</span></div></div></div><div class="plan-card-cta"><button class="btn btn-primary">Contratar plano</button></div></div>
+          <div class="plan-card current"><div class="plan-card-accent"></div><div class="plan-card-body"><div class="plan-card-name">Enterprise (4k) <span class="plan-current-badge">Atual</span></div><div class="plan-card-price">R$ 20.400,00 <span class="plan-card-period">/ mês</span></div><div class="plan-card-features"><div class="plan-feature"><span class="plan-feature-label">Atendimentos</span><span class="plan-feature-value">4.000/mês</span></div><div class="plan-feature"><span class="plan-feature-label">Remarketing</span><span class="plan-feature-value">Incluso</span></div><div class="plan-feature"><span class="plan-feature-label">R$/atendimento</span><span class="plan-feature-value">R$ 5,10</span></div><div class="plan-feature"><span class="plan-feature-label">Suporte</span><span class="plan-feature-value">Priority</span></div></div></div><div class="plan-card-cta"><button class="btn btn-ghost">Plano atual</button></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div><!-- /app-wrapper -->
+
+<!-- Renegotiation Modal -->
+<div class="modal-overlay" id="renegoModal" onclick="if(event.target===this)closeRenegoModal()" role="presentation">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="renegoModalTitle">
+    <div class="modal-header"><div class="modal-title" id="renegoModalTitle">Quero falar sobre minha fatura</div><button class="modal-close" onclick="closeRenegoModal()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div style="font-size:var(--text-sm);color:var(--gray-500);margin-bottom:var(--sp-5);line-height:var(--leading-normal)">Selecione as faturas e descreva o que aconteceu. Nossa equipe Financeiro responderá por e-mail em até <strong style="color:var(--gray-700)">1 dia útil</strong>.</div>
+
+      <!-- Section 1: Boleto selection -->
+      <div style="margin-bottom:var(--sp-5)">
+        <div class="billing-label">Faturas relacionadas</div>
+        <div class="renego-item selected" data-amount="20584" onclick="toggleRenego(this)"><div class="renego-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="renego-info"><div class="renego-ref">Fevereiro/2026</div><div class="renego-detail">Venceu em 11/02/2026 · 49 dias atrasado</div></div><div class="renego-amount">R$ 20.584,00</div></div>
+        <div class="renego-item selected" data-amount="20584" onclick="toggleRenego(this)"><div class="renego-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div><div class="renego-info"><div class="renego-ref">Março/2026</div><div class="renego-detail">Venceu em 11/03/2026 · 21 dias atrasado</div></div><div class="renego-amount">R$ 20.584,00</div></div>
+      </div>
+
+      <!-- Section 2: Reason + details (arranged as 2-column grid) -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);margin-bottom:var(--sp-4)">
+        <div>
+          <label for="renegoMotivo" style="display:block;font-size:var(--text-xs);font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--sp-2)">Motivo</label>
+          <select class="period-select" id="renegoMotivo" onchange="toggleMotivoOutro(this)" style="width:100%;min-height:36px">
+            <option value="" disabled>Selecione um motivo</option>
+            <option value="caixa" selected>Atraso temporário de caixa</option>
+            <option value="erro">Erro na cobrança</option>
+            <option value="credito">Aguardando liberação de crédito</option>
+            <option value="banco">Mudança de dados bancários</option>
+            <option value="outro">Outro motivo</option>
+          </select>
+        </div>
+        <div>
+          <label for="renegoEmailModal" style="display:block;font-size:var(--text-xs);font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--sp-2)">E-mail para resposta</label>
+          <input type="email" id="renegoEmailModal" value="emaildarea@yahoo.com.br" style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:var(--text-sm);font-family:inherit;color:var(--gray-800);min-height:36px;transition:border-color .15s ease" onfocus="this.style.borderColor='var(--purple-400)';this.style.boxShadow='0 0 0 3px rgba(150,100,250,.15)'" onblur="this.style.borderColor='var(--gray-200)';this.style.boxShadow='none'">
+        </div>
+      </div>
+      <!-- Optional details textarea (always visible, expands on "Outro") -->
+      <div id="renegoDetalhesWrap">
+        <label for="renegoDetalhes" style="display:block;font-size:var(--text-xs);font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--sp-2)">Detalhes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-400)" id="renegoDetalhesHint">(opcional)</span></label>
+        <textarea id="renegoDetalhes" rows="2" placeholder="Descreva brevemente a situação, se desejar..." style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:var(--text-sm);font-family:inherit;color:var(--gray-800);resize:vertical;min-height:60px;transition:border-color .15s ease;line-height:var(--leading-normal)" onfocus="this.style.borderColor='var(--purple-400)';this.style.boxShadow='0 0 0 3px rgba(150,100,250,.15)'" onblur="this.style.borderColor='var(--gray-200)';this.style.boxShadow='none'"></textarea>
+      </div>
+    </div>
+    <!-- Success state -->
+    <div id="renegoSuccess" class="renego-success-enter" style="display:none;flex-direction:column;align-items:center;gap:var(--sp-4);padding:var(--sp-8) var(--sp-6);text-align:center">
+      <div class="renego-success-icon" style="width:56px;height:56px;border-radius:50%;background:var(--purple-50);border:2px solid var(--purple-100);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="var(--purple-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+      <div>
+        <div style="font-size:var(--text-lg);font-weight:700;color:var(--gray-900)">Mensagem enviada</div>
+        <div style="font-size:var(--text-sm);color:var(--gray-500);margin-top:var(--sp-2);line-height:var(--leading-normal)">A equipe do Financeiro recebeu sua mensagem<br>e retornará por e-mail em até <strong style="color:var(--gray-700)">1 dia útil</strong>.</div>
+      </div>
+      <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:var(--sp-3) var(--sp-5);width:100%;max-width:320px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:var(--text-xs)"><span style="color:var(--gray-500)">Faturas</span><span style="font-weight:600;color:var(--gray-800)" id="renegoSuccessCount">2</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:var(--text-xs);margin-top:var(--sp-2)"><span style="color:var(--gray-500)">Motivo</span><span style="font-weight:600;color:var(--gray-800)" id="renegoSuccessMotivo">Atraso temporário de caixa</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:var(--text-xs);margin-top:var(--sp-2)"><span style="color:var(--gray-500)">Resposta para</span><span style="font-weight:600;color:var(--gray-800)" id="renegoSuccessEmail">emaildarea@yahoo.com.br</span></div>
+      </div>
+      <button class="btn btn-primary" onclick="closeRenegoModal()" style="margin-top:var(--sp-2)">Entendido</button>
+    </div>
+    <!-- Footer: default -->
+    <div class="modal-footer" id="renegoFooterDefault"><button class="btn btn-ghost" onclick="closeRenegoModal()">Cancelar</button><button class="btn btn-primary" onclick="showRenegoConfirm()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Enviar mensagem</button></div>
+    <!-- Footer: confirmation step -->
+    <div class="modal-footer" id="renegoFooterConfirm" style="display:none;flex-direction:column;gap:var(--sp-3);align-items:stretch">
+      <div style="font-size:var(--text-sm);color:var(--gray-700);text-align:center;line-height:var(--leading-normal);padding:var(--sp-2) 0"><strong>Enviar mensagem sobre <span id="renegoConfirmCount">2</span> fatura(s)?</strong><br><span style="color:var(--gray-500)">A equipe do Financeiro retornará por e-mail.</span></div>
+      <div style="display:flex;gap:var(--sp-3);justify-content:flex-end"><button class="btn btn-ghost" onclick="hideRenegoConfirm()">Voltar</button><button class="btn btn-primary" onclick="executeRenego()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Sim, enviar</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="copy-toast" id="copyToast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Código do boleto copiado</div>
+
+<!-- Alterar Plano Modal -->
+<div class="modal-overlay" id="alterarPlanoModal" onclick="if(event.target===this)closeAlterarPlanoModal()" role="presentation">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="alterarPlanoTitle">
+    <div class="modal-header"><div class="modal-title" id="alterarPlanoTitle">Pensando em trocar de plano?</div><button class="modal-close" onclick="closeAlterarPlanoModal()" aria-label="Fechar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <!-- Step 1: Reason -->
+    <div class="modal-body" id="alterarPlanoBody">
+      <div style="font-size:var(--text-sm);color:var(--gray-500);line-height:var(--leading-normal);margin-bottom:var(--sp-5)">Conte pra gente o que está motivando essa mudança. Seu gerente de contas entrará em contato para encontrar a melhor opção para sua operação.</div>
+      <div style="margin-bottom:var(--sp-4)">
+        <label for="alterarMotivo" style="display:block;font-size:var(--text-xs);font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--sp-2)">Motivo principal</label>
+        <select class="period-select" id="alterarMotivo" style="width:100%;min-height:36px">
+          <option value="" disabled selected>Selecione o motivo</option>
+          <option value="mais">Preciso de mais atendimentos</option>
+          <option value="menos">Não estou usando atendimentos o suficiente</option>
+          <option value="custo">Quero reduzir o custo mensal</option>
+          <option value="rea">Quero adicionar ou remover REAs</option>
+          <option value="addon">Quero alterar meus add-ons</option>
+          <option value="outro">Outro motivo</option>
+          <option value="cancelar">Quero cancelar a Lais</option>
+        </select>
+      </div>
+      <div id="alterarDetalhesWrap">
+        <label for="alterarDetalhes" style="display:block;font-size:var(--text-xs);font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--sp-2)">Detalhes <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--gray-400)">(opcional)</span></label>
+        <textarea id="alterarDetalhes" rows="2" placeholder="Descreva o que você precisa, se desejar..." style="width:100%;padding:var(--sp-2) var(--sp-3);border:1px solid var(--gray-200);border-radius:var(--radius-sm);font-size:var(--text-sm);font-family:inherit;color:var(--gray-800);resize:vertical;min-height:60px;transition:border-color .15s ease;line-height:var(--leading-normal)" onfocus="this.style.borderColor='var(--purple-400)';this.style.boxShadow='0 0 0 3px rgba(150,100,250,.15)'" onblur="this.style.borderColor='var(--gray-200)';this.style.boxShadow='none'"></textarea>
+      </div>
+    </div>
+    <!-- Step 2: Success -->
+    <div id="alterarPlanoSuccess" class="renego-success-enter" style="display:none;flex-direction:column;align-items:center;gap:var(--sp-4);padding:var(--sp-8) var(--sp-6);text-align:center">
+      <div class="renego-success-icon" style="width:56px;height:56px;border-radius:50%;background:var(--purple-50);border:2px solid var(--purple-100);display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" fill="none" stroke="var(--purple-600)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:28px;height:28px" aria-hidden="true"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></div>
+      <div>
+        <div style="font-size:var(--text-lg);font-weight:700;color:var(--gray-900)">Solicitação enviada</div>
+        <div style="font-size:var(--text-sm);color:var(--gray-500);margin-top:var(--sp-2);line-height:var(--leading-normal)">Seu gerente de contas <strong style="color:var(--gray-700)">Paulo Mendes</strong> recebeu<br>sua solicitação e entrará em contato em breve.</div>
+      </div>
+      <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:var(--radius-md);padding:var(--sp-3) var(--sp-5);width:100%;max-width:320px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:var(--text-xs)"><span style="color:var(--gray-500)">Motivo</span><span style="font-weight:600;color:var(--gray-800)" id="alterarSuccessMotivo"></span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:var(--text-xs);margin-top:var(--sp-2)"><span style="color:var(--gray-500)">Contato via</span><span style="font-weight:600;color:var(--gray-800)">WhatsApp ou e-mail</span></div>
+      </div>
+      <button class="btn btn-primary" onclick="closeAlterarPlanoModal()" style="margin-top:var(--sp-2)">Entendido</button>
+    </div>
+    <!-- Footer -->
+    <div class="modal-footer" id="alterarPlanoFooter"><button class="btn btn-ghost" onclick="closeAlterarPlanoModal()">Cancelar</button><button class="btn btn-primary" id="alterarPlanoSubmit" onclick="submitAlterarPlano()" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Enviar solicitação</button></div>
+  </div>
+</div>
+
+<script>
+  // ── Keyboard nav for tabs (arrow keys) ──
+  function tabKeyNav(e, el) {
+    const tabs = Array.from(el.closest('[role="tablist"]').querySelectorAll('[role="tab"]'));
+    const idx = tabs.indexOf(el);
+    let next = -1;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); next = (idx + 1) % tabs.length; }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); next = (idx - 1 + tabs.length) % tabs.length; }
+    else if (e.key === 'Home') { e.preventDefault(); next = 0; }
+    else if (e.key === 'End') { e.preventDefault(); next = tabs.length - 1; }
+    if (next >= 0) { tabs[next].focus(); tabs[next].click(); }
+  }
+
+  // ── Accordion toggle with aria-expanded ──
+  function toggleAccordion(el) {
+    el.classList.toggle('open');
+    el.setAttribute('aria-expanded', el.classList.contains('open'));
+  }
+
+  // ── Modal focus trap ──
+  function trapFocus(modal) {
+    const focusable = modal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    modal._trapHandler = function(e) {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+      if (e.key === 'Escape') closeRenegoModal();
+    };
+    modal.addEventListener('keydown', modal._trapHandler);
+    first.focus();
+  }
+  function releaseFocus(modal) {
+    if (modal._trapHandler) modal.removeEventListener('keydown', modal._trapHandler);
+  }
+
+  // Pill tabs (Plano/Conta)
+  function switchPillTab(el) {
+    el.closest('[role="tablist"]').querySelectorAll('[role="tab"]').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
+    el.classList.add('active'); el.setAttribute('aria-selected','true'); el.setAttribute('tabindex','0');
+    const tab = el.dataset.ptab;
+    document.querySelectorAll('.ptab-content').forEach(c => c.style.display = 'none');
+    document.getElementById('ptab-' + tab).style.display = 'block';
+    // Alterar plano stays visible in card header across all tabs
+  }
+
+  // Inline tabs (Boletos) — scoped to boleto card only
+  function switchTab(el) {
+    el.closest('[role="tablist"]').querySelectorAll('[role="tab"]').forEach(t => { t.classList.remove('active'); t.setAttribute('aria-selected','false'); t.setAttribute('tabindex','-1'); });
+    el.classList.add('active'); el.setAttribute('aria-selected','true'); el.setAttribute('tabindex','0');
+    const tab = el.dataset.tab;
+    el.closest('.card').querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+    document.getElementById('tab-' + tab).style.display = 'block';
+    // Force 2026 accordion open when switching to Histórico
+    if (tab === 'historico') {
+      const acc2026 = document.getElementById('accordion2026');
+      if (acc2026) acc2026.classList.add('open');
+    }
+    const summary = document.getElementById('boletoSummary');
+    if (summary) summary.style.display = tab === 'ativos' ? 'flex' : 'none';
+  }
+
+  function copyBoleto(btn, code) {
+    navigator.clipboard.writeText(code).then(() => {
+      btn.classList.add('copied');
+      document.getElementById('copyToast').classList.add('show');
+      setTimeout(() => { btn.classList.remove('copied'); document.getElementById('copyToast').classList.remove('show'); }, 2000);
+    });
+  }
+
+  function toggleREAs(el) { el.classList.toggle('open'); document.getElementById('reaItems').classList.toggle('visible'); el.setAttribute('aria-expanded', el.classList.contains('open')); }
+  function toggleREAsConta(el) { el.classList.toggle('open'); document.getElementById('reaItemsConta').classList.toggle('visible'); el.setAttribute('aria-expanded', el.classList.contains('open')); }
+
+  // ── Contato Financeiro inline edit ──
+  function startEditContato() {
+    document.getElementById('contatoFinanceiroDisplay').style.display = 'none';
+    var editEl = document.getElementById('contatoFinanceiroEdit');
+    editEl.style.display = 'block';
+    document.getElementById('contatoFinanceiroInput').value = document.getElementById('contatoFinanceiroEmail').textContent;
+    document.getElementById('contatoFinanceiroInput').focus();
+  }
+  function cancelEditContato() {
+    document.getElementById('contatoFinanceiroEdit').style.display = 'none';
+    document.getElementById('contatoFinanceiroDisplay').style.display = 'flex';
+  }
+  function confirmEditContato() {
+    var newEmail = document.getElementById('contatoFinanceiroInput').value.trim();
+    if (!newEmail) return;
+    if (confirm('Alterar contato financeiro para "' + newEmail + '"?\n\nBoletos e comunicações financeiras serão enviados para este e-mail.')) {
+      document.getElementById('contatoFinanceiroEmail').textContent = newEmail;
+      // Also update the renegotiation modal email field
+      var renegoEmail = document.getElementById('renegoEmailModal');
+      if (renegoEmail) renegoEmail.value = newEmail;
+      cancelEditContato();
+    }
+  }
+
+  var _lastFocusBeforeModal;
+  function openRenegoModal() { _lastFocusBeforeModal = document.activeElement; var m = document.getElementById('renegoModal'); m.classList.add('open'); document.body.style.overflow = 'hidden'; hideRenegoConfirm(); hideRenegoSuccess(); trapFocus(m.querySelector('.modal')); }
+  function closeRenegoModal() { var m = document.getElementById('renegoModal'); releaseFocus(m.querySelector('.modal')); m.classList.remove('open'); document.body.style.overflow = ''; hideRenegoConfirm(); hideRenegoSuccess(); if (_lastFocusBeforeModal) _lastFocusBeforeModal.focus(); }
+  function showRenegoConfirm() { var count = document.querySelectorAll('.renego-item.selected').length; document.getElementById('renegoConfirmCount').textContent = count; document.getElementById('renegoFooterDefault').style.display='none'; document.getElementById('renegoFooterConfirm').style.display='flex'; }
+  function hideRenegoConfirm() { document.getElementById('renegoFooterDefault').style.display=''; document.getElementById('renegoFooterConfirm').style.display='none'; }
+  function toggleMotivoOutro(sel) {
+    var hint = document.getElementById('renegoDetalhesHint');
+    var ta = document.getElementById('renegoDetalhes');
+    if (sel.value === 'outro') { hint.textContent = '(obrigatório)'; hint.style.color = 'var(--gray-700)'; ta.placeholder = 'Descreva o motivo da sua solicitação...'; ta.required = true; }
+    else { hint.textContent = '(opcional)'; hint.style.color = 'var(--gray-400)'; ta.placeholder = 'Descreva brevemente a situação, se desejar...'; ta.required = false; }
+  }
+  function executeRenego() { document.getElementById('renegoFooterConfirm').style.display='none'; document.querySelector('#renegoModal .modal-body').style.display='none'; var s=document.getElementById('renegoSuccess'); s.style.display='flex'; document.getElementById('renegoSuccessCount').textContent=document.querySelectorAll('.renego-item.selected').length; var emailEl=document.getElementById('renegoEmailModal'); if(emailEl) document.getElementById('renegoSuccessEmail').textContent=emailEl.value; var motivo=document.getElementById('renegoMotivo'); if(motivo) document.getElementById('renegoSuccessMotivo').textContent=motivo.options[motivo.selectedIndex].text; }
+  function hideRenegoSuccess() { var s=document.getElementById('renegoSuccess'); if(s) s.style.display='none'; var b=document.querySelector('#renegoModal .modal-body'); if(b) b.style.display=''; }
+  function toggleRenego(el) { el.classList.toggle('selected'); updateRenegoSummary(); }
+  function updateRenegoSummary() {
+    let count = 0, total = 0;
+    document.querySelectorAll('.renego-item').forEach(item => { if (item.classList.contains('selected')) { count++; total += parseInt(item.dataset.amount||0); } });
+    const discount = total * 0.02;
+    document.getElementById('renegoCount').textContent = count;
+    document.getElementById('renegoOriginal').textContent = 'R$ ' + total.toLocaleString('pt-BR',{minimumFractionDigits:2});
+    document.getElementById('renegoDiscount').textContent = '- R$ ' + discount.toLocaleString('pt-BR',{minimumFractionDigits:2});
+    document.getElementById('renegoTotal').textContent = 'R$ ' + (total-discount).toLocaleString('pt-BR',{minimumFractionDigits:2});
+  }
+
+  function showPlansPage() { document.getElementById('mainPage').classList.add('hidden'); document.getElementById('plansPage').classList.add('active'); }
+  function hidePlansPage() { document.getElementById('plansPage').classList.remove('active'); document.getElementById('mainPage').classList.remove('hidden'); }
+  document.querySelectorAll('.plans-toggle-btn').forEach(btn => { btn.addEventListener('click', () => { document.querySelectorAll('.plans-toggle-btn').forEach(b => b.classList.remove('active')); btn.classList.add('active'); }); });
+
+  // ── Period switcher ──
+  const chartsBuilt = {};
+  var _currentConsumoHeader = '<span class="usage-count">4.120 / 4.000</span><span class="usage-pct-badge exceeded">103%</span>';
+  function switchPeriod(view) {
+    document.querySelectorAll('.period-view').forEach(v => v.style.display = 'none');
+    const hl = document.getElementById('usageHeaderLeft');
+    if (view === 'mes') {
+      document.getElementById('viewMes').style.display = '';
+      hl.innerHTML = _currentConsumoHeader;
+    } else {
+      document.getElementById('view12m').style.display = '';
+      hl.innerHTML = '<span class="usage-count" style="color:var(--gray-500)">Abr 2025 — Mar 2026</span>';
+      build12mChart();
+    }
+  }
+
+  function addRefLines(chart, limit, avg, chartMax, chartH) {
+    function lineY(val) { return chartH - (val/chartMax*chartH); }
+    const ll = document.createElement('div'); ll.className='ref-line limit'; ll.style.top=lineY(limit)+'px';
+    ll.innerHTML='<span class="ref-line-tag">Limite '+limit.toLocaleString('pt-BR')+'</span>'; chart.appendChild(ll);
+    const al = document.createElement('div'); al.className='ref-line avg'; al.style.top=lineY(avg)+'px';
+    al.innerHTML='<span class="ref-line-tag">Média '+avg.toLocaleString('pt-BR')+'</span>'; chart.appendChild(al);
+  }
+  function addBars(chart, axis, data, limit, chartMax, chartH, isCurrFn) {
+    data.forEach((d,i) => {
+      const col = document.createElement('div'); col.className='bar-col';
+      const bar = document.createElement('div');
+      const curr = isCurrFn(i); const over = d.v > limit;
+      bar.className='bar '+(curr?'current':(over?'over-limit':'past'));
+      bar.style.height = Math.max(2,d.v/chartMax*chartH)+'px';
+      bar.innerHTML='<span class="bar-tip">'+d.label+' · '+d.v.toLocaleString('pt-BR')+' atend.</span>';
+      col.appendChild(bar); chart.appendChild(col);
+      const lbl = document.createElement('span'); lbl.textContent=d.m;
+      if(curr) lbl.className='current'; axis.appendChild(lbl);
+    });
+  }
+
+  // ── 3 months: weekly bars (13 weeks of Jan-Mar 2026) ──
+  function buildWeeklyChart() {
+    if(chartsBuilt['3m']) return; chartsBuilt['3m']=true;
+    const WEEKS = [
+      {mo:'Jan',wk:'S1',label:'Sem 1 Jan/2026',v:850},{mo:'Jan',wk:'S2',label:'Sem 2 Jan/2026',v:920},{mo:'Jan',wk:'S3',label:'Sem 3 Jan/2026',v:880},{mo:'Jan',wk:'S4',label:'Sem 4 Jan/2026',v:1050},
+      {mo:'Fev',wk:'S1',label:'Sem 1 Fev/2026',v:950},{mo:'Fev',wk:'S2',label:'Sem 2 Fev/2026',v:1020},{mo:'Fev',wk:'S3',label:'Sem 3 Fev/2026',v:980},{mo:'Fev',wk:'S4',label:'Sem 4 Fev/2026',v:1050},
+      {mo:'Mar',wk:'S1',label:'Sem 1 Mar/2026',v:1000},{mo:'Mar',wk:'S2',label:'Sem 2 Mar/2026',v:1080},{mo:'Mar',wk:'S3',label:'Sem 3 Mar/2026',v:1020},{mo:'Mar',wk:'S4',label:'Sem 4 Mar/2026',v:1020}
+    ];
+    const LIMIT=1000, MAX=1200, H=200;
+    const AVG=Math.round(WEEKS.reduce((s,d)=>s+d.v,0)/WEEKS.length);
+    const chart=document.getElementById('weeklyChart');
+    const axis=document.getElementById('weeklyAxis');
+    addRefLines(chart,LIMIT,AVG,MAX,H);
+    // Build bars manually for custom axis labels
+    const weeksRow = document.getElementById('weeklyAxisWeeks');
+    const monthsRow = document.getElementById('weeklyAxisMonths');
+    const months = ['Jan','Fev','Mar'];
+    WEEKS.forEach((d,i) => {
+      const col=document.createElement('div'); col.className='bar-col';
+      const bar=document.createElement('div');
+      const curr=i===WEEKS.length-1; const over=d.v>LIMIT;
+      bar.className='bar '+(curr?'current':(over?'over-limit':'past'));
+      bar.style.height=Math.max(2,d.v/MAX*H)+'px';
+      bar.innerHTML='<span class="bar-tip">'+d.label+' · '+d.v.toLocaleString('pt-BR')+' atend.</span>';
+      col.appendChild(bar); chart.appendChild(col);
+      // Week number in top row
+      const wkLbl=document.createElement('span');
+      wkLbl.textContent=d.wk;
+      if(curr) wkLbl.className='current';
+      weeksRow.appendChild(wkLbl);
+    });
+    // Month groups in bottom row (each spans 4 weeks)
+    months.forEach((mo,i) => {
+      const grp=document.createElement('div');
+      grp.className='weekly-month-group'+(i===months.length-1?' current':'');
+      grp.innerHTML='<span class="weekly-month-name">'+mo+'</span><div class="weekly-month-bracket"></div>';
+      monthsRow.appendChild(grp);
+    });
+    document.getElementById('weeklySummary').innerHTML=
+      '<div class="chart-stat"><span class="chart-stat-label">Média semanal</span><span class="chart-stat-value">'+AVG.toLocaleString('pt-BR')+'</span></div>'+
+      '<div class="chart-stat"><span class="chart-stat-label">Semana atual</span><span class="chart-stat-value purple">1.020</span></div>'+
+      '';
+  }
+
+  // ── 6 months: Oct 2025 - Mar 2026 ──
+  function build6mChart() {
+    if(chartsBuilt['6m']) return; chartsBuilt['6m']=true;
+    const DATA = [
+      {m:'Out',label:'Out/2025',v:3500},{m:'Nov',label:'Nov/2025',v:3900},{m:'Dez',label:'Dez/2025',v:3300},
+      {m:'Jan',label:'Jan/2026',v:3700},{m:'Fev',label:'Fev/2026',v:4000},{m:'Mar',label:'Mar/2026',v:4120}
+    ];
+    const LIMIT=4000, MAX=4500, H=200;
+    const AVG=Math.round(DATA.reduce((s,d)=>s+d.v,0)/DATA.length);
+    const chart=document.getElementById('chart6m'); const axis=document.getElementById('axis6m');
+    addRefLines(chart,LIMIT,AVG,MAX,H);
+    addBars(chart,axis,DATA,LIMIT,MAX,H,(i)=>i===DATA.length-1);
+    document.getElementById('summary6m').innerHTML=
+      '<div class="chart-stat"><span class="chart-stat-label">Média mensal</span><span class="chart-stat-value">'+AVG.toLocaleString('pt-BR')+'</span></div>'+
+      '<div class="chart-stat"><span class="chart-stat-label">Mês atual</span><span class="chart-stat-value purple">4.120</span></div>'+
+      '<div class="chart-stat"><span class="chart-stat-label">Limite do plano</span><span class="chart-stat-value">4.000</span></div>';
+  }
+
+  // ── 12 months: Apr 2025 - Mar 2026 ──
+  function build12mChart() {
+    if(chartsBuilt['12m']) return; chartsBuilt['12m']=true;
+    const DATA = [
+      {m:'Abr',label:'Abr/2025',v:0},{m:'Mai',label:'Mai/2025',v:800},{m:'Jun',label:'Jun/2025',v:2100},{m:'Jul',label:'Jul/2025',v:1750},
+      {m:'Ago',label:'Ago/2025',v:2900},{m:'Set',label:'Set/2025',v:3400},{m:'Out',label:'Out/2025',v:2600},{m:'Nov',label:'Nov/2025',v:3800},
+      {m:'Dez',label:'Dez/2025',v:2200},{m:'Jan',label:'Jan/2026',v:3500},{m:'Fev',label:'Fev/2026',v:3100},{m:'Mar',label:'Mar/2026',v:4120}
+    ];
+    const LIMIT=4000, MAX=4500, H=200;
+    const AVG=Math.round(DATA.reduce((s,d)=>s+d.v,0)/DATA.length);
+    const chart=document.getElementById('monthlyChart'); const axis=document.getElementById('monthlyAxis');
+    addRefLines(chart,LIMIT,AVG,MAX,H);
+    addBars(chart,axis,DATA,LIMIT,MAX,H,(i)=>i===DATA.length-1);
+    // Year brackets: 9 months in 2025 (Abr-Dez), 3 months in 2026 (Jan-Mar)
+    const yearsRow=document.getElementById('yearlyAxisMonths');
+    [{name:'2025',span:9},{name:'2026',span:3,current:true}].forEach(yr => {
+      const grp=document.createElement('div');
+      grp.className='weekly-month-group'+(yr.current?' current':'');
+      grp.style.flex=yr.span;
+      grp.innerHTML='<span class="weekly-month-name">'+yr.name+'</span><div class="weekly-month-bracket"></div>';
+      yearsRow.appendChild(grp);
+    });
+  }
+
+  // ── Ref-line tag follows mouse x position (scoped to chart containers) ──
+  document.querySelectorAll('.chart-wrap').forEach(function(wrap) {
+    wrap.addEventListener('mousemove', function(e) {
+      wrap.querySelectorAll('.ref-line').forEach(function(line) {
+        var tag = line.querySelector('.ref-line-tag');
+        if (!tag) return;
+        var rect = line.getBoundingClientRect();
+        var x = e.clientX - rect.left;
+        tag.style.left = Math.max(30, Math.min(x, rect.width - 30)) + 'px';
+      });
+    });
+  });
+
+  // ── Alterar Plano modal ──
+  function openAlterarPlanoModal() {
+    document.getElementById('alterarPlanoModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('alterarPlanoBody').style.display = '';
+    document.getElementById('alterarPlanoSuccess').style.display = 'none';
+    document.getElementById('alterarPlanoFooter').style.display = '';
+    document.getElementById('alterarMotivo').selectedIndex = 0;
+    document.getElementById('alterarDetalhes').value = '';
+    document.getElementById('alterarPlanoSubmit').disabled = true;
+  }
+  function closeAlterarPlanoModal() {
+    document.getElementById('alterarPlanoModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('change', function(e) {
+    if (e.target.id === 'alterarMotivo') {
+      document.getElementById('alterarPlanoSubmit').disabled = !e.target.value;
+    }
+  });
+  function submitAlterarPlano() {
+    var motivo = document.getElementById('alterarMotivo');
+    document.getElementById('alterarPlanoBody').style.display = 'none';
+    document.getElementById('alterarPlanoFooter').style.display = 'none';
+    document.getElementById('alterarPlanoSuccess').style.display = 'flex';
+    document.getElementById('alterarSuccessMotivo').textContent = motivo.options[motivo.selectedIndex].text;
+  }
+
+  // ── Consumo view switcher (feature vs REA) ──
+  var CONSUMO_VIEWS = {
+    feature: {
+      bar: '<div class="stacked-bar-segment purple" style="width:60.6%"><span class="stacked-bar-pct">61%</span><span class="stacked-bar-tooltip">Atendimento da Lais · 2.423 (60,6%)</span></div><div class="stacked-bar-segment green" style="width:25.8%"><span class="stacked-bar-pct">26%</span><span class="stacked-bar-tooltip">Remarketing · 1.030 (25,8%)</span></div><div class="stacked-bar-segment pink" style="width:16.7%"><span class="stacked-bar-pct">17%</span><span class="stacked-bar-tooltip">Anúncios Proprietários · 667 (16,7%)</span></div>',
+      legend: '<div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>'
+    },
+    rea: {
+      bar: '<div class="stacked-bar-segment purple-500" style="width:74.8%"><span class="stacked-bar-pct">77%</span><span class="stacked-bar-tooltip">Matriz · 3.172 (77,0%)</span></div><div class="stacked-bar-segment purple" style="width:14.6%"><span class="stacked-bar-pct">15%</span><span class="stacked-bar-tooltip">Filial Centro · 618 (15,0%)</span></div><div class="stacked-bar-segment purple-300" style="width:10.7%"><span class="stacked-bar-pct">11%</span><span class="stacked-bar-tooltip">Filial Sul · 330 (8,0%)</span></div>',
+      legend: '<div class="stacked-legend-item"><div class="stacked-legend-dot purple-500"></div><span class="stacked-legend-name">Zeio Imóveis — Matriz</span><span class="stacked-legend-value">3.172</span><span class="stacked-legend-pct">(77,0%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Zeio Imóveis — Filial Centro</span><span class="stacked-legend-value">618</span><span class="stacked-legend-pct">(15,0%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot purple-300"></div><span class="stacked-legend-name">Zeio Imóveis — Filial Sul</span><span class="stacked-legend-value">330</span><span class="stacked-legend-pct">(8,0%)</span></div>'
+    }
+  };
+  function switchConsumoView(view) {
+    var d = CONSUMO_VIEWS[view]; if (!d) return;
+    var mesView = document.getElementById('viewMes');
+    if (!mesView) return;
+    mesView.querySelector('.stacked-bar-track').innerHTML = d.bar;
+    mesView.querySelector('.stacked-legend').innerHTML = d.legend;
+  }
+
+  // ── REA switcher ──
+  var REA_DATA = [
+    { name:'Zeio Imóveis — Matriz', plan:'Enterprise (4k)', total:'R$ 9.000,00/mês', costs:'<div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Plano base (Enterprise 4k)</span><span class="cost-row-value">R$ 9.000,00</span></div><div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Lais Adicional</span><span class="cost-row-value">R$ 0,00</span></div><div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Assentos Premium</span><span class="cost-row-value">R$ 0,00</span></div>' },
+    { name:'Zeio Imóveis — Filial Centro', plan:'Enterprise (2k)', total:'R$ 5.950,00/mês', costs:'<div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Plano base (Enterprise 2k)</span><span class="cost-row-value">R$ 5.200,00</span></div><div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Lais Adicional</span><span class="cost-row-value">R$ 0,00</span></div><div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Assentos Premium</span><span class="cost-row-value">R$ 750,00</span></div>' },
+    { name:'Zeio Imóveis — Filial Sul', plan:'Enterprise (0.5k)', total:'R$ 4.674,15/mês', costs:'<div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Plano base (Enterprise 0.5k)</span><span class="cost-row-value">R$ 4.174,15</span></div><div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Lais Adicional</span><span class="cost-row-value">R$ 500,00</span></div><div class="cost-row" style="padding:var(--sp-1) 0"><span class="cost-row-label">Assentos Premium</span><span class="cost-row-value">R$ 0,00</span></div>' }
+  ];
+  function switchREABySelect(sel) {
+    var d = REA_DATA[parseInt(sel.value)];
+    applyREAData(d);
+  }
+  function switchREA(btn) {
+    document.querySelectorAll('.rea-tab').forEach(function(t){ t.classList.remove('active'); });
+    btn.classList.add('active');
+    var d = REA_DATA[parseInt(btn.dataset.rea)];
+    applyREAData(d);
+  }
+  function applyREAData(d) {
+    document.getElementById('reaDetailName').textContent = d.name;
+    document.getElementById('reaDetailPlan').textContent = d.plan;
+    document.getElementById('reaDetailTotal').textContent = d.total;
+    document.getElementById('reaDetailCosts').innerHTML = d.costs;
+  }
+
+  // ── Scenario data switcher ──
+  var SCENARIOS = {
+    '0': {
+      plan: { name:'Enterprise (500)', price:'500', period:'atendimentos / mês', tipo:'Mensal', vigencia:'', annual:'' },
+      consumo: { used:'20', limit:'500', pct:'4', status:'normal',
+        segments:[{cls:'purple',w:'2.4%',pct:'',tip:'Atendimento da Lais · 12 (60%)'},{cls:'green',w:'1.0%',pct:'',tip:'Remarketing · 5 (25%)'},{cls:'pink',w:'0.6%',pct:'',tip:'Anúncios Proprietários · 3 (15%)'}],
+        legend:'<div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">12</span><span class="stacked-legend-pct">(60,0%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">5</span><span class="stacked-legend-pct">(25,0%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">3</span><span class="stacked-legend-pct">(15,0%)</span></div>'
+      },
+      snackbar: false, navBadge: '',
+      boletos: {
+        ativos: "<div class=\"empty-state\"><div class=\"empty-state-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z\"/></svg></div><div class=\"empty-state-title\">Nenhum boleto a pagar</div><div class=\"empty-state-desc\">O próximo boleto será gerado alguns dias antes do vencimento e aparecerá aqui.</div></div>",
+        ativosCount: '0', ativosDanger: false,
+        cta: '',
+        historico: "<div class=\"empty-state\"><div class=\"empty-state-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v5h5\"/><path d=\"M3.05 13A9 9 0 1 0 6 5.3L3 8\"/><path d=\"M12 7v5l4 2\"/></svg></div><div class=\"empty-state-title\">Nada no histórico ainda</div><div class=\"empty-state-desc\">Quando seus boletos forem pagos ou renegociados, eles aparecerão por aqui.</div></div>",
+        historicoCount: '0'
+      },
+      conta: { reaCount:'1', reaList:'<div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Matriz</span></div>' },
+      extensoesEmpty: true,
+      warning: false
+    },
+    '1': {
+      plan: { name:'Enterprise (4k)', price:'4.000', period:'atendimentos / mês', tipo:'Anual', vigencia:'Maio 2025 → Abril 2026', annual:'48.000 atendimentos no contrato anual' },
+      consumo: { used:'1.320', limit:'4.000', pct:'33', status:'normal',
+        segments:[{cls:'purple',w:'20%',pct:'61%',tip:'Atendimento da Lais · 800 (60,6%)'},{cls:'green',w:'8.5%',pct:'26%',tip:'Remarketing · 340 (25,8%)'},{cls:'pink',w:'4.5%',pct:'',tip:'Anúncios Proprietários · 180 (13,6%)'}],
+        legend:'<div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">800</span><span class="stacked-legend-pct">(60,6%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">340</span><span class="stacked-legend-pct">(25,8%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">180</span><span class="stacked-legend-pct">(13,6%)</span></div>'
+      },
+      snackbar: false,
+      navBadge: '',
+      boletos: {
+        ativos: '<div class="boleto-item"><svg class="boleto-status-icon disponivel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg><div class="boleto-info"><div class="boleto-ref">Abril/2026</div><div class="boleto-meta"><span class="boleto-status-label disponivel">Disponível</span> <span class="boleto-meta-sep">·</span> Vence em 11/04/2026</div></div><div class="boleto-amount">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,\'23793.38128 60000.000010\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div>',
+        ativosCount: '1', ativosDanger: false,
+        cta: '<div class="boleto-cta-text">Todos os boletos em dia</div>'
+      },
+      conta: { reaCount:'1', reaList:'<div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Matriz</span></div>' },
+      warning: false
+    },
+    '2': {
+      plan: { name:'Enterprise (4k)', price:'4.000', period:'atendimentos / mês', tipo:'Anual', vigencia:'Maio 2025 → Abril 2026', annual:'48.000 atendimentos no contrato anual' },
+      consumo: { used:'3.360', limit:'4.000', pct:'84', status:'normal',
+        segments:[{cls:'purple',w:'51%',pct:'61%',tip:'Atendimento da Lais · 2.038 (60,7%)'},{cls:'green',w:'21.7%',pct:'26%',tip:'Remarketing · 868 (25,8%)'},{cls:'pink',w:'11.3%',pct:'',tip:'Anúncios Proprietários · 454 (13,5%)'}],
+        legend:'<div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.038</span><span class="stacked-legend-pct">(60,7%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">868</span><span class="stacked-legend-pct">(25,8%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">454</span><span class="stacked-legend-pct">(13,5%)</span></div>'
+      },
+      snackbar: true, snackbarText: '<strong>Você tem 1 boleto atrasado.</strong> A Lais continua atendendo seus leads, mas a regularização é necessária para manter o serviço ativo.',
+      navBadge: '1',
+      boletos: {
+        ativos: '<div class="boleto-item overdue"><svg class="boleto-status-icon atrasado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="boleto-info"><div class="boleto-ref">Março/2026</div><div class="boleto-meta"><span class="boleto-status-label atrasado">Atrasado · 21 dias</span> <span class="boleto-meta-sep">·</span> Venceu em 11/03/2026</div></div><div class="boleto-amount overdue">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,\'23793.38128 60000.000020\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div class="boleto-item"><svg class="boleto-status-icon disponivel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg><div class="boleto-info"><div class="boleto-ref">Abril/2026</div><div class="boleto-meta"><span class="boleto-status-label disponivel">Disponível</span> <span class="boleto-meta-sep">·</span> Vence em 11/04/2026</div></div><div class="boleto-amount">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,\'23793.38128 60000.000021\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div>',
+        ativosCount: '2', ativosDanger: true,
+        cta: '<div class="boleto-cta-text"><strong>1 fatura atrasada</strong></div><button class="btn btn-text-danger btn-sm" onclick="openRenegoModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Falar sobre minha fatura</button>'
+      },
+      conta: { reaCount:'1', reaList:'<div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Matriz</span></div>' },
+      warning: false
+    },
+    '3': {
+      plan: { name:'Enterprise (4k)', price:'4.000', period:'atendimentos / mês', tipo:'Anual', vigencia:'Maio 2025 → Abril 2026', annual:'48.000 atendimentos no contrato anual' },
+      consumo: { used:'4.120', limit:'4.000', pct:'103', status:'exceeded',
+        segments:[{cls:'purple',w:'60.6%',pct:'61%',tip:'Atendimento da Lais · 2.423 (60,6%)'},{cls:'green',w:'25.8%',pct:'26%',tip:'Remarketing · 1.030 (25,8%)'},{cls:'pink',w:'16.7%',pct:'17%',tip:'Anúncios Proprietários · 667 (16,7%)'}],
+        legend:'<div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">2.423</span><span class="stacked-legend-pct">(60,6%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">1.030</span><span class="stacked-legend-pct">(25,8%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">667</span><span class="stacked-legend-pct">(16,7%)</span></div>'
+      },
+      snackbar: true, snackbarText: '<strong>Você tem 2 boletos atrasados.</strong> A Lais continua atendendo seus leads, mas a regularização é necessária para manter o serviço ativo.',
+      navBadge: '2',
+      boletos: {
+        ativos: '<div class="boleto-item overdue"><svg class="boleto-status-icon atrasado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="boleto-info"><div class="boleto-ref">Fevereiro/2026</div><div class="boleto-meta"><span class="boleto-status-label atrasado">Atrasado · 49 dias</span> <span class="boleto-meta-sep">·</span> Venceu em 11/02/2026</div></div><div class="boleto-amount overdue">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,\'23793.38128 60000.000003\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div class="boleto-item overdue"><svg class="boleto-status-icon atrasado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div class="boleto-info"><div class="boleto-ref">Março/2026</div><div class="boleto-meta"><span class="boleto-status-label atrasado">Atrasado · 21 dias</span> <span class="boleto-meta-sep">·</span> Venceu em 11/03/2026</div></div><div class="boleto-amount overdue">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,\'23793.38128 60000.000004\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div><div class="boleto-item"><svg class="boleto-status-icon disponivel" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg><div class="boleto-info"><div class="boleto-ref">Abril/2026</div><div class="boleto-meta"><span class="boleto-status-label disponivel">Disponível</span> <span class="boleto-meta-sep">·</span> Vence em 11/04/2026</div></div><div class="boleto-amount">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar boleto" aria-label="Baixar boleto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button><button class="icon-btn" title="Copiar código do boleto" aria-label="Copiar código do boleto" onclick="copyBoleto(this,\'23793.38128 60000.000005\')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button></div></div>',
+        ativosCount: '3', ativosDanger: true,
+        cta: '<div class="boleto-cta-text"><strong>2 faturas atrasadas</strong></div><button class="btn btn-text-danger btn-sm" onclick="openRenegoModal()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Falar sobre minha fatura</button>'
+      },
+      conta: { reaCount:'3', reaList:'<div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Matriz</span></div><div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Filial Centro</span></div><div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Filial Sul</span></div>' },
+      warning: true
+    }
+  };
+
+  function switchScenario(id) {
+    var s = SCENARIOS[id]; if (!s) return;
+
+    // ── Plan card ──
+    document.querySelector('.plan-name').textContent = s.plan.name;
+    document.querySelector('.plan-price').innerHTML = s.plan.price + ' <span class="plan-price-period">' + s.plan.period + '</span>';
+    var annualEl = document.querySelector('.plan-annual-total');
+    if (s.plan.annual) { annualEl.textContent = s.plan.annual; annualEl.style.display = ''; }
+    else { annualEl.style.display = 'none'; }
+    document.querySelector('.plan-detail-value').textContent = s.plan.tipo;
+    var vigBlock = document.getElementById('planoVigencia');
+    if (vigBlock) {
+      if (s.plan.vigencia) { vigBlock.style.display = ''; vigBlock.querySelector('.plan-detail-value').textContent = s.plan.vigencia; }
+      else { vigBlock.style.display = 'none'; }
+    }
+
+    // ── Plano tab consumo (ring + value + meta) ──
+    var planoConsumo = document.getElementById('planoConsumoValue');
+    if (planoConsumo) planoConsumo.innerHTML = s.consumo.used + ' <span class="summary-value-unit">/ ' + s.consumo.limit + '</span>';
+    var planoMeta = document.getElementById('planoConsumoMeta');
+    if (planoMeta) {
+      var usedN = parseInt(s.consumo.used.replace(/\./g,''),10);
+      var limN = parseInt(s.consumo.limit.replace(/\./g,''),10);
+      var remaining = limN - usedN;
+      if (remaining >= 0) planoMeta.innerHTML = '<strong>' + remaining.toLocaleString('pt-BR') + '</strong> restantes';
+      else planoMeta.innerHTML = '<strong>+' + Math.abs(remaining).toLocaleString('pt-BR') + '</strong> acima do limite';
+    }
+    var planoRing = document.getElementById('planoRing');
+    var planoRingFg = document.getElementById('planoRingFg');
+    var planoRingPct = document.getElementById('planoRingPct');
+    if (planoRingFg && planoRingPct && planoRing) {
+      var circ = 2 * Math.PI * 26;
+      var pct = Math.min(100, parseInt(s.consumo.pct, 10));
+      planoRingFg.setAttribute('stroke-dasharray', circ.toFixed(2));
+      planoRingFg.setAttribute('stroke-dashoffset', (circ * (1 - pct/100)).toFixed(2));
+      planoRingPct.textContent = s.consumo.pct + '%';
+      planoRing.classList.toggle('exceeded', s.consumo.status === 'exceeded');
+    }
+    var planoWarn = document.getElementById('planoUsageWarning');
+    if (planoWarn) planoWarn.style.display = s.warning ? '' : 'none';
+
+    // ── Snackbar ──
+    var snack = document.getElementById('appSnackbar');
+    if (s.snackbar) { snack.style.display = ''; if (s.snackbarText) snack.querySelector('span:nth-child(2)').innerHTML = s.snackbarText; }
+    else { snack.style.display = 'none'; }
+
+    // ── Nav badge ──
+    var badge = document.querySelector('.nav-badge');
+    if (s.navBadge) { badge.textContent = s.navBadge; badge.style.display = ''; }
+    else { badge.style.display = 'none'; }
+
+    // ── Boletos ativos ──
+    var bList = document.querySelector('#tab-ativos .boleto-list');
+    if (bList) bList.innerHTML = s.boletos.ativos;
+    var tabCount = document.querySelector('.inline-tab[data-tab="ativos"] .tab-count');
+    tabCount.textContent = s.boletos.ativosCount;
+    tabCount.className = 'tab-count' + (s.boletos.ativosDanger ? ' danger' : '');
+    var ctaArea = document.querySelector('.boleto-cta-area');
+    if (ctaArea) {
+      if (s.boletos.cta) { ctaArea.innerHTML = s.boletos.cta; ctaArea.style.display = ''; }
+      else { ctaArea.style.display = 'none'; }
+    }
+
+    // ── Boletos histórico (empty state swap) ──
+    var histTabCount = document.querySelector('.inline-tab[data-tab="historico"] .tab-count');
+    var histInner = document.getElementById('historicoInner');
+    if (histInner) {
+      if (s.boletos.historico) {
+        if (!histInner.dataset.originalHtml) histInner.dataset.originalHtml = histInner.innerHTML;
+        histInner.innerHTML = s.boletos.historico;
+        if (histTabCount) histTabCount.textContent = s.boletos.historicoCount || '0';
+      } else if (histInner.dataset.originalHtml) {
+        histInner.innerHTML = histInner.dataset.originalHtml;
+        if (histTabCount) histTabCount.textContent = '10';
+      }
+    }
+
+    // ── Extensões empty state ──
+    var extBody = document.getElementById('extensoesBody');
+    if (extBody) {
+      if (s.extensoesEmpty) {
+        if (!extBody.dataset.originalHtml) extBody.dataset.originalHtml = extBody.innerHTML;
+        extBody.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 7h-9\'/><path d=\'M14 17H5\'/><circle cx=\'17\' cy=\'17\' r=\'3\'/><circle cx=\'7\' cy=\'7\' r=\'3\'/></svg></div><div class=\'empty-state-title\'>Nenhuma extensão ativa</div><div class=\'empty-state-desc\'>Contrate extensões como Lais Adicional ou Assentos Premium para expandir sua operação.</div></div>';
+      } else if (extBody.dataset.originalHtml) {
+        extBody.innerHTML = extBody.dataset.originalHtml;
+      }
+    }
+
+    // ── Conta tab — update operações list & counter ──
+    if (s.conta.reaCount) { var opc = document.getElementById('opCountBadge'); if (opc) opc.textContent = s.conta.reaCount; }
+    if (s.conta.reaList) { var opl = document.getElementById('reaListConta'); if (opl) opl.innerHTML = s.conta.reaList; }
+
+  }
+
+  // ── Enforce default tab states on load ──
+  (function() {
+    // Plano atual tab
+    const planoTab = document.querySelector('.inline-tab[data-ptab="plano"]');
+    if (planoTab && !planoTab.classList.contains('active')) planoTab.click();
+    // Boletos ativos tab
+    const boletosTab = document.querySelector('.inline-tab[data-tab="ativos"]');
+    if (boletosTab && !boletosTab.classList.contains('active')) boletosTab.click();
+    // Default to scenario 1
+    switchScenario('1');
+  })();
+</script>
+
+
+</div>
+
+<script>
+  // TWEAKS DEFAULTS (edit-mode persistent block)
+  const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+    "scenario": "0",
+    "density": "comfortable",
+    "summary": "default"
+  }/*EDITMODE-END*/;
+
+  // ── Apply defaults on load
+  function applyTweak(kind, val) {
+    if (kind === 'scenario') {
+      document.querySelectorAll('#tweakScenario button').forEach(b => b.classList.toggle('active', b.dataset.scenario === val));
+      switchScenario(val);
+    } else if (kind === 'density') {
+      document.body.classList.toggle('density-compact', val === 'compact');
+      document.querySelectorAll('#tweakDensity button').forEach(b => b.classList.toggle('active', b.dataset.density === val));
+    } else if (kind === 'summary') {
+      document.body.classList.remove('emphasis-hero','summary-hidden');
+      if (val === 'hero') document.body.classList.add('emphasis-hero');
+      else if (val === 'hidden') document.body.classList.add('summary-hidden');
+      document.querySelectorAll('#tweakSummary button').forEach(b => b.classList.toggle('active', b.dataset.summary === val));
+    }
+  }
+  Object.keys(TWEAK_DEFAULTS).forEach(k => applyTweak(k, TWEAK_DEFAULTS[k]));
+
+  // Wire tweak buttons
+  function bindTweak(panelId, key) {
+    document.querySelectorAll('#' + panelId + ' button').forEach(b => {
+      b.addEventListener('click', () => {
+        var val = b.dataset[key];
+        applyTweak(key, val);
+        try { window.parent.postMessage({type:'__edit_mode_set_keys', edits:{[key]: val}}, '*'); } catch(e){}
+      });
+    });
+  }
+  bindTweak('tweakScenario','scenario');
+  bindTweak('tweakDensity','density');
+
+  // Tweaks moved to sidebar — always visible.
+
+</script>
+</body>
+</html>
