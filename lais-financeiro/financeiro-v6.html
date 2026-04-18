@@ -520,6 +520,20 @@
   .cost-popover-row.discount .label, .cost-popover-row.discount .value { color:var(--green-600); font-weight:500; }
   .cost-popover-row.excedente .label, .cost-popover-row.excedente .value { color:var(--amber-700); font-weight:500; }
   .cost-popover-total { display:flex; justify-content:space-between; gap:var(--sp-4); margin-top:var(--sp-3); padding-top:var(--sp-3); border-top:1px solid var(--gray-100); font-family:'Red Hat Display',sans-serif; font-size:var(--text-sm); font-weight:700; color:var(--gray-900); font-variant-numeric:tabular-nums; }
+  .cost-popover-desc { font-size:var(--text-xs); color:var(--gray-700); line-height:var(--leading-normal); padding:10px 12px; margin-bottom:var(--sp-3); background:var(--purple-50); border-left:2px solid var(--purple-400); border-radius:0 var(--radius-sm) var(--radius-sm) 0; }
+  /* Merged-mode tabs (per-invoice sub-breakdowns) */
+  .cost-popover-tabs { display:flex; gap:0; border-bottom:1px solid var(--gray-200); margin-bottom:var(--sp-3); }
+  .cost-popover-tab { flex:1; display:flex; flex-direction:column; align-items:flex-start; gap:2px; padding:8px 10px; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-1px; cursor:pointer; font-family:inherit; text-align:left; transition:color .15s ease, border-color .15s ease, background .15s ease; border-radius:var(--radius-sm) var(--radius-sm) 0 0; }
+  .cost-popover-tab:hover { background:var(--gray-50); }
+  .cost-popover-tab[aria-selected="true"] { border-bottom-color:var(--purple-600); }
+  .cost-popover-tab[aria-selected="true"]:hover { background:var(--purple-50); }
+  .cost-popover-tab-ref { font-size:11px; font-weight:600; color:var(--gray-500); letter-spacing:0.01em; transition:color .15s ease; }
+  .cost-popover-tab[aria-selected="true"] .cost-popover-tab-ref { color:var(--purple-700); }
+  .cost-popover-tab-amt { font-size:13px; font-weight:700; color:var(--gray-700); font-variant-numeric:tabular-nums; transition:color .15s ease; }
+  .cost-popover-tab[aria-selected="true"] .cost-popover-tab-amt { color:var(--gray-900); }
+  .cost-popover-tab:focus-visible { outline:2px solid var(--purple-400); outline-offset:-2px; }
+  @keyframes costPopoverRowsSwitch { from { opacity:0; transform:translateX(6px); } to { opacity:1; transform:translateX(0); } }
+  .cost-popover-rows.anim-switch { animation:costPopoverRowsSwitch 200ms cubic-bezier(0.16, 1, 0.3, 1); }
 
     /* ── Cobranças + Add-ons 2-col ── */
   .cobrancas-addons-grid { display:grid; grid-template-columns:1.6fr 1fr; gap:var(--sp-5); align-items:start; }
@@ -847,13 +861,13 @@
                 </div>
                 <div class="year-accordion-body">
                   <div class="boleto-list">
-                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Dezembro/2025</div><div class="boleto-meta">Pago em 10/12/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 41.168,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Dezembro/2025</div><div class="boleto-meta">Pago em 10/12/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)" data-merged="1">R$ 41.376,95</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
                     <div class="boleto-item"><svg class="boleto-status-icon renegociado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><div class="boleto-info"><div class="boleto-ref">Novembro/2025</div><div class="boleto-meta">Renegociado em 28/11/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">—</div><div class="boleto-actions"></div></div>
                     <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Setembro/2025</div><div class="boleto-meta">Pago em 10/09/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
                     <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Agosto/2025</div><div class="boleto-meta">Pago em 11/08/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
-                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Julho/2025</div><div class="boleto-meta">Pago em 10/07/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
-                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Junho/2025</div><div class="boleto-meta">Pago em 11/06/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 20.584,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
-                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Maio/2025</div><div class="boleto-meta">Pago em 12/05/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">R$ 5.146,00</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon pago" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z"/><path d="m9 12 2 2 4-4"/></svg><div class="boleto-info"><div class="boleto-ref">Julho/2025</div><div class="boleto-meta">Pago em 10/07/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)" data-merged="1">R$ 62.383,48</div><div class="boleto-actions"><button class="icon-btn" title="Baixar comprovante" aria-label="Baixar comprovante"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon renegociado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><div class="boleto-info"><div class="boleto-ref">Junho/2025</div><div class="boleto-meta">Renegociado em 11/06/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">—</div><div class="boleto-actions"></div></div>
+                    <div class="boleto-item"><svg class="boleto-status-icon renegociado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></svg><div class="boleto-info"><div class="boleto-ref">Maio/2025</div><div class="boleto-meta">Renegociado em 12/05/2025</div></div><div class="boleto-amount" style="color:var(--gray-500)">—</div><div class="boleto-actions"></div></div>
                   </div>
                 </div>
               </div>
@@ -1665,7 +1679,10 @@
     <div class="cost-popover-title" id="costPopoverTitle">Composição do custo</div>
     <div class="cost-popover-ref" id="costPopoverRef"></div>
   </div>
-  <div class="cost-popover-rows">
+  <div class="cost-popover-desc" id="costPopoverDesc" style="display:none"></div>
+  <div class="cost-popover-tabs" id="costPopoverTabs" role="tablist" style="display:none"></div>
+  <div class="cost-popover-rows" id="costPopoverMergedRows" style="display:none"></div>
+  <div class="cost-popover-rows" id="costPopoverStandardRows">
     <div class="cost-popover-row"><span class="label">Plano 4.000 créditos</span><span class="value">R$ 20.400,00</span></div>
     <div class="cost-popover-row discount"><span class="label">Desconto 4%</span><span class="value">−R$ 816,00</span></div>
     <div class="cost-popover-row discount"><span class="label">Lais Adicional</span><span class="value">Isento</span></div>
@@ -1710,12 +1727,111 @@
       pop.style.visibility = '';
     }
 
+    function _escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+    // Merged-boleto breakdowns (rollups). Keyed by boleto ref.
+    var STANDARD_PLAN_ROWS = [
+      { label: 'Plano 4.000 créditos', value: 'R$ 20.400,00' },
+      { label: 'Desconto 4%', value: '−R$ 816,00', style: 'discount' },
+      { label: 'Lais Adicional', value: 'Isento', style: 'discount' },
+      { label: 'Assentos Premium (5)', value: 'Isento', style: 'discount' },
+      { label: 'Assentos adicionais (2)', value: 'R$ 1.000,00' }
+    ];
+    // Juros (interest) — 1% monthly + pro-rata days, applied to renegociated tabs.
+    function rowsWithJuros(value) {
+      return STANDARD_PLAN_ROWS.concat([{ label: 'Juros (renegociação)', value: value, style: 'excedente' }]);
+    }
+    var MERGED_BREAKDOWNS = {
+      'Dezembro/2025': {
+        desc: 'Inclui a renegociação de Novembro/2025 com juros. O boleto de Dezembro soma as duas faturas.',
+        tabs: [
+          { ref: 'Novembro/2025', subtotal: 'R$ 20.792,95', rows: rowsWithJuros('R$ 208,95') },
+          { ref: 'Dezembro/2025', subtotal: 'R$ 20.584,00', rows: STANDARD_PLAN_ROWS }
+        ]
+      },
+      'Julho/2025': {
+        desc: 'Inclui as renegociações de Maio/2025 e Junho/2025 com juros. O boleto de Julho soma as três faturas.',
+        tabs: [
+          { ref: 'Maio/2025',   subtotal: 'R$ 21.002,62', rows: rowsWithJuros('R$ 418,62') },
+          { ref: 'Junho/2025',  subtotal: 'R$ 20.796,86', rows: rowsWithJuros('R$ 212,86') },
+          { ref: 'Julho/2025',  subtotal: 'R$ 20.584,00', rows: STANDARD_PLAN_ROWS }
+        ]
+      }
+    };
+    var _currentMergedData = null;
+    var _activeMergedTab = 0;
+
+    function _renderMergedRows(tab) {
+      var wrap = document.getElementById('costPopoverMergedRows');
+      if (!wrap || !tab) return;
+      wrap.innerHTML = tab.rows.map(function(row) {
+        var cls = 'cost-popover-row' + (row.style ? ' ' + row.style : '');
+        return '<div class="' + cls + '"><span class="label">' + _escHtml(row.label) + '</span><span class="value">' + _escHtml(row.value) + '</span></div>';
+      }).join('');
+    }
+
+    function _renderMergedTabs(data, activeIdx) {
+      var wrap = document.getElementById('costPopoverTabs');
+      if (!wrap) return;
+      wrap.innerHTML = data.tabs.map(function(tab, i) {
+        var sel = i === activeIdx;
+        return '<button type="button" class="cost-popover-tab" role="tab" aria-selected="' + sel + '" data-tab-idx="' + i + '" tabindex="' + (sel ? '0' : '-1') + '">' +
+          '<span class="cost-popover-tab-ref">' + _escHtml(tab.ref) + '</span>' +
+          '<span class="cost-popover-tab-amt">' + _escHtml(tab.subtotal) + '</span>' +
+        '</button>';
+      }).join('');
+    }
+
+    function switchMergedTab(idx) {
+      if (!_currentMergedData || !_currentMergedData.tabs[idx]) return;
+      _activeMergedTab = idx;
+      _renderMergedTabs(_currentMergedData, idx);
+      var wrap = document.getElementById('costPopoverMergedRows');
+      if (wrap) {
+        wrap.classList.remove('anim-switch');
+        void wrap.offsetWidth; // force reflow so animation re-triggers
+        _renderMergedRows(_currentMergedData.tabs[idx]);
+        wrap.classList.add('anim-switch');
+      } else {
+        _renderMergedRows(_currentMergedData.tabs[idx]);
+      }
+      if (currentAnchor) positionPopover(currentAnchor);
+    }
+
     function openPopover(anchor) {
       currentAnchor = anchor;
       var total = anchor.dataset.total || anchor.textContent.trim();
       var exceeded = anchor.dataset.excedente === '1';
+      var merged = anchor.dataset.merged === '1';
       var ref = anchor.dataset.ref || '';
-      if (excRow) excRow.style.display = exceeded ? '' : 'none';
+      var mergedData = merged ? MERGED_BREAKDOWNS[ref] : null;
+
+      var descEl = document.getElementById('costPopoverDesc');
+      var tabsEl = document.getElementById('costPopoverTabs');
+      var mergedRowsEl = document.getElementById('costPopoverMergedRows');
+      var standardRowsEl = document.getElementById('costPopoverStandardRows');
+
+      // Popover width scales with tab count for merged rollups (2 tabs → 320, 3 tabs → 400, etc.)
+      var extraTabs = mergedData ? Math.max(0, mergedData.tabs.length - 2) : 0;
+      pop.style.width = (320 + extraTabs * 80) + 'px';
+
+      if (mergedData) {
+        _currentMergedData = mergedData;
+        _activeMergedTab = 0;
+        if (descEl) { descEl.textContent = mergedData.desc; descEl.style.display = mergedData.desc ? '' : 'none'; }
+        if (standardRowsEl) standardRowsEl.style.display = 'none';
+        if (tabsEl) tabsEl.style.display = '';
+        if (mergedRowsEl) mergedRowsEl.style.display = '';
+        _renderMergedTabs(mergedData, 0);
+        _renderMergedRows(mergedData.tabs[0]);
+      } else {
+        _currentMergedData = null;
+        if (descEl) descEl.style.display = 'none';
+        if (tabsEl) tabsEl.style.display = 'none';
+        if (mergedRowsEl) mergedRowsEl.style.display = 'none';
+        if (standardRowsEl) standardRowsEl.style.display = '';
+        if (excRow) excRow.style.display = exceeded ? '' : 'none';
+      }
       if (totalOut) totalOut.textContent = total;
       if (refOut) {
         refOut.textContent = ref;
@@ -1750,6 +1866,13 @@
     }
 
     document.addEventListener('click', function(e) {
+      // Merged-popover tab click → switch tab, keep popover open
+      var tabBtn = e.target.closest('.cost-popover-tab');
+      if (tabBtn && pop.contains(tabBtn)) {
+        var idx = parseInt(tabBtn.dataset.tabIdx, 10);
+        if (!isNaN(idx)) switchMergedTab(idx);
+        return;
+      }
       var triggerEl = e.target.closest('.boleto-amount, .cost-amount-trigger, .composicao-btn');
       if (triggerEl) {
         var anchor = resolveTrigger(triggerEl);

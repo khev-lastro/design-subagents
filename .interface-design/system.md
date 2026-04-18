@@ -327,6 +327,82 @@ Scenario switchers update the anchor attrs; the popover re-renders on each open.
 - Amounts representing "—" or placeholders (mark parent `.substituido` or skip `R$` prefix; handler auto-disables)
 - Quick summary strips where the user doesn't need reconciliation
 
+### Merged Mode — Rollup Invoices with Inline Tabs
+
+When a single boleto combines multiple invoices (e.g., Dezembro pays for both the renegotiated Novembro + the regular Dezembro), the popover switches into a tabbed surface. Same surface, same arrow, same shadow — just a richer inner layout.
+
+**Trigger contract:** set `data-merged="1"` on the amount element. Breakdown data is looked up in a JS `MERGED_BREAKDOWNS` map keyed by the boleto's `ref` (e.g., `'Dezembro/2025'`) — keeps the HTML clean, makes adding new rollups a single-line change.
+
+```js
+MERGED_BREAKDOWNS[ref] = {
+  desc: 'Inclui a renegociação de Novembro/2025. O boleto de Dezembro soma as duas faturas.',
+  tabs: [
+    { ref: 'Novembro/2025', subtotal: 'R$ 20.584,00', rows: [...] },
+    { ref: 'Dezembro/2025', subtotal: 'R$ 20.584,00', rows: [...] }
+  ]
+};
+```
+
+### Merged Popover Layout
+
+```
+┌────────────────────────────────────────┐
+│ COMPOSIÇÃO DO CUSTO       Dezembro/2025│  ← head (ref = the clicked boleto)
+├────────────────────────────────────────┤
+│ ▌ Inclui a renegociação de Novembro… │  ← description (purple-50 bg, purple-400 left accent)
+├────────────────────────────────────────┤
+│ [Novembro/2025 ·]  [ Dezembro/2025 ]  │  ← tabs (flex:1, inline-tab language)
+│  R$ 20.584,00      R$ 20.584,00       │
+├────────────────────────────────────────┤
+│ Plano 4.000 créditos    R$ 20.400,00  │  ← dynamic rows — reflect the active tab
+│ Desconto 4%             −R$ 816,00    │
+│ Lais Adicional            Isento      │
+│ Assentos Premium (5)      Isento      │
+│ Assentos adicionais (2) R$ 1.000,00   │
+├────────────────────────────────────────┤
+│ TOTAL                   R$ 41.168,00  │  ← grand total — CONSTANT across tab switches
+└────────────────────────────────────────┘
+```
+
+### The Anchor Rule
+
+**The total at the bottom never changes when you flip tabs.** It equals the R$ amount the user originally clicked. Each tab pill carries its own sub-total so the split is visible. One gesture to open, one gesture to flip, never lose the anchor.
+
+### Tab Pattern
+
+Two-line pills (ref on top, subtotal below) so each tab reads like a mini card:
+
+```
+.cost-popover-tab {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px;
+  padding: 8px 10px;
+  border-bottom: 2px solid transparent;
+  border-radius: radius-sm radius-sm 0 0;
+}
+.cost-popover-tab[aria-selected="true"] {
+  border-bottom-color: purple-600;
+}
+```
+
+- **Inactive:** ref in gray-500, subtotal in gray-700
+- **Active:** ref in purple-700, subtotal in gray-900, purple-600 bottom underline
+- **Hover:** subtle gray-50 background (purple-50 on the active tab)
+- Each tab shares the row evenly (`flex: 1`) — no scroll, max ~3 tabs before things feel cramped
+
+### Tab Switch Behavior
+
+- Click tab → re-render tabs (flip `aria-selected`) + re-render rows for that tab's data. Re-position the popover if its height changes.
+- Event-delegated at document level so re-rendered buttons don't lose listeners.
+- The popover stays open during tab switches — click-outside still closes (tab click doesn't bubble past the popover boundary).
+- Keyboard: Tab key moves focus between tab pills; Enter/Space activates.
+
+### When to Use Merged Mode
+
+- Rollup invoices where two or more period bills collapsed into one payment (renegotiation, proration, consolidated monthly close, etc.)
+- Any case where the clicked R$ is the *sum* of multiple discrete invoices that each have their own breakdown worth exposing
+- NOT for single invoices with a complex breakdown — use the standard rows path with the `discount` / `excedente` row styles
+
 ### Why This Over Inline Accordion
 
 An inline accordion (row expands in place) was considered and rejected for this product because:
