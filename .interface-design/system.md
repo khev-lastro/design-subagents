@@ -246,6 +246,98 @@ White bg, `border-top: 1px solid #e5e5e5`. Selection count (12px, #646464) + div
 
 ---
 
+## Cost Breakdown Popover — "Tap the Money"
+
+Pattern for exposing per-invoice cost composition (boletos, Valor da próxima fatura, any monetary total the user might want to reconcile).
+
+### Interaction Model
+
+**Every R$ amount is a trigger.** One mental model across the product: tap the money to see its math.
+
+- Click the R$ value → floating popover opens anchored to the amount
+- Hover on R$ → subtle underline (1px, 3px offset) as affordance
+- Click outside, Esc, or click the same amount again → closes
+- Shared popover element (one per page, re-anchored on each open)
+
+**Redundant trigger for new interactions.** When introducing the pattern for the first time (or on a primary/landing surface like Valor da próxima fatura), add an **icon + text button** underneath the amount as a discoverability aid:
+
+```
+R$ 21.184,00          ← primary trigger (clickable amount)
+📄 Composição do custo ← redundant, explicit affordance (icon+text button)
+```
+
+Both triggers open the same popover. Use `receipt-text` Lucide icon for composição actions. Drop the icon+text as the pattern becomes familiar; amount-click stays.
+
+### Popover Surface
+
+```
+Width: 320px (max-width: calc(100vw - 24px))
+Padding: 16px 20px
+Background: white
+Border: 1px solid #e5e5e5 (gray-200)
+Border-radius: 12px (radius-lg)
+Shadow: shadow-lg
+Arrow: 10×10px rotated square, white + matching 1px border, positioned over anchor center
+Placement: auto — below when space, otherwise flip above
+Animation: 0.15s ease fade + translateY(-4px → 0)
+Z-index: 600
+```
+
+Arrow x-position is dynamic (CSS var `--arrow-x`) so it always points at the trigger center even when the popover is clamped to the viewport edge.
+
+### Popover Content Structure
+
+```
+┌─ Head (flex, space-between) ────────────┐
+│  COMPOSIÇÃO DO CUSTO       Abril/2026  │  ← uppercase label + invoice ref
+├──────────────────────────────────────────┤
+│  Plano 4.000 créditos       R$ 20.400  │  ← base rows, gray-500 label / gray-700 value
+│  Desconto 4%                −R$ 816    │  ← green-600 both sides
+│  Lais Adicional              Isento    │  ← green-600 (positive outcome)
+│  Assentos Premium (5)        Isento    │
+│  Assentos adicionais (2)    R$ 1.000   │
+│  Excedente (120 × R$ 5)     R$ 600     │  ← amber-700 both sides (warning state)
+├──────────────────────────────────────────┤
+│  Total                      R$ 21.184  │  ← Red Hat Display 700, gray-900, border-top
+└──────────────────────────────────────────┘
+```
+
+### Color Semantics Inside the Breakdown
+
+| Row type | Color | Weight |
+|---|---|---|
+| Standard cost (label) | `--gray-500` | 400 |
+| Standard cost (value) | `--gray-700` | 500 |
+| Discount / Isento | `--green-600` | 500 |
+| Excedente / over-limit charge | `--amber-700` | 500 |
+| Total line | `--gray-900` | 700 (Display) |
+
+### Scenario-Driven Content
+
+The popover reads data attributes from the anchor:
+- `data-total="R$ 20.584,00"` — total shown in popover footer
+- `data-ref="Abril/2026"` — invoice month shown in header
+- `data-excedente="1"` — shows/hides the amber excedente row
+
+Scenario switchers update the anchor attrs; the popover re-renders on each open.
+
+### Where NOT to Use
+
+- Non-monetary triggers (use the existing Row Nudge popover for AI suggestions)
+- Amounts representing "—" or placeholders (mark parent `.substituido` or skip `R$` prefix; handler auto-disables)
+- Quick summary strips where the user doesn't need reconciliation
+
+### Why This Over Inline Accordion
+
+An inline accordion (row expands in place) was considered and rejected for this product because:
+- Rows paired with a min-height neighbor card would unbalance on expand
+- The Histórico tab already uses a year-accordion — nesting an accordion inside an accordion gets heavy
+- Intent is "peek and close" (verify one number), not "browse many" (compare breakdowns)
+
+Popover reuses the existing Smart Suggestion popover vocabulary (shadow-lg, 8px arrow, 0.15s fade+translate) so users learn one floating-surface idiom.
+
+---
+
 ## Animations
 
 ```css

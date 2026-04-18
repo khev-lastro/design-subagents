@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nova tela do Financeiro - JdC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --p100: #EDE9FE; --p200: #DDD6FE; --p300: #C4B5FD;
+      --p400: #A78BFA; --p600: #7C3AED; --p700: #6D28D9;
+      --green: #10B981; --green-dim: rgba(16,185,129,0.14);
+      --red: #F43F5E; --red-dim: rgba(244,63,94,0.14);
+      --amber: #F59E0B;
+      --fg-hi: #FAFAFA;
+      --fg-mid: #D4D4D8;
+      --fg-low: #A1A1AA;
+      --fg-dim: #71717A;
+      --border: rgba(255,255,255,0.08);
+      --border-hi: rgba(255,255,255,0.14);
+      --surface: rgba(255,255,255,0.03);
+      --surface-hi: rgba(255,255,255,0.06);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0A0A0B;
+      color: var(--fg-mid);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+
+    /* Subtle purple glow behind hero */
+    body::before {
+      content: ''; position: fixed; top: -30%; left: 50%;
+      width: 900px; height: 600px; transform: translateX(-50%);
+      background: radial-gradient(ellipse at center, rgba(124,58,237,0.18), transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    .catalog { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 96px 40px 160px; }
+
+    /* ── Hero ─────────────────────────────── */
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 10px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--p300); margin-bottom: 20px;
+    }
+    .eyebrow::before { content: ''; width: 24px; height: 1px; background: var(--p600); }
+    .hero-title {
+      font-size: 48px; font-weight: 700; color: var(--fg-hi);
+      letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 18px;
+    }
+    .hero-lede {
+      font-size: 17px; color: var(--fg-low); max-width: 620px;
+      line-height: 1.6; margin-bottom: 16px;
+    }
+    .hero-meta {
+      font-size: 13px; color: var(--fg-dim); max-width: 620px;
+      line-height: 1.7;
+    }
+    .hero-meta strong { color: var(--fg-mid); font-weight: 600; }
+
+    /* ── Stats row ─────────────────────────── */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+      margin-top: 40px; padding: 22px 0 6px;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-size: 24px; font-weight: 700; color: var(--fg-hi);
+      letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+    .stat-label {
+      font-size: 11px; color: var(--fg-dim); margin-top: 6px;
+      letter-spacing: 0.04em; text-transform: uppercase; font-weight: 500;
+    }
+
+    /* ── TOC ───────────────────────────────── */
+    .toc {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 48px; margin-bottom: 96px;
+    }
+    .toc-chip {
+      display: inline-flex; align-items: center; gap: 8px;
+      height: 32px; padding: 0 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 999px; font-size: 12px; font-weight: 500;
+      color: var(--fg-low); text-decoration: none;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .toc-chip:hover {
+      background: rgba(124,58,237,0.12); border-color: var(--p600); color: var(--p300);
+    }
+    .toc-chip-num {
+      font-size: 10px; font-weight: 700; color: var(--fg-dim); letter-spacing: 0.05em;
+    }
+    .toc-chip:hover .toc-chip-num { color: var(--p400); }
+
+    /* ── Phase section ─────────────────────── */
+    .phase { margin-bottom: 104px; scroll-margin-top: 32px; }
+    .phase-header {
+      display: grid; grid-template-columns: 56px 1fr auto; gap: 24px;
+      align-items: baseline; margin-bottom: 24px;
+      padding-bottom: 18px; border-bottom: 1px solid var(--border);
+    }
+    .phase-index {
+      font-size: 36px; font-weight: 700; color: var(--p400);
+      letter-spacing: -0.04em; font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .phase-name-wrap { min-width: 0; }
+    .phase-name {
+      font-size: 26px; font-weight: 700; color: var(--fg-hi);
+      letter-spacing: -0.02em; line-height: 1.2;
+    }
+    .phase-kicker {
+      font-size: 12px; color: var(--fg-dim); margin-top: 4px;
+      letter-spacing: 0.03em;
+    }
+    .phase-versions {
+      display: flex; gap: 6px; align-items: center;
+    }
+    .version-badge {
+      display: inline-flex; align-items: center; height: 22px;
+      padding: 0 10px; font-size: 11px; font-weight: 700;
+      background: var(--surface-hi); border: 1px solid var(--border-hi);
+      border-radius: 6px; color: var(--fg-mid); letter-spacing: 0.03em;
+      font-variant-numeric: tabular-nums;
+    }
+    .version-badge.current {
+      background: rgba(124,58,237,0.18); border-color: var(--p600); color: var(--p300);
+    }
+
+    .phase-hypothesis {
+      font-size: 15px; color: var(--fg-mid); font-style: italic;
+      padding: 14px 18px; background: var(--surface); border-left: 2px solid var(--p600);
+      border-radius: 0 6px 6px 0; margin-bottom: 24px;
+    }
+    .phase-hypothesis::before { content: 'Hipótese · '; font-weight: 600; color: var(--p300); font-style: normal; letter-spacing: 0.04em; text-transform: uppercase; font-size: 11px; }
+
+    .phase-body { margin-bottom: 28px; }
+    .phase-body-intro {
+      font-size: 16px; font-weight: 500; color: var(--fg-hi);
+      letter-spacing: -0.005em; line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .phase-body-intro em { color: var(--fg-hi); font-style: normal; font-weight: 600; }
+    .phase-body-list { list-style: none; padding: 0; margin: 0; border-top: 1px solid var(--border); }
+    .phase-body-list li {
+      position: relative;
+      padding: 11px 0 11px 24px;
+      font-size: 14px; color: var(--fg-mid); line-height: 1.6;
+      border-bottom: 1px solid var(--border);
+    }
+    .phase-body-list li::before {
+      content: ''; position: absolute; left: 0; top: 19px;
+      width: 10px; height: 2px; background: var(--p400); border-radius: 1px;
+    }
+    .phase-body-list li strong { color: var(--fg-hi); font-weight: 600; }
+    .phase-body-list li em { color: var(--fg-hi); font-style: normal; font-weight: 500; }
+    .phase-body-list li .bullet-label {
+      display: inline-block; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--p300); margin-right: 8px;
+      padding: 2px 7px; background: rgba(124,58,237,0.18);
+      border-radius: 4px; vertical-align: 1px;
+    }
+
+    /* Worked / Didn't verdict */
+    .verdict {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+      margin-bottom: 32px;
+    }
+    .verdict-card {
+      padding: 18px 20px; border-radius: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+    }
+    .verdict-card.worked { background: var(--green-dim); border-color: rgba(16,185,129,0.22); }
+    .verdict-card.didnt { background: var(--red-dim); border-color: rgba(244,63,94,0.22); }
+    .verdict-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.08em; margin-bottom: 10px;
+    }
+    .verdict-card.worked .verdict-label { color: var(--green); }
+    .verdict-card.didnt .verdict-label { color: var(--red); }
+    .verdict-label::before {
+      content: ''; width: 14px; height: 14px; border-radius: 50%;
+      display: inline-block;
+    }
+    .verdict-card.worked .verdict-label::before { background: var(--green); box-shadow: 0 0 0 3px rgba(16,185,129,0.22); }
+    .verdict-card.didnt .verdict-label::before { background: var(--red); box-shadow: 0 0 0 3px rgba(244,63,94,0.22); }
+    .verdict-card ul { list-style: none; padding: 0; margin: 0; }
+    .verdict-card li {
+      font-size: 13px; color: var(--fg-mid); line-height: 1.55;
+      padding: 4px 0;
+    }
+    .verdict-card li + li { border-top: 1px solid rgba(255,255,255,0.04); margin-top: 4px; padding-top: 8px; }
+
+    .phase-key {
+      padding: 18px 22px; margin-bottom: 28px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.10), rgba(124,58,237,0.04));
+      border: 1px solid rgba(124,58,237,0.24); border-radius: 10px;
+    }
+    .phase-key-label {
+      display: inline-block;
+      font-size: 10px; font-weight: 700; color: var(--p300);
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .phase-key-text {
+      font-size: 15px; color: var(--fg-hi); font-weight: 500;
+      letter-spacing: -0.005em; line-height: 1.5;
+    }
+    .phase-key-text em { color: var(--p200); font-style: normal; font-weight: 600; }
+
+    /* ── Term tooltips (glossary for buzzwords) ── */
+    .term {
+      position: relative; cursor: help;
+      border-bottom: 1px dashed rgba(196,181,253,0.45);
+      padding-bottom: 1px;
+      transition: color 0.15s ease, border-color 0.15s ease;
+    }
+    .term:hover, .term:focus, .term:focus-visible {
+      color: var(--p200); border-bottom-color: var(--p400);
+      outline: none;
+    }
+    .term-tip {
+      position: absolute; bottom: calc(100% + 10px); left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      width: 300px; padding: 14px 16px;
+      background: #18181B; border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 10px;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.55);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      z-index: 100; text-align: left; font-style: normal; white-space: normal;
+      font-weight: 400; color: var(--fg-mid);
+    }
+    .term-tip::after {
+      content: ''; position: absolute; top: 100%; left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent; border-top-color: #18181B;
+    }
+    .term:hover .term-tip, .term:focus .term-tip, .term:focus-visible .term-tip {
+      opacity: 1; transform: translateX(-50%) translateY(0); pointer-events: auto;
+    }
+    .term-tip-label {
+      display: block;
+      font-size: 10px; font-weight: 700; color: var(--p300);
+      letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .term-tip-body {
+      font-size: 13px; color: var(--fg-mid); line-height: 1.55;
+    }
+    .term-tip-visual {
+      margin-bottom: 12px; padding: 14px;
+      background: #F4F4F5; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+    }
+    /* Mock — pill tabs */
+    .mock-pill-row { display: flex; gap: 6px; }
+    .mock-pill {
+      display: inline-flex; align-items: center; height: 26px; padding: 0 12px;
+      border-radius: 999px; font-size: 11px; font-weight: 500;
+      font-family: 'Inter', sans-serif; border: 1px solid transparent;
+    }
+    .mock-pill.active { background: #49317A; color: #FFF; }
+    .mock-pill.inactive { color: #6B7280; background: transparent; }
+    /* Mock — inline tabs */
+    .mock-inline-tabs {
+      display: flex; gap: 18px; width: 100%;
+      border-bottom: 1px solid #E5E5EA; padding-bottom: 0;
+    }
+    .mock-inline-tab {
+      font-size: 11px; font-weight: 500; padding: 6px 0;
+      border-bottom: 2px solid transparent; margin-bottom: -1px;
+      font-family: 'Inter', sans-serif;
+    }
+    .mock-inline-tab.active { color: #49317A; font-weight: 600; border-bottom-color: #49317A; }
+    .mock-inline-tab.inactive { color: #6B7280; }
+    /* Mock — ring chart */
+    .mock-ring-wrap { display: flex; align-items: center; gap: 14px; }
+    .mock-ring { position: relative; width: 60px; height: 60px; flex-shrink: 0; }
+    .mock-ring svg { width: 60px; height: 60px; transform: rotate(-90deg); }
+    .mock-ring-pct {
+      position: absolute; inset: 0; display: flex;
+      align-items: center; justify-content: center;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px; font-weight: 700; color: #1F2937;
+      font-variant-numeric: tabular-nums;
+    }
+    .mock-ring-meta {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px; color: #6B7280; line-height: 1.4;
+    }
+    .mock-ring-meta strong { color: #1F2937; font-weight: 600; font-size: 13px; display: block; }
+
+    /* ── Preview frame ─────────────────────── */
+    .preview-shell {
+      background: #09090B; border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+    }
+    .preview-chrome {
+      height: 36px; display: flex; align-items: center; padding: 0 14px; gap: 8px;
+      background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border);
+    }
+    .preview-dot { width: 9px; height: 9px; border-radius: 50%; background: rgba(255,255,255,0.14); }
+    .preview-dot:nth-child(1) { background: rgba(244,63,94,0.5); }
+    .preview-dot:nth-child(2) { background: rgba(245,158,11,0.5); }
+    .preview-dot:nth-child(3) { background: rgba(16,185,129,0.5); }
+    .preview-url {
+      flex: 1; height: 22px; display: flex; align-items: center;
+      padding: 0 10px; margin-left: 8px;
+      background: rgba(255,255,255,0.04); border-radius: 5px;
+      font-size: 11px; color: var(--fg-dim); font-family: 'SF Mono', Menlo, monospace;
+    }
+    .preview-open {
+      font-size: 11px; font-weight: 600; color: var(--p300);
+      text-decoration: none; padding: 4px 10px; border-radius: 5px;
+      border: 1px solid var(--border-hi); transition: background 0.15s, color 0.15s;
+    }
+    .preview-open:hover { background: rgba(124,58,237,0.16); color: var(--p200); }
+    .preview-frame {
+      width: 100%; overflow: hidden; background: #F9FAFB;
+      position: relative;
+    }
+    .preview-frame iframe {
+      width: 1400px; height: 900px; border: 0;
+      transform-origin: top left; display: block;
+    }
+    .preview-note {
+      padding: 14px 20px; font-size: 12px; color: var(--fg-dim);
+      border-top: 1px solid var(--border); background: rgba(0,0,0,0.2);
+      display: flex; gap: 12px; align-items: center;
+    }
+    .preview-note::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--p400);
+      flex-shrink: 0;
+    }
+
+    /* AB variants side-by-side inside phase 04 */
+    .variants-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px;
+    }
+    .variants-grid .preview-shell { box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+
+    /* ── Closing section ───────────────────── */
+    .closing {
+      margin-top: 96px; padding: 48px 44px;
+      background: linear-gradient(180deg, rgba(124,58,237,0.06), transparent 80%);
+      border: 1px solid var(--border); border-radius: 16px;
+    }
+    .closing-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--p300); margin-bottom: 14px;
+    }
+    .closing-title {
+      font-size: 30px; font-weight: 700; color: var(--fg-hi);
+      letter-spacing: -0.02em; line-height: 1.2; margin-bottom: 14px;
+    }
+    .closing-lede {
+      font-size: 15px; color: var(--fg-low); line-height: 1.7; margin-bottom: 32px;
+      max-width: 640px;
+    }
+    .takeaways {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .takeaway {
+      padding: 18px 20px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px;
+    }
+    .takeaway-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 6px;
+      background: rgba(124,58,237,0.22); color: var(--p300);
+      font-size: 11px; font-weight: 700; margin-bottom: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+    .takeaway-text {
+      font-size: 14px; color: var(--fg-mid); line-height: 1.55;
+    }
+    .takeaway-text strong { color: var(--fg-hi); font-weight: 600; }
+
+    /* ── Footer ─────────────────────────────── */
+    .footer {
+      margin-top: 80px; padding-top: 32px;
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 12px; color: var(--fg-dim);
+    }
+    .footer a { color: var(--fg-low); text-decoration: none; transition: color 0.15s; }
+    .footer a:hover { color: var(--p300); }
+
+    /* ── Responsive ─────────────────────────── */
+    @media (max-width: 860px) {
+      .hero-title { font-size: 36px; }
+      .phase-header { grid-template-columns: auto 1fr; }
+      .phase-versions { grid-column: 1 / -1; margin-top: 4px; }
+      .verdict, .variants-grid, .takeaways, .stats { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="catalog">
+
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <div class="eyebrow">Casa da Lais · Retrospectiva de Design</div>
+    <h1 class="hero-title">Nova tela do Financeiro - JdC</h1>
+    <p class="hero-lede">
+      Da v1 à v6 — 3 semanas condensadas de iterações no Financeiro da Casa da Lais. O que testamos, o que cortamos, e as voltas que demos pra chegar num dashboard que finalmente respeita o tempo do usuário.
+    </p>
+    <p class="hero-meta">
+      Esta página documenta <strong>7 iterações</strong>, <strong>3 variantes A/B/C</strong>, e os padrões que nasceram (ou morreram) no caminho. Cada fase traz o protótipo vivo — clique pra abrir em tela cheia.
+    </p>
+
+    <nav class="toc" aria-label="Sumário">
+      <a href="#fase-01" class="toc-chip"><span class="toc-chip-num">01</span> Fundação</a>
+      <a href="#fase-02" class="toc-chip"><span class="toc-chip-num">02</span> Linguagem Visual</a>
+      <a href="#fase-03" class="toc-chip"><span class="toc-chip-num">03</span> Consolidação</a>
+      <a href="#fase-04" class="toc-chip"><span class="toc-chip-num">04</span> Variantes A/B/C</a>
+      <a href="#fase-05" class="toc-chip"><span class="toc-chip-num">05</span> Contato Próprio</a>
+      <a href="#fase-06" class="toc-chip"><span class="toc-chip-num">06</span> Dashboard Mentality</a>
+      <a href="#closing" class="toc-chip"><span class="toc-chip-num">→</span> O que levamos daqui</a>
+    </nav>
+
+    <!-- ═══════════════════ FASE 01 ═══════════════════ -->
+    <section class="phase" id="fase-01">
+      <div class="phase-header">
+        <div class="phase-index">01</div>
+        <div class="phase-name-wrap">
+          <div class="phase-name">Fundação</div>
+          <div class="phase-kicker">Duas colunas, sidebar de contexto, pill tabs</div>
+        </div>
+        <div class="phase-versions"><span class="version-badge">v2</span></div>
+      </div>
+
+      <p class="phase-hypothesis">
+        Uma sidebar de contexto ancora o usuário enquanto ele age na tela principal.
+      </p>
+
+      <div class="phase-body">
+        <p class="phase-body-intro">Formato familiar de SaaS — duas colunas, sidebar de 320px com gerente e add-ons, pill tabs pra alternar entre Plano e Conta. Aposta segura, e serviu pra revelar onde a <em>gordura</em> morava.</p>
+        <ul class="phase-body-list">
+          <li><strong><span class="term" tabindex="0"><span>Pill tabs</span><span class="term-tip" role="tooltip"><span class="term-tip-label">Pill tabs · componente</span><span class="term-tip-visual"><span class="mock-pill-row"><span class="mock-pill active">Plano atual</span><span class="mock-pill inactive">Conta de cobrança</span></span></span><span class="term-tip-body">Botões em formato de pílula (border-radius 999px) com estado preenchido pra ativo. Caem bem pra filtros, mas se apresentam fracos como navegação primária.</span></span></span> sem <span class="term" tabindex="0"><span>ARIA</span><span class="term-tip" role="tooltip"><span class="term-tip-label">ARIA</span><span class="term-tip-body"><em style="color:#fff;font-style:normal;font-weight:600">Accessible Rich Internet Applications.</em> Atributos HTML (<code style="color:var(--p200);font-family:monospace;font-size:12px">role</code>, <code style="color:var(--p200);font-family:monospace;font-size:12px">aria-selected</code>, <code style="color:var(--p200);font-family:monospace;font-size:12px">tabindex</code>) que comunicam semântica e estado pra leitores de tela. Botão sem ARIA = navegação invisível pra acessibilidade.</span></span></span></strong> funcionaram como filtro, não como navegação — semântica fraca desde o começo.</li>
+          <li><strong>Consumo só como número</strong> perdido no card Plano; <strong>add-ons passivos</strong> na sidebar sem peso comercial.</li>
+          <li>Três cards grandes competindo por atenção na mesma tela — densidade alta, hierarquia fraca.</li>
+        </ul>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card worked">
+          <div class="verdict-label">Funcionou</div>
+          <ul>
+            <li>Separação lógica entre ação (plano, cobranças) e contexto (gerente, add-ons)</li>
+            <li>Hierarquia clara — os cards grandes dominavam visualmente</li>
+          </ul>
+        </div>
+        <div class="verdict-card didnt">
+          <div class="verdict-label">Não funcionou</div>
+          <ul>
+            <li>Pill tabs sem ARIA — mais perto de filtro do que de navegação</li>
+            <li>Consumo como número perdido dentro do card Plano</li>
+            <li>Add-ons passivos na sidebar sem peso comercial</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-key">
+        <span class="phase-key-label">Aprendizado</span>
+        <div class="phase-key-text">Sidebar pesa. Precisa justificar sua existência com tarefa contínua de referência — caso contrário, vira decoração.</div>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-chrome">
+          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+          <span class="preview-url">lais-financeiro/financeiro-v2.html</span>
+          <a href="lais-financeiro/financeiro-v2.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+        </div>
+        <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v2.html" loading="lazy" title="Financeiro v2"></iframe></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FASE 02 ═══════════════════ -->
+    <section class="phase" id="fase-02">
+      <div class="phase-header">
+        <div class="phase-index">02</div>
+        <div class="phase-name-wrap">
+          <div class="phase-name">Linguagem Visual</div>
+          <div class="phase-kicker">Inline tabs + chart de consumo</div>
+        </div>
+        <div class="phase-versions"><span class="version-badge">v3</span></div>
+      </div>
+
+      <p class="phase-hypothesis">
+        Um gráfico faz o consumo falar antes do usuário ler.
+      </p>
+
+      <div class="phase-body">
+        <p class="phase-body-intro">Curta, mas mudou o tom. Pill tabs viraram <span class="term" tabindex="0"><em>inline tabs</em><span class="term-tip" role="tooltip"><span class="term-tip-label">Inline tabs · componente</span><span class="term-tip-visual"><span class="mock-inline-tabs"><span class="mock-inline-tab active">Plano atual</span><span class="mock-inline-tab inactive">Conta de cobrança</span></span></span><span class="term-tip-body">Tabs com underline no ativo. Padrão adotado por Linear, Vercel, Stripe. Mais próximo de "navegação" do que de "filtro" — a semântica correta com <code style="color:var(--p200);font-family:monospace;font-size:12px">role="tablist"</code>.</span></span></span>; o consumo ganhou um gráfico com breakdown por feature.</p>
+        <ul class="phase-body-list">
+          <li><strong>Inline tabs</strong> (padrão Linear/Vercel/Stripe) com ARIA — virou herança até a v6.</li>
+          <li><strong>Chart segmentado por feature</strong> (Atendimentos, Remarketing, Anúncios). Bonito, mas ocupava espaço demais pro insight que entregava — 33% vs 103% pesa mais que a segmentação.</li>
+          <li>Consumo continuou <strong>atrás de tab</strong> — usuário precisava ativar pra ver.</li>
+        </ul>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card worked">
+          <div class="verdict-label">Funcionou</div>
+          <ul>
+            <li>Inline tabs pegaram — e ficaram até a v6</li>
+            <li>Consumo deixou de ser texto e virou sinal visual</li>
+          </ul>
+        </div>
+        <div class="verdict-card didnt">
+          <div class="verdict-label">Não funcionou</div>
+          <ul>
+            <li>Chart grande demais pra o payoff informacional</li>
+            <li>Consumo ainda "escondido" — usuário precisava ativar o tab pra ver</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-key">
+        <span class="phase-key-label">Aprendizado</span>
+        <div class="phase-key-text">Dominância visual tem custo. Se um elemento ocupa 40% do card, ele precisa responder uma pergunta de 40%.</div>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-chrome">
+          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+          <span class="preview-url">lais-financeiro/financeiro-v3.html</span>
+          <a href="lais-financeiro/financeiro-v3.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+        </div>
+        <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v3.html" loading="lazy" title="Financeiro v3"></iframe></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FASE 03 ═══════════════════ -->
+    <section class="phase" id="fase-03">
+      <div class="phase-header">
+        <div class="phase-index">03</div>
+        <div class="phase-name-wrap">
+          <div class="phase-name">Consolidação</div>
+          <div class="phase-kicker">Sidebar cortada, tudo em uma coluna</div>
+        </div>
+        <div class="phase-versions"><span class="version-badge">v4</span></div>
+      </div>
+
+      <p class="phase-hypothesis">
+        Menos cards, mais organização por categorias. Tabs dentro de um card único substituem a sidebar.
+      </p>
+
+      <div class="phase-body">
+        <p class="phase-body-intro">Resposta direta à gordura visual da v3: cortamos a sidebar inteira. Um único card assumiu três papéis — Plano, Conta e Gerente — via tabs.</p>
+        <ul class="phase-body-list">
+          <li><strong>1 coluna, 3 tabs no card Plano.</strong> Tela mais calma, menos elementos competindo.</li>
+          <li><strong>Gerente de contas</strong> caiu em tab terciária — perdeu o protagonismo que tinha na sidebar. Quem precisava de suporte tinha que caçar.</li>
+          <li><strong>Add-ons</strong> viraram linhas discretas sem espaço de venda — efetivamente um "não priorizamos isso".</li>
+        </ul>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card worked">
+          <div class="verdict-label">Funcionou</div>
+          <ul>
+            <li>Tela mais calma, menos elementos competindo</li>
+            <li>1-col escala melhor em telas menores</li>
+          </ul>
+        </div>
+        <div class="verdict-card didnt">
+          <div class="verdict-label">Não funcionou</div>
+          <ul>
+            <li>Gerente de contas virou tab terciária — efetivamente escondido</li>
+            <li>Add-ons perderam a oportunidade comercial</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-key">
+        <span class="phase-key-label">Aprendizado</span>
+        <div class="phase-key-text">Consolidar em tabs é consolidar <em>acesso</em>, não <em>significado</em>. O que é importante não pode virar tab terciária.</div>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-chrome">
+          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+          <span class="preview-url">lais-financeiro/financeiro-v4.html</span>
+          <a href="lais-financeiro/financeiro-v4.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+        </div>
+        <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v4.html" loading="lazy" title="Financeiro v4"></iframe></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FASE 04 ═══════════════════ -->
+    <section class="phase" id="fase-04">
+      <div class="phase-header">
+        <div class="phase-index">04</div>
+        <div class="phase-name-wrap">
+          <div class="phase-name">Variantes A/B/C</div>
+          <div class="phase-kicker">Sticky boletos vs Consumo dedicado — teste em paralelo</div>
+        </div>
+        <div class="phase-versions">
+          <span class="version-badge">v4b</span>
+          <span class="version-badge">v4c</span>
+        </div>
+      </div>
+
+      <p class="phase-hypothesis">
+        Em vez de uma nova versão inteira, bifurcamos. Qual forma de apresentar Boletos e Consumo paga mais?
+      </p>
+
+      <div class="phase-body">
+        <p class="phase-body-intro">Em vez de uma nova versão inteira, bifurcamos. Duas hipóteses testadas em paralelo — qual forma de apresentar Boletos e Consumo paga mais?</p>
+        <ul class="phase-body-list">
+          <li><span class="bullet-label">v4b</span><strong>Sticky boletos.</strong> Sidebar volta só pro Boletos — hipótese: usuário quer o boleto sempre à vista enquanto navega no plano.</li>
+          <li><span class="bullet-label">v4c</span><strong>Consumo dedicado.</strong> Consumo vira tab própria (4 tabs totais) — hipótese: consumo merece respiração pra ser escaneado.</li>
+          <li><strong>Resultado:</strong> sticky virou ruído (sem tarefa contínua que justifique); 4 tabs aumentaram a fricção. v4c venceu — "Consumo merece espaço, mas não dentro das mesmas tabs." A v5 nasceu dessa decisão.</li>
+        </ul>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card worked">
+          <div class="verdict-label">Funcionou</div>
+          <ul>
+            <li>v4c: Consumo dedicado ficou mais fácil de escanear</li>
+            <li>Bifurcar em vez de fazer nova versão — custo barato de testar hipóteses</li>
+          </ul>
+        </div>
+        <div class="verdict-card didnt">
+          <div class="verdict-label">Não funcionou</div>
+          <ul>
+            <li>v4b: sticky sem tarefa de referência contínua = ruído</li>
+            <li>v4c: 4 tabs aumentaram a fricção — cada tab é um clique pago</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-key">
+        <span class="phase-key-label">Aprendizado</span>
+        <div class="phase-key-text">Sticky é caro. Exige uma tarefa contínua de referência. Se não existe, é ruído ocupando real estate premium.</div>
+      </div>
+
+      <div class="variants-grid">
+        <div class="preview-shell">
+          <div class="preview-chrome">
+            <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+            <span class="preview-url">v4b · sticky boletos</span>
+            <a href="lais-financeiro/financeiro-v4b.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+          </div>
+          <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v4b.html" loading="lazy" title="Financeiro v4b"></iframe></div>
+        </div>
+        <div class="preview-shell">
+          <div class="preview-chrome">
+            <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+            <span class="preview-url">v4c · consumo dedicado</span>
+            <a href="lais-financeiro/financeiro-v4c.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+          </div>
+          <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v4c.html" loading="lazy" title="Financeiro v4c"></iframe></div>
+        </div>
+      </div>
+
+      <div class="preview-note">Os iframes estão em escala reduzida — clique em "Abrir →" pra explorar cada protótipo em tamanho real.</div>
+    </section>
+
+    <!-- ═══════════════════ FASE 05 ═══════════════════ -->
+    <section class="phase" id="fase-05">
+      <div class="phase-header">
+        <div class="phase-index">05</div>
+        <div class="phase-name-wrap">
+          <div class="phase-name">Contato Próprio</div>
+          <div class="phase-kicker">Gerente sai, Contato Financeiro editável entra</div>
+        </div>
+        <div class="phase-versions"><span class="version-badge">v5</span></div>
+      </div>
+
+      <p class="phase-hypothesis">
+        A imobiliária quer autonomia sobre quem recebe os boletos — não uma pessoa atribuída.
+      </p>
+
+      <div class="phase-body">
+        <p class="phase-body-intro">Feedback direto do campo mudou a arquitetura: nem toda imobiliária tem account manager dedicado — e quem tem, muitas vezes quer o <em>e-mail do financeiro</em> recebendo os boletos, não o do gerente.</p>
+        <ul class="phase-body-list">
+          <li><strong>Tab "Gerente de contas" removida.</strong> "Contato financeiro" editável inline na aba Plano — texto + botão Editar.</li>
+          <li><span class="term" tabindex="0"><strong>Ring chart</strong><span class="term-tip" role="tooltip"><span class="term-tip-label">Ring chart · componente</span><span class="term-tip-visual"><span class="mock-ring-wrap"><span class="mock-ring"><svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="26" fill="none" stroke="#F3F4F6" stroke-width="5"/><circle cx="30" cy="30" r="26" fill="none" stroke="#49317A" stroke-width="5" stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="109.45"/></svg><span class="mock-ring-pct">33%</span></span><span class="mock-ring-meta"><strong>1.320 / 4.000</strong>2.680 restantes</span></span></span><span class="term-tip-body">Círculo de progresso compacto (60px) com porcentagem no centro. Pesa pouco visualmente e comunica o estado do consumo num olhar — alternativa à chart grande da v3.</span></span></span> (círculo de progresso) emerge como alternativa compacta ao chart grande da v3. Pesa pouco, comunica muito.</li>
+          <li><strong>Consumo em dois lugares</strong> (resumo no Plano + tab dedicada) resolveu visibilidade, mas criou duas fontes de verdade pra sincronizar.</li>
+        </ul>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card worked">
+          <div class="verdict-label">Funcionou</div>
+          <ul>
+            <li>Contato financeiro editável resolveu caso real de uso</li>
+            <li>Ring chart emergiu como alternativa compacta ao chart grande</li>
+            <li>Resumo + detalhe em tab — progressive disclosure na prática</li>
+          </ul>
+        </div>
+        <div class="verdict-card didnt">
+          <div class="verdict-label">Não funcionou</div>
+          <ul>
+            <li>Consumo em dois lugares = duas versões pra manter sincronizadas</li>
+            <li>Transição do Gerente sem aviso pode confundir quem realmente usava</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-key">
+        <span class="phase-key-label">Aprendizado</span>
+        <div class="phase-key-text">Autonomia &gt; atribuição. Permita o usuário controlar os campos que são dele.</div>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-chrome">
+          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+          <span class="preview-url">lais-financeiro/financeiro-v5.html</span>
+          <a href="lais-financeiro/financeiro-v5.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+        </div>
+        <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v5.html" loading="lazy" title="Financeiro v5"></iframe></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ FASE 06 ═══════════════════ -->
+    <section class="phase" id="fase-06">
+      <div class="phase-header">
+        <div class="phase-index">06</div>
+        <div class="phase-name-wrap">
+          <div class="phase-name">Dashboard Mentality</div>
+          <div class="phase-kicker">Glanceable &gt; navegável · Cenários, popover, vocabulário de produto</div>
+        </div>
+        <div class="phase-versions"><span class="version-badge current">v6 · atual</span></div>
+      </div>
+
+      <p class="phase-hypothesis">
+        Glanceable &gt; navegável. O Financeiro é um <em>status</em>, não uma ferramenta.
+      </p>
+
+      <div class="phase-body">
+        <p class="phase-body-intro">A v6 assumiu a postura de <em>dashboard</em> — o Financeiro é um status, não uma ferramenta. Várias experimentações no caminho, algumas cortadas no meio.</p>
+        <ul class="phase-body-list">
+          <li><strong>Summary strip descartado.</strong> Três cards horizontais no topo duplicavam info. Consolidamos em <em>linha única de 5 colunas</em> no Plano: Plano · Tipo · Consumo (ring) · Vigência · spacer.</li>
+          <li><strong>Cobranças + Extensões side-by-side</strong> (min-height 340px). Extensões finalmente com card próprio — se vende add-on, add-on precisa de espaço de venda.</li>
+          <li><strong>Vocabulário de produto</strong> substituiu jargão: <em>"REAs vinculadas"</em> → <em>"Operações nesta conta"</em>, <em>"Add-ons"</em> → <em>"Extensões"</em>.</li>
+          <li><strong>Padrão <span class="term" tabindex="0">"Tap the Money"<span class="term-tip" role="tooltip"><span class="term-tip-label">Tap the Money · padrão</span><span class="term-tip-body">Modelo mental introduzido na v6: <em style="color:#fff;font-style:normal;font-weight:600">todo valor em R$ é clicável</em>. Ao clicar, abre um popover com a composição do custo — plano, descontos, assentos, excedente. Aplicável em boletos históricos, próxima fatura ou qualquer número monetário. Um gesto, uma resposta.</span></span></span></strong> nasceu: cada R$ vira trigger de popover com a composição do custo. Um modelo mental único pra pergunta mais frequente — <em>"por que esse valor?"</em>.</li>
+          <li><strong>Cenários 0–3</strong> (Nova conta, Healthy, 1 atrasado, 2 atrasados) documentam estados reais. Cada cenário re-renderiza o Financeiro inteiro — honestidade > tela bonita.</li>
+        </ul>
+      </div>
+
+      <div class="verdict">
+        <div class="verdict-card worked">
+          <div class="verdict-label">Funcionou</div>
+          <ul>
+            <li>Linha única de 5 colunas no Plano — tudo visível sem clicar</li>
+            <li>Cobranças + Extensões side-by-side = visual balance real</li>
+            <li>Vocabulário de produto (Operações, Extensões) no lugar de jargão técnico</li>
+            <li><strong>Tap the Money</strong> padronizou a pergunta "por que esse valor?"</li>
+            <li>Cenários 0–3 documentam estados reais do produto</li>
+            <li>Empty states intencionais — plus-circle roxo em Extensões como CTA de venda</li>
+          </ul>
+        </div>
+        <div class="verdict-card didnt">
+          <div class="verdict-label">Não funcionou (nas tentativas anteriores)</div>
+          <ul>
+            <li>Summary strip inicial — cortado por duplicar info dos cards</li>
+            <li>Várias passadas no empty state de Extensões até virar CTA</li>
+            <li>Primeira versão do popover dependia de <code>span:nth-child(2)</code> no snackbar — quebrou quando removemos o ícone. Erro silencioso que travou todos os Tweaks</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="phase-key">
+        <span class="phase-key-label">Aprendizado</span>
+        <div class="phase-key-text">Quando você decide o <em>vocabulário certo</em>, metade da UI surge sozinha. "Operações" e "Extensões" resolveram mais que layout.</div>
+      </div>
+
+      <div class="preview-shell">
+        <div class="preview-chrome">
+          <span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span>
+          <span class="preview-url">lais-financeiro/financeiro-v6.html</span>
+          <a href="lais-financeiro/financeiro-v6.html" target="_blank" rel="noopener" class="preview-open">Abrir →</a>
+        </div>
+        <div class="preview-frame"><iframe src="lais-financeiro/financeiro-v6.html" loading="lazy" title="Financeiro v6"></iframe></div>
+      </div>
+      <div class="preview-note">Abra em tela cheia e experimente o switcher de Tweaks na sidebar — Nova conta, Healthy, 1 atrasado, 2 atrasados.</div>
+    </section>
+
+    <!-- ═══════════════════ CLOSING ═══════════════════ -->
+    <section class="closing" id="closing">
+      <div class="closing-eyebrow">O que levamos daqui</div>
+      <h2 class="closing-title">Sete lições que transcenderam o Financeiro</h2>
+      <p class="closing-lede">
+        Padrões que nasceram dessas iterações e vão influenciar próximos trabalhos na Casa da Lais. Não são regras — são <em>defaults</em> que funcionam até que alguém consiga argumentar contra.
+      </p>
+
+      <div class="takeaways">
+        <div class="takeaway">
+          <div class="takeaway-num">1</div>
+          <div class="takeaway-text"><strong>Cada tab é um clique pago.</strong> Só promova algo a tab se o conteúdo sustenta navegação dedicada. Três tabs é o limite saudável; quatro pede justificativa.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">2</div>
+          <div class="takeaway-text"><strong>Sticky é caro.</strong> Exige uma tarefa contínua de referência. Sem isso, vira ruído ocupando real estate premium.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">3</div>
+          <div class="takeaway-text"><strong>Consolidar = unificar acesso, não achatar hierarquia.</strong> O que é importante não pode virar tab terciária.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">4</div>
+          <div class="takeaway-text"><strong>Tap the money.</strong> Quando existe um padrão óbvio de interação (clicar no R$ abre a composição), aplique em todo lugar. Um modelo mental &gt; três.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">5</div>
+          <div class="takeaway-text"><strong>Vocabulário antes de UI.</strong> "Operações" e "Extensões" resolveram problemas que nenhum layout ia resolver. Termos de produto &gt; jargão técnico.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">6</div>
+          <div class="takeaway-text"><strong>Autonomia &gt; atribuição.</strong> Deixe o usuário controlar os campos que são dele. Contato financeiro editável &gt; gerente atribuído sem escolha.</div>
+        </div>
+        <div class="takeaway">
+          <div class="takeaway-num">7</div>
+          <div class="takeaway-text"><strong>Cenários são documentação.</strong> Um switcher de estados (Nova conta, Healthy, 1 atrasado, 2 atrasados) mostra honestamente que a UI respira realidades diferentes — não só uma tela bonita de portfólio.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Casa da Lais · Retrospectiva v6 · 2026</span>
+      <a href="lais-financeiro/financeiro-v6.html" target="_blank" rel="noopener">Abrir v6 →</a>
+    </footer>
+
+  </div>
+
+  <script>
+    // Scale iframes proportionally to wrapper width
+    (function() {
+      const W = 1400, H = 900;
+      function scaleAll() {
+        document.querySelectorAll('.preview-frame').forEach(wrap => {
+          const iframe = wrap.querySelector('iframe');
+          if (!iframe) return;
+          const scale = wrap.clientWidth / W;
+          iframe.style.transform = 'scale(' + scale + ')';
+          wrap.style.height = (H * scale) + 'px';
+        });
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', scaleAll);
+      } else {
+        scaleAll();
+      }
+      window.addEventListener('resize', scaleAll);
+    })();
+  </script>
+</body>
+</html>

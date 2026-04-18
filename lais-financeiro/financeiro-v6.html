@@ -492,6 +492,35 @@
   .contato-tooltip::after { content:''; position:absolute; top:100%; left:50%; transform:translateX(-50%); border:4px solid transparent; border-top-color:var(--gray-800); }
   .contato-info:hover .contato-tooltip, .contato-info:focus-visible .contato-tooltip { opacity:1; }
 
+  /* ── Cost breakdown popover (per-boleto + próxima fatura) ── */
+  .boleto-amount { cursor:pointer; transition:color .1s ease; }
+  .boleto-amount:hover { text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
+  .boleto-item.substituido .boleto-amount { cursor:default; }
+  .boleto-item.substituido .boleto-amount:hover { text-decoration:none; }
+  .cost-amount-trigger { cursor:pointer; transition:opacity .1s ease; }
+  .cost-amount-trigger:hover { text-decoration:underline; text-underline-offset:3px; text-decoration-thickness:1px; }
+  .composicao-btn { display:inline-flex; align-items:center; gap:6px; background:none; border:none; padding:2px 0; margin-top:var(--sp-2); cursor:pointer; font-family:inherit; font-size:var(--text-xs); font-weight:600; color:var(--purple-600); transition:color .15s ease; }
+  .composicao-btn:hover { color:var(--purple-800); }
+  .composicao-btn:hover .composicao-btn-label { text-decoration:underline; text-underline-offset:2px; }
+  .composicao-btn:focus-visible { outline:2px solid var(--purple-400); outline-offset:2px; border-radius:var(--radius-sm); }
+  .composicao-btn svg { width:14px; height:14px; flex-shrink:0; }
+
+  .cost-popover { position:absolute; top:0; left:0; z-index:600; width:320px; max-width:calc(100vw - 24px); background:var(--white); border:1px solid var(--gray-200); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); padding:var(--sp-4) var(--sp-5); opacity:0; transform:translateY(-4px); pointer-events:none; transition:opacity .15s ease, transform .15s ease; }
+  .cost-popover.open { opacity:1; transform:translateY(0); pointer-events:auto; }
+  .cost-popover::before { content:''; position:absolute; width:10px; height:10px; background:var(--white); border:1px solid var(--gray-200); }
+  .cost-popover[data-placement="bottom"]::before { top:-6px; left:var(--arrow-x, 50%); margin-left:-5px; border-right:none; border-bottom:none; transform:rotate(45deg); }
+  .cost-popover[data-placement="top"]::before { bottom:-6px; left:var(--arrow-x, 50%); margin-left:-5px; border-left:none; border-top:none; transform:rotate(45deg); }
+  .cost-popover-head { display:flex; align-items:baseline; justify-content:space-between; gap:var(--sp-3); margin-bottom:var(--sp-3); }
+  .cost-popover-title { font-size:10px; font-weight:600; color:var(--gray-500); text-transform:uppercase; letter-spacing:0.06em; }
+  .cost-popover-ref { font-size:var(--text-xs); font-weight:600; color:var(--gray-700); font-variant-numeric:tabular-nums; }
+  .cost-popover-rows { display:flex; flex-direction:column; gap:2px; }
+  .cost-popover-row { display:flex; justify-content:space-between; gap:var(--sp-4); font-size:var(--text-xs); font-variant-numeric:tabular-nums; line-height:var(--leading-normal); padding:2px 0; }
+  .cost-popover-row .label { color:var(--gray-500); }
+  .cost-popover-row .value { color:var(--gray-700); font-weight:500; }
+  .cost-popover-row.discount .label, .cost-popover-row.discount .value { color:var(--green-600); font-weight:500; }
+  .cost-popover-row.excedente .label, .cost-popover-row.excedente .value { color:var(--amber-700); font-weight:500; }
+  .cost-popover-total { display:flex; justify-content:space-between; gap:var(--sp-4); margin-top:var(--sp-3); padding-top:var(--sp-3); border-top:1px solid var(--gray-100); font-family:'Red Hat Display',sans-serif; font-size:var(--text-sm); font-weight:700; color:var(--gray-900); font-variant-numeric:tabular-nums; }
+
     /* ── Cobranças + Add-ons 2-col ── */
   .cobrancas-addons-grid { display:grid; grid-template-columns:1.6fr 1fr; gap:var(--sp-5); align-items:start; }
   @media (max-width: 1100px) { .cobrancas-addons-grid { grid-template-columns:1fr; } }
@@ -516,6 +545,10 @@
   .empty-state-icon svg { width:20px; height:20px; }
   .empty-state-title { font-size:var(--text-sm); font-weight:600; color:var(--gray-700); }
   .empty-state-desc { font-size:var(--text-xs); color:var(--gray-500); line-height:var(--leading-normal); max-width:280px; }
+  .empty-state-icon.accent { background:var(--purple-50); color:var(--purple-600); }
+  .empty-state-cta { display:inline-flex; align-items:center; gap:4px; font-size:var(--text-xs); font-weight:600; color:var(--purple-600); text-decoration:none; margin-top:var(--sp-2); transition:color .15s ease; }
+  .empty-state-cta:hover { color:var(--purple-800); text-decoration:underline; text-underline-offset:3px; }
+  .empty-state-cta:focus-visible { outline:2px solid var(--purple-400); outline-offset:2px; border-radius:var(--radius-sm); }
   /* Let cards in the cobrancas-addons-grid stretch so their empty states vertically center */
   .cobrancas-addons-grid > .card { display:flex; flex-direction:column; }
   .cobrancas-addons-grid > .card > .card-body { flex:1; display:flex; flex-direction:column; }
@@ -743,15 +776,12 @@
                 </div>
                 <div>
                   <div style="font-size:var(--text-xs);color:var(--gray-500);text-align:right">Valor da próxima fatura</div>
-                  <div id="custoTotalValor" style="font-size:var(--text-lg);font-weight:700;color:var(--purple-600);font-variant-numeric:tabular-nums;margin-top:1px;text-align:right">R$ 20.584,00</div>
-                  <div class="rea-toggle" role="button" tabindex="0" aria-expanded="false" aria-controls="custoBreakdown" onclick="this.classList.toggle('open');document.getElementById('custoBreakdown').classList.toggle('visible');this.setAttribute('aria-expanded',this.classList.contains('open'))" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click()}" style="margin-top:var(--sp-2);justify-content:flex-end"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>Composição do custo</div>
-                  <div class="rea-items" id="custoBreakdown" style="margin-top:var(--sp-2);font-size:var(--text-xs);font-variant-numeric:tabular-nums;line-height:var(--leading-normal);flex-direction:column;gap:var(--sp-1);max-width:320px;margin-left:auto">
-                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Plano 4.000 créditos</span><span style="color:var(--gray-700);font-weight:500">R$ 20.400,00</span></div>
-                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--green-600);font-weight:500">Desconto 4%</span><span style="color:var(--green-600);font-weight:500">−R$ 816,00</span></div>
-                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Lais Adicional</span><span style="color:var(--green-600);font-weight:500">Isento</span></div>
-                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Assentos Premium (5 assentos)</span><span style="color:var(--green-600);font-weight:500">Isento</span></div>
-                    <div style="display:flex;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--gray-500)">Assentos adicionais (2 assentos)</span><span style="color:var(--gray-700);font-weight:500">R$ 1.000,00</span></div>
-                    <div id="custoExcedente" style="display:none;justify-content:space-between;gap:var(--sp-4)"><span style="color:var(--amber-700);font-weight:500">Excedente (120 × R$ 5,00)</span><span style="color:var(--amber-700);font-weight:500">R$ 600,00</span></div>
+                  <div id="custoTotalValor" class="cost-amount-trigger" data-trigger="proxima" data-ref="Abril/2026" data-total="R$ 20.584,00" role="button" tabindex="0" aria-haspopup="dialog" aria-label="Ver composição do custo da próxima fatura" style="font-size:var(--text-lg);font-weight:700;color:var(--purple-600);font-variant-numeric:tabular-nums;margin-top:1px;text-align:right">R$ 20.584,00</div>
+                  <div style="text-align:right">
+                    <button type="button" class="composicao-btn" data-trigger="proxima" aria-label="Ver composição do custo">
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M14 8H8"/><path d="M16 12H8"/><path d="M13 16H8"/></svg>
+                      <span class="composicao-btn-label">Composição do custo</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -1406,16 +1436,17 @@
   var SCENARIOS = {
     '0': {
       plan: { name:'Enterprise (500)', price:'500', period:'atendimentos / mês', tipo:'Mensal', vigencia:'', annual:'' },
+      proximaTotal: 'R$ 2.573,00',
       consumo: { used:'20', limit:'500', pct:'4', status:'normal',
         segments:[{cls:'purple',w:'2.4%',pct:'',tip:'Atendimento da Lais · 12 (60%)'},{cls:'green',w:'1.0%',pct:'',tip:'Remarketing · 5 (25%)'},{cls:'pink',w:'0.6%',pct:'',tip:'Anúncios Proprietários · 3 (15%)'}],
         legend:'<div class="stacked-legend-item"><div class="stacked-legend-dot purple"></div><span class="stacked-legend-name">Atendimento da Lais</span><span class="stacked-legend-value">12</span><span class="stacked-legend-pct">(60,0%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot green"></div><span class="stacked-legend-name">Remarketing</span><span class="stacked-legend-value">5</span><span class="stacked-legend-pct">(25,0%)</span></div><div class="stacked-legend-item"><div class="stacked-legend-dot pink"></div><span class="stacked-legend-name">Anúncios Proprietários</span><span class="stacked-legend-value">3</span><span class="stacked-legend-pct">(15,0%)</span></div>'
       },
       snackbar: false, navBadge: '',
       boletos: {
-        ativos: "<div class=\"empty-state\"><div class=\"empty-state-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z\"/></svg></div><div class=\"empty-state-title\">Nenhum boleto a pagar</div><div class=\"empty-state-desc\">O próximo boleto será gerado alguns dias antes do vencimento e aparecerá aqui.</div></div>",
+        ativos: "<div class=\"empty-state\"><div class=\"empty-state-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"m9 12 2 2 4-4\"/></svg></div><div class=\"empty-state-title\">Nenhum boleto a pagar</div><div class=\"empty-state-desc\">Geramos o próximo boleto alguns dias antes do vencimento.</div></div>",
         ativosCount: '0', ativosDanger: false,
         cta: '',
-        historico: "<div class=\"empty-state\"><div class=\"empty-state-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 3v5h5\"/><path d=\"M3.05 13A9 9 0 1 0 6 5.3L3 8\"/><path d=\"M12 7v5l4 2\"/></svg></div><div class=\"empty-state-title\">Nada no histórico ainda</div><div class=\"empty-state-desc\">Quando seus boletos forem pagos ou renegociados, eles aparecerão por aqui.</div></div>",
+        historico: "<div class=\"empty-state\"><div class=\"empty-state-icon\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect width=\"20\" height=\"5\" x=\"2\" y=\"3\" rx=\"1\"/><path d=\"M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8\"/><path d=\"M10 12h4\"/></svg></div><div class=\"empty-state-title\">Seu histórico começa aqui</div><div class=\"empty-state-desc\">Boletos pagos e renegociados ficam salvos aqui.</div></div>",
         historicoCount: '0'
       },
       conta: { reaCount:'1', reaList:'<div class="op-chip"><span class="op-chip-dot"></span><span class="op-chip-name">Zeio Imóveis — Matriz</span></div>' },
@@ -1513,12 +1544,15 @@
     var planoWarn = document.getElementById('planoUsageWarning');
     if (planoWarn) planoWarn.style.display = s.warning ? '' : 'none';
 
-    // ── Composição do custo: excedente row + total ──
-    var excRow = document.getElementById('custoExcedente');
+    // ── Composição do custo: update próxima fatura total + excedente flag ──
     var totalEl = document.getElementById('custoTotalValor');
     var exceeded = s.consumo && s.consumo.status === 'exceeded';
-    if (excRow) excRow.style.display = exceeded ? 'flex' : 'none';
-    if (totalEl) totalEl.textContent = exceeded ? 'R$ 21.184,00' : 'R$ 20.584,00';
+    var proximaTotal = s.proximaTotal || (exceeded ? 'R$ 21.184,00' : 'R$ 20.584,00');
+    if (totalEl) {
+      totalEl.textContent = proximaTotal;
+      totalEl.dataset.total = proximaTotal;
+      totalEl.dataset.excedente = exceeded ? '1' : '0';
+    }
 
     // ── Snackbar ──
     var snack = document.getElementById('appSnackbar');
@@ -1555,7 +1589,7 @@
     if (extBody) {
       if (s.extensoesEmpty) {
         if (!extBody.dataset.originalHtml) extBody.dataset.originalHtml = extBody.innerHTML;
-        extBody.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><path d=\'M20 7h-9\'/><path d=\'M14 17H5\'/><circle cx=\'17\' cy=\'17\' r=\'3\'/><circle cx=\'7\' cy=\'7\' r=\'3\'/></svg></div><div class=\'empty-state-title\'>Nenhuma extensão ativa</div><div class=\'empty-state-desc\'>Contrate extensões como Lais Adicional ou Assentos Premium para expandir sua operação.</div></div>';
+        extBody.innerHTML = '<div class="empty-state"><div class="empty-state-icon accent"><svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M8 12h8\'/><path d=\'M12 8v8\'/></svg></div><div class=\'empty-state-title\'>Nenhuma extensão ativa</div><div class=\'empty-state-desc\'>Explore Lais Adicional, Assentos Premium e outras extensões para ampliar sua operação.</div><a class="empty-state-cta" href="#extensoes" onclick="event.preventDefault()">Conhecer extensões <span aria-hidden="true">→</span></a></div>';
       } else if (extBody.dataset.originalHtml) {
         extBody.innerHTML = extBody.dataset.originalHtml;
       }
@@ -1623,6 +1657,131 @@
 
   // Tweaks moved to sidebar — always visible.
 
+</script>
+
+<!-- Shared cost-breakdown popover (Composição do custo) -->
+<div class="cost-popover" id="costPopover" role="dialog" aria-labelledby="costPopoverTitle" aria-hidden="true">
+  <div class="cost-popover-head">
+    <div class="cost-popover-title" id="costPopoverTitle">Composição do custo</div>
+    <div class="cost-popover-ref" id="costPopoverRef"></div>
+  </div>
+  <div class="cost-popover-rows">
+    <div class="cost-popover-row"><span class="label">Plano 4.000 créditos</span><span class="value">R$ 20.400,00</span></div>
+    <div class="cost-popover-row discount"><span class="label">Desconto 4%</span><span class="value">−R$ 816,00</span></div>
+    <div class="cost-popover-row discount"><span class="label">Lais Adicional</span><span class="value">Isento</span></div>
+    <div class="cost-popover-row discount"><span class="label">Assentos Premium (5)</span><span class="value">Isento</span></div>
+    <div class="cost-popover-row"><span class="label">Assentos adicionais (2)</span><span class="value">R$ 1.000,00</span></div>
+    <div class="cost-popover-row excedente" id="costPopoverExcedente" style="display:none"><span class="label">Excedente (120 × R$ 5)</span><span class="value">R$ 600,00</span></div>
+  </div>
+  <div class="cost-popover-total"><span>Total</span><span id="costPopoverTotal">R$ 20.584,00</span></div>
+</div>
+
+<script>
+  (function() {
+    var pop = document.getElementById('costPopover');
+    if (!pop) return;
+    var excRow = document.getElementById('costPopoverExcedente');
+    var totalOut = document.getElementById('costPopoverTotal');
+    var refOut = document.getElementById('costPopoverRef');
+    var currentAnchor = null;
+
+    function positionPopover(anchor) {
+      var rect = anchor.getBoundingClientRect();
+      pop.style.visibility = 'hidden';
+      pop.classList.add('open');
+      var popRect = pop.getBoundingClientRect();
+      var margin = 10;
+      var viewportH = window.innerHeight;
+      var viewportW = window.innerWidth;
+      var spaceBelow = viewportH - rect.bottom;
+      var placeBelow = spaceBelow >= popRect.height + margin + 8;
+      var top = placeBelow
+        ? rect.bottom + margin + window.scrollY
+        : rect.top - popRect.height - margin + window.scrollY;
+      var rawLeft = rect.left + rect.width/2 - popRect.width/2 + window.scrollX;
+      var minLeft = 12 + window.scrollX;
+      var maxLeft = viewportW - popRect.width - 12 + window.scrollX;
+      var left = Math.max(minLeft, Math.min(rawLeft, maxLeft));
+      var arrowX = (rect.left + rect.width/2 + window.scrollX) - left;
+      pop.dataset.placement = placeBelow ? 'bottom' : 'top';
+      pop.style.setProperty('--arrow-x', arrowX + 'px');
+      pop.style.top = top + 'px';
+      pop.style.left = left + 'px';
+      pop.style.visibility = '';
+    }
+
+    function openPopover(anchor) {
+      currentAnchor = anchor;
+      var total = anchor.dataset.total || anchor.textContent.trim();
+      var exceeded = anchor.dataset.excedente === '1';
+      var ref = anchor.dataset.ref || '';
+      if (excRow) excRow.style.display = exceeded ? '' : 'none';
+      if (totalOut) totalOut.textContent = total;
+      if (refOut) {
+        refOut.textContent = ref;
+        refOut.style.display = ref ? '' : 'none';
+      }
+      pop.setAttribute('aria-hidden', 'false');
+      positionPopover(anchor);
+    }
+
+    function closePopover() {
+      pop.classList.remove('open');
+      pop.setAttribute('aria-hidden', 'true');
+      currentAnchor = null;
+    }
+
+    function resolveTrigger(el) {
+      if (el.classList.contains('composicao-btn')) {
+        var ctx = el.dataset.trigger;
+        return document.querySelector('.cost-amount-trigger[data-trigger="' + ctx + '"]') || el;
+      }
+      if (el.classList.contains('boleto-amount')) {
+        var text = el.textContent.trim();
+        if (!text || !text.startsWith('R$')) return null;
+        if (el.closest('.boleto-item.substituido')) return null;
+        var refEl = el.closest('.boleto-item') && el.closest('.boleto-item').querySelector('.boleto-ref');
+        el.dataset.total = text;
+        el.dataset.ref = refEl ? refEl.textContent.trim() : '';
+        el.dataset.excedente = '0';
+        return el;
+      }
+      return el;
+    }
+
+    document.addEventListener('click', function(e) {
+      var triggerEl = e.target.closest('.boleto-amount, .cost-amount-trigger, .composicao-btn');
+      if (triggerEl) {
+        var anchor = resolveTrigger(triggerEl);
+        if (!anchor) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (currentAnchor === anchor && pop.classList.contains('open')) closePopover();
+        else openPopover(anchor);
+        return;
+      }
+      if (pop.classList.contains('open') && !pop.contains(e.target)) closePopover();
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && pop.classList.contains('open')) { closePopover(); return; }
+      if ((e.key === 'Enter' || e.key === ' ') && document.activeElement) {
+        var el = document.activeElement;
+        if (el.classList.contains('cost-amount-trigger') || el.classList.contains('boleto-amount')) {
+          e.preventDefault();
+          var anchor = resolveTrigger(el);
+          if (anchor) openPopover(anchor);
+        }
+      }
+    });
+
+    window.addEventListener('resize', function() {
+      if (pop.classList.contains('open') && currentAnchor) positionPopover(currentAnchor);
+    });
+    window.addEventListener('scroll', function() {
+      if (pop.classList.contains('open') && currentAnchor) positionPopover(currentAnchor);
+    }, true);
+  })();
 </script>
 </body>
 </html>
